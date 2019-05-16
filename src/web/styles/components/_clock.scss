@@ -1,0 +1,70 @@
+#clock {
+  position: relative;
+  display: block;
+  color: #000;
+  background-color: rgb(0, 0, 0);
+  font-size: 30px;
+  width: 400px;
+  padding: 0px;
+  margin: 0 auto;
+  transition: background-color 0.5s linear;
+}
+
+.module{
+  &.clock{
+    font-weight: 800;
+  }
+}
+
+#letters {
+  display: inline-block;
+  line-height: 41px;
+  text-align: center;
+  transition: all 0.5s linear;
+  span {
+    display: inline-block;
+    line-height: 41px;
+    text-align: center;
+    transition: all 0.5s linear;
+    color: rgba(109, 109, 109, 0.3);
+    text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
+    font-weight: 800;
+    width: 35px;
+    &.light {
+      color: #fff !important;
+      text-shadow: 0px 0px 5px #fff;
+    }
+  }
+}
+
+#settings {
+  color: gray;
+  font-size: 13px;
+  width: 190px;
+  margin: 0 auto 10px auto;
+  a {
+    color: gray;
+    font-size: 13px;
+    width: 190px;
+    margin: 0 auto 10px auto;
+  }
+}
+
+#e0,#e1,#e2,#e3{
+    position:absolute;
+    color:black;
+    font-size:15px;
+}
+
+#e0, #e1{
+  top:15px;
+}
+#e2, #e1{
+  right:25px;
+}
+#e0, #e3{
+  left:25px;
+}
+#e2, #e3{
+  bottom:20px;
+}

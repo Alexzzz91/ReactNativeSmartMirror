@@ -1,0 +1,72 @@
+{
+  "name": "rnsk",
+  "homepage": "http://react-boilerplate.mcnam.ee/",
+  "version": "0.1.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|react-clone-referenced-element|expo(nent)?|@expo(nent)?/.*|react-navigation|redux-persist|native-base(-shoutem-theme)|native-base|react-native-router-flux))"
+    ]
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject",
+    "test": "node_modules/.bin/jest",
+    "web": "PORT=3001 react-scripts start",
+    "web-bundle": "react-scripts build",
+    "predeploy": "npm run web-bundle",
+    "deploy": "gh-pages -d build",
+    "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=19001'"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^9.0.0",
+    "@unimodules/core": "^1.0.0",
+    "add": "^2.0.6",
+    "babel-polyfill": "^6.26.0",
+    "bootstrap": "^4.3.1",
+    "expo": "^32.0.5",
+    "expo-app-auth": "^4.0.0",
+    "expo-google-sign-in": "^4.0.0",
+    "expokit": "32.1.1",
+    "firebase": "^5.8.3",
+    "luxon": "^1.12.1",
+    "native-base": "^2.11.0",
+    "prop-types": "^15.7.2",
+    "react": "16.5.0",
+    "react-dom": "^16.3.1",
+    "react-helmet": "^5.2.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-google-signin": "^1.2.3",
+    "react-native-router-flux": "4.0.6",
+    "react-redux": "^6.0.0",
+    "react-router-dom": "^4.2.2",
+    "react-timer-mixin": "^0.13.4",
+    "reactstrap": "^7.1.0",
+    "redux": "^4.0.1",
+    "redux-persist": "^5.10.0",
+    "redux-thunk": "^2.3.0",
+    "yarn": "^1.15.2"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "babel-preset-expo": "^5.0.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.0",
+    "gh-pages": "^2.0.1",
+    "jest-expo": "^32.0.0",
+    "node-sass": "^4.11.0",
+    "react-scripts": "2.1.5"
+  }
+}
