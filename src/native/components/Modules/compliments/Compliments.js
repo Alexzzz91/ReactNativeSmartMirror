@@ -98,7 +98,7 @@ class Compliments extends React.Component {
 
     let actiualCompliment = this.getRandomCompliment(complimentVariants, compliment, prevCompliment);
 
-    if (prevCompliment == actiualCompliment) {
+    if (prevCompliment == actiualCompliment && complimentVariants.length > 1) {
       actiualCompliment = this.getRandomCompliment(complimentVariants, compliment, prevCompliment);
     }
 
@@ -132,6 +132,9 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans_light",
     color: '#fff',
     fontWeight: "100",
+    alignItems: 'center',
+    alignContent: 'center',
+    textAlign: 'center',
     fontSize: 75,
     lineHeight: 80,
     marginTop: 5,

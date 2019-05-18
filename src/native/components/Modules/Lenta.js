@@ -3,11 +3,40 @@ import {
   Container, Content, Text, H1, H2, H3,
 } from 'native-base';
 import { View, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { parseString } from 'react-native-xml2js';
 import { DateTime } from 'luxon';
+
+const lentsUrl = [
+  {
+    "title":"Наука",
+    "url":"https://lenta.ru/rss/news/science/science/"
+  },
+  {
+    "title":"Космос",
+    "url":"https://lenta.ru/rss/news/science/cosmos/"
+  }
+];
 
 class Lenta extends React.Component {
   changeCompliment = () => {
     alert('меняется новость')
+  }
+
+  componentDidMount() {
+    this.getNews();
+  }
+
+  getNews = () => {
+    console.log(new DOMParser());
+    lentsUrl.forEach(({title, url}) => {
+      fetch(url)
+        .then(response => response.text())
+        .then((response) => {
+            parseString(response, function (err, result) {
+                console.log(response)
+            })
+        .then((response) => response.json());
+    })
   }
 
   render() {
