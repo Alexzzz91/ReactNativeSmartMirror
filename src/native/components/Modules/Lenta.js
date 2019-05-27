@@ -4,6 +4,7 @@ import {
 } from 'native-base';
 import { View, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import XMLParser from 'react-xml-parser';
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import { DateTime } from 'luxon';
 
 const lentsUrl = [
@@ -27,6 +28,7 @@ class Lenta extends React.Component {
     this.state = {
       watched: {},
       newsList: [],
+      updateTime: null,
       news: undefined,
     };
   }
@@ -37,6 +39,10 @@ class Lenta extends React.Component {
       this.getNews();
     }
 
+    if (Object.keys(watched).length > 1 && Object.keys(watched).length === newsList.length) {
+      this.setState({ watched: {} });
+    }
+
     if (news && prevState.news != news) {
       watched[news.guid] = true;
       this.setState({ watched });
@@ -45,7 +51,7 @@ class Lenta extends React.Component {
 
   componentDidMount() {
     this.getNewsList();
-    setInterval(this.getNews, 120000)
+    setInterval(this.getNews, 120000);
   }
 
   getNewsList = () => {
@@ -82,6 +88,8 @@ class Lenta extends React.Component {
               }
             }
 
+            console.log('title', title);
+
             return {
               guid: !!guid && !!guid.length ? guid[0].value : '',
               title: !!title && title.length ? title[0].value : '',
@@ -101,8 +109,54 @@ class Lenta extends React.Component {
     this.setState({watched: {}});
   }
 
-  getNews = () => {
-    const { newsList, watched } = this.state;
+  getNextNews = () => {
+    const { newsList, news } = this.state;
+    const now = DateTime.local();
+
+    const newsIndex = newsList.indexOf(news);
+    let nNews;
+
+    if (newsIndex == newsList.length-1) {
+      nNews = newsList[0]
+    } else {
+      nNews = newsList[newsIndex+1]
+    };
+
+    this.setState({
+      news: nNews,
+      updateTime: now,
+    });
+  }
+
+  getPreviousNews = () => {
+    const { newsList, news } = this.state;
+    const now = DateTime.local();
+    const newsIndex = newsList.indexOf(news);
+    let nNews;
+
+    if (newsIndex == -1) {
+      nNews = newsList[newsList.length-1]
+    } else {
+      nNews = newsList[newsIndex-1]
+    };
+
+    this.setState({
+      news: nNews,
+      updateTime: now,
+    });
+  }
+
+  getNews = (forced = false) => {
+    const { newsList, watched, updateTime } = this.state;
+    const now = DateTime.local();
+
+    if (!!updateTime && !forced) {
+      const diffNow = updateTime.diffNow().toObject();
+      if (Math.abs(diffNow.milliseconds) < 120000) {
+        return;
+      }
+    }
+
     let actialNews;
 
     newsList.forEach((n) => {
@@ -111,8 +165,13 @@ class Lenta extends React.Component {
       }
     });
 
-    this.setState({news: actialNews});
+    this.setState({
+      news: actialNews,
+      updateTime: now,
+    });
   }
+
+  getNewsForced = () => this.getNews(true)
 
   render() {
     const { newsList, news } = this.state;
@@ -162,10 +221,13 @@ class Lenta extends React.Component {
     }
 
     return (
-      <Container>
+      <GestureRecognizer
+        onSwipeLeft={this.getPreviousNews}
+        onSwipeRight={this.getNextNews}
+      >
         <View style={styles.base}>
           <TouchableOpacity
-            onPress={this.getNews}
+            onPress={this.getNewsForced}
           >
             <Text style={styles.themeAndTime}>
               {category}, {diffString} назад:
@@ -178,7 +240,7 @@ class Lenta extends React.Component {
             {description}
           </Text>
         </View>
-      </Container>
+      </GestureRecognizer>
     );
   }
 };
