@@ -10,7 +10,7 @@ export const compliments = {
     Clear: [
       "Какое замечательное утро!"
     ],
-    Cloudy: [
+    Clouds: [
       "Опять тучи. Как обычно",
       "Долбанные тучи на небе"
     ],
@@ -38,7 +38,7 @@ export const compliments = {
     Clear: [
       "Вампирам на улицу не выходить!"
     ],
-    Cloudy: [
+    Clouds: [
       "Солнца опять не видно за тучами",
       "Тучи опять закрыли все небо"
     ],
@@ -63,7 +63,7 @@ export const compliments = {
       "Хватит работать, отдохни!"
     ],
     Clear: [],
-    Cloudy: [],
+    Clouds: [],
     Rain: [],
     Thunderstorm: [],
     Snow: [
@@ -81,7 +81,7 @@ export const compliments = {
     Clear: [
       "Небо чистое, но ночью на это пофиг"
     ],
-    Cloudy: [
+    Clouds: [
       "Тут тучи даже ночью! Какое счастье, что их не видно"
     ],
     Rain: [
