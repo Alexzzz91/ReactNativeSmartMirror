@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Container, Content, Text, H1, H2, H3,
 } from 'native-base';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Button } from 'react-native';
 import { Clock } from './Modules/Clock';
 import { CalendarEvents } from './Modules/CalendarEvents';
 import { Weather } from './Modules/Weather';
@@ -12,12 +12,15 @@ import { Constants, Location, Permissions } from 'expo';
 import { DateTime } from 'luxon';
 import { API_KEY } from './Modules/WeatherAPIKey'
 
+import { Actions } from 'react-native-router-flux';
+
 class About extends React.Component {
   state = {
     isLoading: true,
     temperature: 0,
     weatherCondition: null,
     weatherDescription: null,
+    updateTime: null,
     days: [],
     city: null,
     error: null
@@ -25,6 +28,7 @@ class About extends React.Component {
 
   componentDidMount() {
     this.fetchWeather();
+    setInterval(this.fetchWeather, 60000);
   }
 
   fetchAsync = async (url) => {
@@ -40,9 +44,19 @@ class About extends React.Component {
     return data;
   }
 
-  fetchWeather = (lat = 25, lon = 25) => {
+  fetchWeather = () => {
+    const { updateTime } = this.state;
+    const now = DateTime.local();
+
+    if (!!updateTime) {
+      const diffNow = updateTime.diffNow().toObject();
+      if (Math.abs(diffNow.milliseconds) < 900000) {
+        return;
+      }
+    }
+
     try {
-      this.fetchAsync(`https://api.openweathermap.org/data/2.5/forecast/daily?id=524901&appid=e7238ba6d604e266124dd596dfdf2645&units=metric&lang=ru&q=Moscow,RU`)
+      this.fetchAsync(`https://api.openweathermap.org/data/2.5/forecast/daily?appid=${API_KEY}&units=metric&lang=ru&q=Moscow,RU`)
       .then(({list, city}) => {
         const _this = this;
         let item;
@@ -58,8 +72,8 @@ class About extends React.Component {
             if(days.length < 6 && !days[date.weekdayShort]) {
               days.push({
                 weatherCondition,
-                tempMax: item.temp.max.toFixed(1),
-                tempMin: item.temp.min.toFixed(1),
+                tempMax: Math.ceil(item.temp.max.toFixed(1)),
+                tempMin: Math.ceil(item.temp.min.toFixed(1)),
                 date: date.weekdayShort,
               });
               days[date.weekdayShort] = true;
@@ -69,7 +83,7 @@ class About extends React.Component {
         this.setState({days});
       })
       .catch(reason => console.log(reason.message))
-      this.fetchAsync(`https://api.openweathermap.org/data/2.5/forecast?&appid=e7238ba6d604e266124dd596dfdf2645&units=metric&lang=ru&q=Moscow,RU`)
+      this.fetchAsync(`https://api.openweathermap.org/data/2.5/forecast?&appid=${API_KEY}&units=metric&lang=ru&q=Moscow,RU`)
         .then(({list, city}) => {
           const _this = this;
           let item;
@@ -84,7 +98,7 @@ class About extends React.Component {
               weatherCondition = item.weather[0].main;
               weatherDescription = item.weather[0].description;
               _this.setState({
-                temperature: temperature.toFixed(1),
+                temperature: Math.ceil(temperature.toFixed(1)),
                 weatherCondition,
                 weatherDescription,
                 city,
@@ -97,6 +111,8 @@ class About extends React.Component {
     } catch (e) {
       console.log("error", e)
     }
+
+    this.setState({ updateTime: now });
   }
 
   render() {
@@ -115,6 +131,13 @@ class About extends React.Component {
           <View style={styles.topRows}>
             <Clock/>
             <CalendarEvents/>
+          </View>
+          <View style={styles.settingsButton}>
+            <Button
+              onPress={() => Actions.settings()}
+              title={'Settings'}
+              color="transparent"
+            />
           </View>
           <View>
             {isLoading ?
@@ -186,5 +209,9 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     textAlign: 'center',
     marginBottom: 10,
+  },
+  settingsButton: {
+    width: 140,
+    height: 20
   },
 });

@@ -5,6 +5,9 @@ import {
 import { DateTime } from 'luxon';
 import { View, StyleSheet, Button, TouchableOpacity} from 'react-native';
 
+// const webacalUrl = "https://p11-calendars.icloud.com/published/2/MTM2NzAyMjI0ODEzNjcwMqI5jWSNf6penKtjCEx88rFVTg69KSsCtgSKVETp7hBEmb0puBzTnV2NyhpyWCFxMIRN9wOvOEZliDRsVJxpIr8";
+const webacalUrl = "https://calendar.google.com/calendar/ical/nlj3voogbgmajslig5dd9bppe8%40group.calendar.google.com/public/basic.ics";
+
 class CalendarEvents extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +23,36 @@ class CalendarEvents extends React.Component {
     this.handleItemClick = this.handleItemClick.bind(this);
     this.signUpdate = this.signUpdate.bind(this);
     this.setCalendars = this.setCalendars.bind(this);
+  }
+
+  componentDidMount() {
+    this.getByWebCal();
+  }
+
+  getByWebCal = () => {
+    fetch(webacalUrl)
+      .then((response) => {
+        response.text().then((text) =>  {
+          var lines = text.split("\n");
+          var events = [];
+          var events_i = 0;
+          for (i = 0; i < lines.length; i++) {
+            if (lines[i].includes('DTSTART')) {
+              var date = lines[i].split(":");
+              events[events_i] = {date: date[1]};
+            }
+            else if (lines[i].includes('SUMMARY')) {
+              var title = lines[i].split(":");
+              events[events_i]["title"] = title[1];
+            }
+            else if (lines[i].includes('END:VEVENT')) {
+              events_i++;
+            }
+          }
+
+          this.setEvents(events.splice(0, 7));
+        })
+      })
   }
 
   signUpdate(signedIn, accessToken) {
@@ -121,24 +154,21 @@ class CalendarEvents extends React.Component {
 
     return (
         <Container style={{transition: 'opacity 1s ease 0s', opacity: 1}}>
-          { !signedIn && (
+          { !events.length  && !signedIn && (
             <Button
                 onPress={(e) => this.handleItemClick(e, 'sign-in')}
                 title="Авторизоваться в гугле"
                 style={styles.button}
             />
           )}
-          { signedIn && (
+          { !events.length && signedIn && (
             <Button
                 onPress={(e) => this.handleItemClick(e, 'sign-out')}
                 title="ИнАвторизоваться в гугле"
                 style={styles.button}
             />
           )}
-          { signedIn &&
-            !!calendars &&
-            !!calendars.length &&
-            !events.length &&
+          { !events.length &&
             <View style={styles.eventRows}>
               <Text> Выбери календарь </Text>
               {calendars.map((calendar, i) =>
@@ -156,32 +186,38 @@ class CalendarEvents extends React.Component {
               )}
             </View>
           }
-          {signedIn &&
-            !!activeCalendar &&
-            !!events.length && (
+          {!!events.length && (
             <>
               <H3 style={styles.header}>События</H3>
               <View style={styles.eventRows}>
-                {events.map((event, i) =>
-                  <View
-                    key={event.id+i}
-                    style={eventRowStyles(i)}
-                  >
-                    <View style={styles.eventRow}>
-                      <Icon name="calendar" style={styles.eventIcon}/>
-                      <Text style={styles.eventTitle}>
-                        {event.summary}
-                      </Text>
-                      <Text style={styles.eventTime}>
-                        {
-                          DateTime
-                          .fromISO(event.end.dateTime)
-                          .set({ year: now.year, month: now.month })
-                          .toRelative()
-                        }
-                      </Text>
+                {events.map((event, i) => {
+                  let date;
+
+                  if (!!event.end && !!event.end.dateTime) {
+                    date = DateTime.fromISO(event.end.dateTime).set({ year: now.year, month: now.month }).toRelative();
+                  }
+
+                  if (!!event.date) {
+                    date = DateTime.fromISO(parseInt(event.date)).set({ year: now.year, month: now.month }).toRelative();
+                  }
+
+                  return (
+                    <View
+                      key={event.i + event.summary || event.title}
+                      style={eventRowStyles(i)}
+                    >
+                      <View style={styles.eventRow}>
+                        <Icon name="calendar" style={styles.eventIcon}/>
+                        <Text style={styles.eventTitle}>
+                          {event.summary || event.title }
+                        </Text>
+                        <Text style={styles.eventTime}>
+                          { date }
+                        </Text>
+                      </View>
                     </View>
-                  </View>
+                  );
+                }
                 )}
               </View>
             </>

@@ -28,6 +28,7 @@ import LocaleComponent from '../components/Locale';
 // import ProfileComponent from '../components/Profile';
 
 import AboutComponent from '../components/About';
+import SettingsComponent from '../components/Settings';
 
 const Index = (
   <Stack hideNavBar>
@@ -107,15 +108,14 @@ const Index = (
       </Tabs>
     </Scene>*/}
     <Scene key="home" component={AboutComponent} />
-    {/*<Scene
-      back
-      clone
-      key="recipe"
-      title="RECIPE"
-      {...DefaultProps.navbarProps}
-      component={RecipesContainer}
-      Layout={RecipeViewComponent}
-    />*/}
+
+    <Stack
+      key="settings"
+      title="Settings"
+    >
+      <Scene key="settings" component={SettingsComponent} />
+    </Stack>
+
   </Stack>
 );
 

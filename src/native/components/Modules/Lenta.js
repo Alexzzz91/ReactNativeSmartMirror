@@ -2,10 +2,23 @@ import React from 'react';
 import {
   Container, Content, Text, H1, H2, H3,
 } from 'native-base';
-import { View, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Button, TouchableOpacity, Dimensions } from 'react-native';
 import XMLParser from 'react-xml-parser';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import Carousel from 'react-native-snap-carousel';
 import { DateTime } from 'luxon';
+
+const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
+
+function wp (percentage) {
+    const value = (percentage * viewportWidth) / 100;
+    return Math.round(value);
+}
+
+const slideWidth = wp(90);
+const itemHorizontalMargin = wp(1);
+
+export const sliderWidth = viewportWidth;
+export const itemWidth = slideWidth + itemHorizontalMargin * 2;
 
 const lentsUrl = [
   {
@@ -28,6 +41,7 @@ class Lenta extends React.Component {
     this.state = {
       watched: {},
       newsList: [],
+      activeSlide: 0,
       updateTime: null,
       news: undefined,
     };
@@ -51,7 +65,7 @@ class Lenta extends React.Component {
 
   componentDidMount() {
     this.getNewsList();
-    setInterval(this.getNews, 120000);
+    setInterval(this.getNews, 60000);
   }
 
   getNewsList = () => {
@@ -87,8 +101,6 @@ class Lenta extends React.Component {
                 return false;
               }
             }
-
-            console.log('title', title);
 
             return {
               guid: !!guid && !!guid.length ? guid[0].value : '',
@@ -158,12 +170,18 @@ class Lenta extends React.Component {
     }
 
     let actialNews;
+    let index;
 
-    newsList.forEach((n) => {
+    newsList.forEach((n, i) => {
       if (!actialNews && !watched[n.guid]) {
         actialNews = n;
+        index = i;
       }
     });
+
+    if (this._carousel) {
+      this._carousel.snapToNext(index);
+    }
 
     this.setState({
       news: actialNews,
@@ -173,34 +191,8 @@ class Lenta extends React.Component {
 
   getNewsForced = () => this.getNews(true)
 
-  render() {
-    const { newsList, news } = this.state;
-
-    if (!news) {
-      return (
-        <Container>
-          <View style={styles.base}>
-            <TouchableOpacity
-              onPress={this.getNewsList}
-            >
-              <Text style={styles.themeAndTime}>
-                Нет новых новостей (нажмите для загрузки новостей)
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Container>
-      );
-    }
-
-    const {
-      guid,
-      title,
-      link,
-      description,
-      pubDate,
-      enclosure,
-      category,
-    } = news;
+  _renderItem ({item, index}) {
+    const { guid, title, link, description, pubDate, enclosure, category } = item;
 
     const dateTimeNews = DateTime.fromRFC2822(pubDate);
     const diffNow = dateTimeNews.diffNow(['hours', 'minute']).toObject();
@@ -221,26 +213,56 @@ class Lenta extends React.Component {
     }
 
     return (
-      <GestureRecognizer
-        onSwipeLeft={this.getPreviousNews}
-        onSwipeRight={this.getNextNews}
-      >
-        <View style={styles.base}>
-          <TouchableOpacity
-            onPress={this.getNewsForced}
-          >
-            <Text style={styles.themeAndTime}>
-              {category}, {diffString} назад:
-            </Text>
-          </TouchableOpacity>
-          <Text style={styles.title}>
-            {title}
+      <View style={styles.base}>
+        <TouchableOpacity
+          onPress={this.getNewsForced}
+        >
+          <Text style={styles.themeAndTime}>
+            {category}, {diffString} назад:
           </Text>
-          <Text style={styles.summary}>
-            {description}
-          </Text>
-        </View>
-      </GestureRecognizer>
+        </TouchableOpacity>
+        <Text style={styles.title}>
+          {title}
+        </Text>
+        <Text style={styles.summary}>
+          {description}
+        </Text>
+      </View>
+    );
+  }
+
+  render() {
+    const { newsList, news } = this.state;
+
+    if (!news) {
+      return (
+        <Container>
+          <View style={styles.base}>
+            <TouchableOpacity
+              onPress={this.getNewsList}
+            >
+              <Text style={styles.themeAndTime}>
+                Нет новых новостей (нажмите для загрузки новостей)
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Container>
+      );
+    }
+
+    return (
+      <View>
+        <Carousel
+          ref={(c) => { this._carousel = c; }}
+          data={newsList}
+          renderItem={this._renderItem}
+          sliderWidth={sliderWidth}
+          itemWidth={itemWidth}
+          activeSlideOffset={80}
+          loop={true}
+          onSnapToItem={(index) => this.setState({ activeSlide: index }) }
+        />
+      </View>
     );
   }
 };
