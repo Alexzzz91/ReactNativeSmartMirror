@@ -3,7 +3,7 @@ import {
   Container, Content, Text, H1, H2, H3,
 } from 'native-base';
 import { View, StyleSheet, Button, TouchableOpacity, Dimensions } from 'react-native';
-import XMLParser from 'react-xml-parser';
+import * as rssParser from 'react-native-rss-parser';
 import Carousel from 'react-native-snap-carousel';
 import { DateTime } from 'luxon';
 
@@ -47,6 +47,11 @@ class Lenta extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.getNewsList();
+    setInterval(this.getNews, 60000);
+  }
+
   componentDidUpdate(prevProps, prevState) {
     const { newsList, news, watched } = this.state;
     if (prevState.newsList.length !== newsList.length) {
@@ -63,35 +68,19 @@ class Lenta extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.getNewsList();
-    setInterval(this.getNews, 60000);
-  }
-
   getNewsList = () => {
     const { watched } = this.state;
-
-    const parser = new XMLParser();
     const now = DateTime.local();
 
     lentsUrl.forEach(({title, url}) => {
       fetch(url)
-        .then(response => response.text())
-        .then((response) => {
-          const xml = parser.parseFromString(response);
-          const items = xml.getElementsByTagName('item');
+        .then((response) => response.text())
+        .then((responseData) => rssParser.parse(responseData))
+        .then((rss) => {
+          const newsList = rss.items.map((item) => {
 
-          const newsList = items.map((item) => {
-            const guid = item.getElementsByTagName('guid') || '';
-            const title = item.getElementsByTagName('title') || '';
-            const link = item.getElementsByTagName('link') || '';
-            const description = item.getElementsByTagName('description') || '';
-            const pubDate = item.getElementsByTagName('pubDate') || '';
-            const enclosure = item.getElementsByTagName('enclosure') || '';
-            const category = item.getElementsByTagName('category') || '';
-
-            if (!!pubDate && pubDate.length && pubDate[0].value) {
-              const dateTimeNews = DateTime.fromRFC2822(pubDate[0].value);
+            if (!!item.published) {
+              const dateTimeNews = DateTime.fromRFC2822(item.published);
               const diffNow = dateTimeNews.diffNow(['days', 'hours']).toObject();
 
               if (!!Math.abs(diffNow.days)) {
@@ -103,17 +92,15 @@ class Lenta extends React.Component {
             }
 
             return {
-              guid: !!guid && !!guid.length ? guid[0].value : '',
-              title: !!title && title.length ? title[0].value : '',
-              link: !!link && link.length ? link[0].value : '',
-              description: !!description && description.length ? description[0].value : '',
-              pubDate: !!pubDate && pubDate.length ? pubDate[0].value : '',
-              enclosure: !!enclosure && enclosure.length ? enclosure[0].value : '',
-              category: !!category && category.length ? category[0].value : '',
+              guid: !!item.id && item.id,
+              title: !!item.title && item.title,
+              link: !!item.link && item.link.length ? item.link[0].url : '',
+              description: item.description && item.description,
+              pubDate: !!item.published && item.published,
+              enclosure: !!item.enclosures && item.enclosures.length ? item.enclosures[0].url : '',
+              category: !!item.categories && item.categories.length ? item.categories[0].name : '',
             };
-          })
-          .filter(Boolean);
-
+          }).filter(Boolean);
           this.setState({newsList});
         });
     });
@@ -200,7 +187,7 @@ class Lenta extends React.Component {
     let diffString = '';
     if (!!Math.abs(diffNow.hours)) {
       if (Math.abs(diffNow.hours) > 1) {
-        diffString += `час, `;
+        diffString += `час `;
       } else {
         diffString += `${Math.abs(diffNow.hours)} часа, `;
       }

@@ -12,6 +12,7 @@ class CalendarEvents extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      fetching: false,
       signedIn: false,
       accessToken: null,
       activeCalendar: null,
@@ -19,6 +20,7 @@ class CalendarEvents extends React.Component {
       events: [],
       name: null,
       photoUrl: null,
+      updateTime: null,
     };
     this.handleItemClick = this.handleItemClick.bind(this);
     this.signUpdate = this.signUpdate.bind(this);
@@ -27,11 +29,23 @@ class CalendarEvents extends React.Component {
 
   componentDidMount() {
     this.getByWebCal();
+    setInterval(this.getByWebCal, 60000);
   }
 
   getByWebCal = () => {
+    const { updateTime } = this.state;
+    const now = DateTime.local();
+
+    if (!!updateTime) {
+      const diffNow = updateTime.diffNow().toObject();
+      if (Math.abs(diffNow.milliseconds) < 2000000) {
+        return;
+      }
+    }
+
     fetch(webacalUrl)
       .then((response) => {
+        this.setState({fetching: true});
         response.text().then((text) =>  {
           var lines = text.split("\n");
           var events = [];
@@ -65,8 +79,6 @@ class CalendarEvents extends React.Component {
   handleItemClick(event, name) {
     if (name === 'sign-in') {
       this.signIn();
-    } else if (name === 'sign-out') {
-      alert('kek');
     }
   }
 
@@ -95,6 +107,7 @@ class CalendarEvents extends React.Component {
 
   getCalendars = async () => {
     const { accessToken } = this.state;
+    this.setState({fetching: true});
     fetch('https://www.googleapis.com/calendar/v3/users/me/calendarList', {
       headers: { Authorization: `Bearer ${accessToken}` },
     })
@@ -138,8 +151,18 @@ class CalendarEvents extends React.Component {
   }
 
   setEvents(events) {
+    events = events.sort((a, b) => {
+      if (a.date > b.date) {
+        return 1; }
+      if (a.date < b.date) {
+        return -1; }
+      return 0;
+    });
+    const now = DateTime.local();
     this.setState({
       events,
+      fetching: false,
+      updateTime: now
     });
   }
 
@@ -150,25 +173,19 @@ class CalendarEvents extends React.Component {
       calendars,
       activeCalendar,
       events,
+      fetching,
     } = this.state;
 
     return (
         <Container style={{transition: 'opacity 1s ease 0s', opacity: 1}}>
-          { !events.length  && !signedIn && (
+          { !events.length  && !signedIn && !fetching && (
             <Button
                 onPress={(e) => this.handleItemClick(e, 'sign-in')}
                 title="Авторизоваться в гугле"
                 style={styles.button}
             />
           )}
-          { !events.length && signedIn && (
-            <Button
-                onPress={(e) => this.handleItemClick(e, 'sign-out')}
-                title="ИнАвторизоваться в гугле"
-                style={styles.button}
-            />
-          )}
-          { !events.length &&
+          { !events.length && !fetching &&
             <View style={styles.eventRows}>
               <Text> Выбери календарь </Text>
               {calendars.map((calendar, i) =>

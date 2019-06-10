@@ -69,7 +69,7 @@ class About extends React.Component {
             item = list[i];
             weatherCondition = item.weather[0].main;
             const date = DateTime.fromMillis(item.dt*1000);
-            if(days.length < 6 && !days[date.weekdayShort]) {
+            if(!days[date.weekdayShort]) {
               days.push({
                 weatherCondition,
                 tempMax: Math.ceil(item.temp.max.toFixed(1)),
@@ -132,10 +132,11 @@ class About extends React.Component {
             <Clock/>
             <CalendarEvents/>
           </View>
-          <View style={styles.settingsButton}>
+          <View style={styles.settingsButtonView}>
             <Button
+              style={styles.settingsButton}
               onPress={() => Actions.settings()}
-              title={'Settings'}
+              title={'Настройки'}
               color="transparent"
             />
           </View>
@@ -210,8 +211,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
   },
-  settingsButton: {
+  settingsButtonView: {
     width: 140,
     height: 20
+  },
+  settingsButton: {
+    opacity: 0.5
   },
 });

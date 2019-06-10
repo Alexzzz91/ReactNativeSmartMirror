@@ -96,6 +96,10 @@ class Compliments extends React.Component {
       prevCompliment,
     } = this.state;
 
+    if (!complimentVariants.length < 2) {
+      return;
+    }
+
     let actiualCompliment = this.getRandomCompliment(complimentVariants, compliment, prevCompliment);
 
     if (prevCompliment == actiualCompliment && complimentVariants.length > 1) {

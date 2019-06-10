@@ -5,7 +5,6 @@ import {
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import Loading from './Loading';
-import Messages from './Messages';
 
 import { Translations } from '../../i18n';
 
@@ -59,8 +58,6 @@ class Locale extends React.Component {
             title="Change language"
             content=""
           />
-
-          {error && <Messages message={error} />}
 
           <Button block onPress={this.changeLocale}>
             <Text>
