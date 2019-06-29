@@ -178,7 +178,7 @@ class Lenta extends React.Component {
 
   getNewsForced = () => this.getNews(true)
 
-  _renderItem ({item, index}) {
+  renderItem ({item, index}) {
     const { guid, title, link, description, pubDate, enclosure, category } = item;
 
     const dateTimeNews = DateTime.fromRFC2822(pubDate);
@@ -242,7 +242,7 @@ class Lenta extends React.Component {
         <Carousel
           ref={(c) => { this._carousel = c; }}
           data={newsList}
-          renderItem={this._renderItem}
+          renderItem={this.renderItem}
           sliderWidth={sliderWidth}
           itemWidth={itemWidth}
           activeSlideOffset={80}

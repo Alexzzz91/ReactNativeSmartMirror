@@ -29,13 +29,10 @@ class Weather extends React.Component {
           </View>
           <View style={styles.bodyContainer}>
             <Text style={styles.title}>{description}</Text>
-            {/*<Text style={styles.subtitle}>
-             {weatherConditions[weather].subtitle}
-            </Text>*/}
           </View>
         </View>
         <View>
-          <H2 style={styles.header}>Прогноз в {city.name}, {city.country}</H2>
+          <H2 style={styles.header}>Прогноз в {city}</H2>
           <View style={styles.eventRows}>
             {days.map((day, i) =>
               <View

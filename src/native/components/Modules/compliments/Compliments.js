@@ -1,14 +1,24 @@
 import React from 'react';
 import {
-  Container, Content, Text, H1, H2, H3,
+  Container,
+  Content,
+  Text,
+  H1,
+  H2,
+  H3
 } from 'native-base';
-import { View, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Button,
+  TouchableOpacity
+} from 'react-native';
 import { DateTime } from 'luxon';
 import { compliments } from './base';
 
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min;
 
-class Compliments extends React.Component {
+class Compliments extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +33,10 @@ class Compliments extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.compliment === this.state.compliment){
+    if (
+      prevProps.weather === this.props.weather &&
+      prevState.compliment === this.state.compliment
+    ){
       return;
     }
 
@@ -31,9 +44,7 @@ class Compliments extends React.Component {
   }
 
   getActualCompliment = () => {
-    const {
-      weather,
-    } = this.props;
+    const {weather} = this.props;
 
     let nowHour = DateTime.local().hour;
 
@@ -79,10 +90,10 @@ class Compliments extends React.Component {
     })
   }
 
-  getRandomCompliment = (complimentVariants, compliment, prevCompliment) => {
-    let newCompliment = compliment;
+  getRandomCompliment = (complimentVariants, prevCompliment) => {
+    let newCompliment = prevCompliment;
 
-    while (compliment == newCompliment || newCompliment== prevCompliment) {
+    while (newCompliment === prevCompliment) {
       newCompliment = complimentVariants[getRandomInt(0, complimentVariants.length)];
     }
 
@@ -96,15 +107,11 @@ class Compliments extends React.Component {
       prevCompliment,
     } = this.state;
 
-    if (!complimentVariants.length < 2) {
+    if (complimentVariants.length < 2) {
       return;
     }
 
-    let actiualCompliment = this.getRandomCompliment(complimentVariants, compliment, prevCompliment);
-
-    if (prevCompliment == actiualCompliment && complimentVariants.length > 1) {
-      actiualCompliment = this.getRandomCompliment(complimentVariants, compliment, prevCompliment);
-    }
+    let actiualCompliment = this.getRandomCompliment(complimentVariants, prevCompliment);
 
     this.setState({
       compliment: actiualCompliment,
@@ -113,13 +120,13 @@ class Compliments extends React.Component {
   }
 
   render() {
-    const { compliment } = this.state;
+    const {compliment} = this.state;
 
     return (
       <Container>
         <TouchableOpacity onPress={this.changeCompliment}>
           <Text style={styles.bright}>
-            { compliment }
+            {compliment}
           </Text>
         </TouchableOpacity>
       </Container>

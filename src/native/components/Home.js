@@ -10,11 +10,17 @@ import { Compliments } from './Modules/compliments/Compliments';
 import { Lenta } from './Modules/Lenta';
 import { Constants, Location, Permissions } from 'expo';
 import { DateTime } from 'luxon';
+import moment from "moment";
+import momentRU from 'moment/locale/ru';
+
+// import DeviceInfo from 'react-native-device-info'
+// const deviceLocale = DeviceInfo.getDeviceLocale()
+
 import { API_KEY } from './Modules/WeatherAPIKey'
 
 import { Actions } from 'react-native-router-flux';
 
-class About extends React.Component {
+class Home extends React.PureComponent {
   state = {
     isLoading: true,
     temperature: 0,
@@ -26,7 +32,19 @@ class About extends React.Component {
     error: null
   }
 
+  config = {
+    hidePrivate: false,
+    hideOngoing: false,
+    sliceMultiDayEvents: true,
+    showEnd: true,
+    dateFormat: 'MMM Do',
+    dateEndFormat: 'HH:mm',
+    urgency: 7,
+    timeFormat: 'relative',
+  };
+
   componentDidMount() {
+    moment.updateLocale('ru', momentRU);
     this.fetchWeather();
     setInterval(this.fetchWeather, 60000);
   }
@@ -46,73 +64,64 @@ class About extends React.Component {
 
   fetchWeather = () => {
     const { updateTime } = this.state;
-    const now = DateTime.local();
+    const now = moment();
 
     if (!!updateTime) {
-      const diffNow = updateTime.diffNow().toObject();
-      if (Math.abs(diffNow.milliseconds) < 900000) {
+      if (updateTime.diff(now, 'minutes') < 2) {
         return;
       }
     }
 
     try {
-      this.fetchAsync(`https://api.openweathermap.org/data/2.5/forecast/daily?appid=${API_KEY}&units=metric&lang=ru&q=Moscow,RU`)
-      .then(({list, city}) => {
+      this.fetchAsync(`https://api.openweathermap.org/data/2.5/forecast?appid=${API_KEY}&units=metric&lang=ru&q=Moscow,RU`)
+      .then(({list}) => {
         const _this = this;
         let item;
         let temperature;
         let weatherCondition;
         const days = [];
-        let daysShortName = {};
         for(let i = 0; i < list.length; i++) {
-          if (i > 1) {
-            item = list[i];
-            weatherCondition = item.weather[0].main;
-            const date = DateTime.fromMillis(item.dt*1000);
-            if(!days[date.weekdayShort]) {
-              days.push({
-                weatherCondition,
-                tempMax: Math.ceil(item.temp.max.toFixed(1)),
-                tempMin: Math.ceil(item.temp.min.toFixed(1)),
-                date: date.weekdayShort,
-              });
-              days[date.weekdayShort] = true;
-            }
+          item = list[i];
+          weatherCondition = item.weather[0].main;
+          const dateTime = moment(item.dt_txt);
+          const day = dateTime.format('ddd')
+          if(!days[day]) {
+            days.push({
+              weatherCondition,
+              tempMax: Math.ceil(item.main.temp_max.toFixed(1)),
+              tempMin: Math.ceil(item.main.temp_min.toFixed(1)),
+              date: day,
+            });
+            days[day] = true;
           }
         };
         this.setState({days});
       })
       .catch(reason => console.log(reason.message))
-      this.fetchAsync(`https://api.openweathermap.org/data/2.5/forecast?&appid=${API_KEY}&units=metric&lang=ru&q=Moscow,RU`)
-        .then(({list, city}) => {
-          const _this = this;
-          let item;
+      this.fetchAsync(`https://api.openweathermap.org/data/2.5/weather?&appid=${API_KEY}&units=metric&lang=ru&q=Moscow,RU`)
+        .then((item) => {
           let temperature;
           let weatherCondition;
-          const days = [];
-          let daysShortName = {};
-          for(let i = 0; i < list.length; i++) {
-            if (i < 1) {
-              item = list[i];
-              temperature = item.main.temp;
-              weatherCondition = item.weather[0].main;
-              weatherDescription = item.weather[0].description;
-              _this.setState({
-                temperature: Math.ceil(temperature.toFixed(1)),
-                weatherCondition,
-                weatherDescription,
-                city,
-                isLoading: false
-              });
-            }
-          };
+          temperature = item.main.temp;
+          weatherCondition = item.weather[0].main;
+          weatherDescription = item.weather[0].description;
+          this.setState({
+            temperature: Math.ceil(temperature.toFixed(1)),
+            weatherCondition,
+            weatherDescription,
+            // @TODO пофиксить
+            city: 'Москве',
+            isLoading: false
+          });
         })
         .catch(reason => console.log(reason.message))
     } catch (e) {
       console.log("error", e)
     }
 
-    this.setState({ updateTime: now });
+    this.setState({
+      updateTime: moment()
+    });
   }
 
   render() {
@@ -130,7 +139,7 @@ class About extends React.Component {
         <View style={styles.topRow}>
           <View style={styles.topRows}>
             <Clock/>
-            <CalendarEvents/>
+            <CalendarEvents config={this.config}/>
           </View>
           <View style={styles.settingsButtonView}>
             <Button
@@ -175,7 +184,7 @@ class About extends React.Component {
   }
 }
 
-export default About;
+export default Home;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,5 +1,8 @@
 export default {
-  Login: 'Login',
+  Login: 'Имя пользователя',
   Email: 'Email',
-  Password: 'Password',
+  Password: 'Пароль',
+  Today: 'сегодня',
+  Tomorrow: 'завтра',
+  Running: 'Заканчивается через'
 };

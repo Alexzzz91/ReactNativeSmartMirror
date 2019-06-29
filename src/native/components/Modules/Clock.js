@@ -1,9 +1,15 @@
 import React from 'react';
 import { DateTime } from 'luxon';
+import moment from "moment";
 import {
   Container, Content, Text, H1, H2, H3,
 } from 'native-base';
 import { View, StyleSheet } from 'react-native';
+import 'moment/src/locale/en-gb';
+import momentRU from 'moment/locale/ru';
+
+// import DeviceInfo from 'react-native-device-info'
+// const deviceLocale = DeviceInfo.getDeviceLocale()
 
 const dayFormat = {
     weekday: 'long',
@@ -21,14 +27,15 @@ class Clock extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.getTime();
+    moment.updateLocale('ru', momentRU);
   }
 
   getTime() {
-      const now = DateTime.local().setLocale('ru-ru');
+      const now = moment();
       return {
-        dateString: now.toLocaleString(dayFormat),
-        time: now.toLocaleString(timeFormat),
-        seconds: now.toFormat('ss'),
+        dateString: now.format("dddd, MMMM Do YYYY"),
+        time: now.format('hh:mm A'),
+        seconds: now.format('ss'),
       };
   }
 
