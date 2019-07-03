@@ -1,6 +1,6 @@
 {
-  "short_name": "React Native Starter Kit",
-  "name": "React Native Starter Kit",
+  "short_name": "React Smart Mirror",
+  "name": "React(web/react-native/electron) Smart Mirror",
   "icons": [
     {
       "src": "favicon.ico",

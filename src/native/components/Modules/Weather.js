@@ -4,7 +4,7 @@ import {
 } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View, StyleSheet, Button } from 'react-native';
-import { weatherConditions } from './WeatherConditions'
+import { weatherConditions } from '../../../common/WeatherConditions'
 
 class Weather extends React.Component {
   render() {

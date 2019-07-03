@@ -16,7 +16,7 @@ import momentRU from 'moment/locale/ru';
 // import DeviceInfo from 'react-native-device-info'
 // const deviceLocale = DeviceInfo.getDeviceLocale()
 
-import { API_KEY } from './Modules/WeatherAPIKey'
+import { API_KEY } from '../../common/WeatherAPIKey'
 
 import { Actions } from 'react-native-router-flux';
 

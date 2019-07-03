@@ -4,15 +4,13 @@ import { Container, Row, Col } from 'reactstrap';
 import { Helmet } from 'react-helmet';
 
 const Template = ({ pageTitle, children }) => (
-  <Container>
+  <>
     <Helmet>
       <title>{pageTitle}</title>
     </Helmet>
 
-    <Row>
-      <Col sm="12">{children}</Col>
-    </Row>
-  </Container>
+    {children}
+  </>
 );
 
 Template.propTypes = {

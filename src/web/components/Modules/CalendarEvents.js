@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  Container, Content, Text, H1, H2, H3, Icon,
-} from 'native-base';
 import { DateTime } from 'luxon';
 import moment from "moment";
-import { View, StyleSheet, Button, TouchableOpacity, VirtualizedList} from 'react-native';
 import { translate } from '../../../i18n';
-
+import { VariableSizeList as List } from 'react-window';
 import 'moment/locale/en-gb';
-
 import * as Ical from '../../../common/Ical';
 import momentRU from 'moment/locale/ru';
 
@@ -18,7 +13,7 @@ import momentRU from 'moment/locale/ru';
 // const webacalUrl = "https://p11-calendars.icloud.com/published/2/MTM2NzAyMjI0ODEzNjcwMqI5jWSNf6penKtjCEx88rFVTg69KSsCtgSKVETp7hBEmb0puBzTnV2NyhpyWCFxMIRN9wOvOEZliDRsVJxpIr8";
 const webacalUrls = [
   "https://calendar.google.com/calendar/ical/nlj3voogbgmajslig5dd9bppe8%40group.calendar.google.com/public/basic.ics",
-  // "ihttps://calendar.google.com/calendar/ical/belalex.9132788%40gmail.com/public/basic.ics"
+  // "https://calendar.google.com/calendar/ical/belalex.9132788%40gmail.com/public/basic.ics"
 ];
 
 class CalendarEvents extends React.PureComponent {
@@ -41,7 +36,7 @@ class CalendarEvents extends React.PureComponent {
   }
 
   componentDidMount() {
-    moment.updateLocale('ru', momentRU);
+    //moment.updateLocale('ru', momentRU);
     this.getByWebCal();
     setInterval(this.getByWebCal, 60000);
   }
@@ -83,22 +78,22 @@ class CalendarEvents extends React.PureComponent {
 
   signIn = async () => {
     try {
-      const result = await Expo.Google.logInAsync({
-        androidClientId: "953730147082-0jif2bi0mtp1s98reealp9jdhl91t4le.apps.googleusercontent.com",
-        discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
-        scopes: [
-          "profile",
-          "email",
-          "https://www.googleapis.com/auth/calendar.readonly",
-          "https://www.googleapis.com/auth/calendar",
-        ]
-      })
-      if (result.type === "success") {
-        this.signUpdate(true, result.accessToken);
-        this.getCalendars();
-      } else {
-        console.log("cancelled")
-      }
+      // const result = await Expo.Google.logInAsync({
+      //   androidClientId: "953730147082-0jif2bi0mtp1s98reealp9jdhl91t4le.apps.googleusercontent.com",
+      //   discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+      //   scopes: [
+      //     "profile",
+      //     "email",
+      //     "https://www.googleapis.com/auth/calendar.readonly",
+      //     "https://www.googleapis.com/auth/calendar",
+      //   ]
+      // })
+      // if (result.type === "success") {
+      //   this.signUpdate(true, result.accessToken);
+      //   this.getCalendars();
+      // } else {
+      //   console.log("cancelled")
+      // }
     } catch (e) {
       console.log("error", e)
     }
@@ -159,10 +154,10 @@ class CalendarEvents extends React.PureComponent {
 
     newEvents = newEvents.map((event) => {
       // Define second, minute, hour, and day variables
-      const oneSecond = 1000; // 1,000 milliseconds
-      const oneMinute = oneSecond * 60;
-      const oneHour = oneMinute * 60;
-      const oneDay = oneHour * 24;
+      var oneSecond = 1000; // 1,000 milliseconds
+      var oneMinute = oneSecond * 60;
+      var oneHour = oneMinute * 60;
+      var oneDay = oneHour * 24;
       let date;
       if (event.fullDayEvent) {
         event.end -= oneSecond;
@@ -336,7 +331,40 @@ class CalendarEvents extends React.PureComponent {
 
   }
 
+  getItemSize = index => {
+    const {events} = this.state;
+    return events[index].location ? 35 : 25;
+  };
 
+  getRow = ({ index, style }) => {
+    const {events} = this.state;
+    const item = events[index];
+    return (
+      <div style={{...style, ...eventRowStyles(index, !!item.location)}}>
+        <div style={{...styles.eventRow}}>
+          {/* <MaterialCommunityIcons name="calendar" style={{...styles.eventIcon}} /> */}
+          <div style={{...styles.eventMiddleRow}}>
+            <span style={{...styles.eventTitle}}>
+              { item.summary }
+            </span>
+          </div>
+          <span style={{...styles.eventTime}}>
+            { item.date }
+          </span>
+        </div>
+         {!!item.location && (
+           <div style={{...styles.locationMiddleRow}}>
+               <>
+                 {/* <MaterialCommunityIcons name="md-pin" size={15} style={{...styles.locationIcon}/> */}
+                 <span style={{...styles.eventLocation}} numberOfLines={1}>
+                   { item.location.substr(0, 60) }
+                 </span>
+               </>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   render() {
     const now = DateTime.local();
@@ -349,89 +377,54 @@ class CalendarEvents extends React.PureComponent {
     } = this.state;
 
     return (
-        <Container style={{transition: 'opacity 1s ease 0s', opacity: 1}}>
+        <div style={{transition: 'opacity 1s ease 0s', opacity: 1}}>
           { !events.length  && !signedIn && !fetching && (
-            <Button
-                onPress={(e) => this.handleItemClick(e, 'sign-in')}
-                title="Авторизоваться в гугле"
-                style={styles.button}
-            />
+            <button
+                onClick={(e) => this.handleItemClick(e, 'sign-in')}
+                style={{...styles.button}}
+            >
+              Авторизоваться в гугле
+            </button>
           )}
           { !events.length && !fetching &&
-            <View style={styles.eventRows}>
-              <Text> Выбери календарь </Text>
+            <div style={{...styles.eventRows}}>
+              <span> Выбери календарь </span>
               {calendars.map((calendar, i) =>
-                <View key={calendar.id+i}>
-                  <View style={styles.eventRow}>
-                    <Icon name="calendar" style={styles.eventIcon}/>
-                    <TouchableOpacity
-                      onPress={() => this.setActiveCalendars(calendar)}
-                      style={styles.calendarTitle}
+                <div key={calendar.id+i}>
+                  <div style={{...styles.eventRow}}>
+                    {/* <MaterialCommunityIcons name="calendar" style={{...styles.eventIcon}/> */}
+                    <div
+                      onClick={() => this.setActiveCalendars(calendar)}
+                      style={{...styles.calendarTitle}}
                     >
-                      <Text> {calendar.summary} </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
+                      <span> {calendar.summary} </span>
+                    </div>
+                  </div>
+                </div>
               )}
-            </View>
+            </div>
           }
           {!!events.length && (
             <>
-              <H3 style={styles.header}>События</H3>
-              <View style={styles.eventRows}>
-                <VirtualizedList
-                  data={events}
-                  initialNumberToRender={5}
-                  windowSize={150}
-                  getItemCount={() => events.length}
-                  getItem={(data, index) => {
-                      const event = data[index];
-                      // console.log('event.date', event.date);
-                      return {
-                        summary: event.summary.trim(),
-                        location: event.location && event.location.trim(),
-                        date: event.date.trim(),
-                        index
-                      };
-                  }}
-                  keyExtractor={(item, index) => index + item.summary}
-                  renderItem={({item, index}) => (
-                      <View
-                        style={eventRowStyles(index, !!item.location)}
-                      >
-                        <View style={styles.eventRow}>
-                          <Icon name="calendar" style={styles.eventIcon}/>
-                          <View style={styles.eventMiddleRow}>
-                            <Text style={styles.eventTitle}>
-                              { item.summary }
-                            </Text>
-                          </View>
-                          <Text style={styles.eventTime}>
-                            { item.date }
-                          </Text>
-                        </View>
-                        { !!item.location && (
-                          <View style={styles.locationMiddleRow}>
-                              <React.Fragment>
-                                <Icon name="md-pin" size={15} style={styles.locationIcon}/>
-                                <Text style={styles.eventLocation} numberOfLines={1}>
-                                  { item.location.substr(0, 60) }
-                                </Text>
-                              </React.Fragment>
-                          </View>
-                        )}
-                      </View>
-                  )}
-                />
-              </View>
+              <h3 style={{...styles.header}}>События</h3>
+              <div style={{...styles.eventRows}}>
+                <List
+                  height={150}
+                  itemCount={events.length}
+                  itemSize={this.getItemSize}
+                  width={450}
+                >
+                  {this.getRow}
+                </List>
+              </div>
             </>
           )}
           {signedIn &&
            !!activeCalendar &&
             !events.length && (
-            <H3 className="module-header">Ближайших событий нет</H3>
+            <h3 className="module-header">Ближайших событий нет</h3>
           )}
-        </Container>
+        </div>
     );
   }
 };
@@ -440,7 +433,7 @@ export {
   CalendarEvents
 };
 
-const styles = StyleSheet.create({
+const styles = {
   eventRows: {
     flex: 1,
     margin: 0,
@@ -471,7 +464,7 @@ const styles = StyleSheet.create({
   },
   eventIcon: {
     width: 25,
-    fontSize: 24,
+    fontSize: '24px',
     flex: 1,
     margin: 0,
     padding: 0,
@@ -481,7 +474,7 @@ const styles = StyleSheet.create({
   locationIcon: {
     width: 26,
     height: 18,
-    fontSize: 12,
+    fontSize: '12px',
     marginRight: 24,
     padding: 0,
     color: '#fff',
@@ -496,7 +489,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   eventLocation : {
-    fontSize: 12,
+    fontSize: '12px',
     color: '#fbf6f6',
     textAlign: 'center',
     justifyContent: 'center',
@@ -513,18 +506,18 @@ const styles = StyleSheet.create({
   },
   header: {
     textTransform: 'uppercase',
-    fontSize: 20,
+    fontSize: '20px',
     fontFamily: "Roboto_condensed_light",
     fontWeight: '400',
     borderBottomWidth: 1,
     borderBottomColor: '#666',
-    lineHeight: 25,
+    lineHeight: '25px',
     paddingBottom: 8,
     marginBottom: 2,
     marginTop: 2,
     color: '#999',
   }
-});
+};
 
 const eventRowStyles = (number, hasLocation) => {
   if (number < 5) {
@@ -532,10 +525,10 @@ const eventRowStyles = (number, hasLocation) => {
   } else {
     number = 5;
   }
-  return StyleSheet.create({
+  return {
     opacity: 1 / number,
     minHeight: hasLocation ? 35 : 25,
     margin: 0,
     padding: 0,
-  })
+  }
 };
