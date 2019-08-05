@@ -1,8 +1,6 @@
 import React from 'react';
 import Root from './src/native/index';
-import configureStore from './src/store/index';
-
-const { persistor, store } = configureStore();
+import { persistor, store } from './src/store/createStore';
 
 export default function App() {
   return <Root store={store} persistor={persistor} />;

@@ -4,18 +4,18 @@ import Carousel from "nuka-carousel";
 import { DateTime } from 'luxon';
 
 const lentsUrl = [
-  {
-    "title":"Наука",
-    "url":"https://lenta.ru/rss/news/science/science/"
-  },
-  {
-    "title":"Космос",
-    "url":"https://lenta.ru/rss/news/science/cosmos/"
-  },
-  {
-    "title":"Все Новости",
-    "url":"https://lenta.ru/rss"
-  },
+  // {
+  //   "title":"Наука",
+  //   "url":"http://lenta.ru/rss/news/science/science/"
+  // },
+  // {
+  //   "title":"Космос",
+  //   "url":"http://lenta.ru/rss/news/science/cosmos/"
+  // },
+  // {
+  //   "title":"Все Новости",
+  //   "url":"http://lenta.ru/rss"
+  // },
 ];
 
 class Lenta extends React.Component {
@@ -45,16 +45,13 @@ class Lenta extends React.Component {
       this.setState({ watched: {} });
     }
 
-    if (news && prevState.news != news) {
+    if (news && prevState.news !== news) {
       watched[news.guid] = true;
       this.setState({ watched });
     }
   }
 
   getNewsList = () => {
-    const { watched } = this.state;
-    const now = DateTime.local();
-
     lentsUrl.forEach(({title, url}) => {
       fetch(url)
         .then((response) => response.text())
@@ -98,7 +95,7 @@ class Lenta extends React.Component {
     const newsIndex = newsList.indexOf(news);
     let nNews;
 
-    if (newsIndex == newsList.length-1) {
+    if (newsIndex === newsList.length-1) {
       nNews = newsList[0]
     } else {
       nNews = newsList[newsIndex+1]
@@ -116,7 +113,7 @@ class Lenta extends React.Component {
     const newsIndex = newsList.indexOf(news);
     let nNews;
 
-    if (newsIndex == -1) {
+    if (newsIndex === -1) {
       nNews = newsList[newsList.length-1]
     } else {
       nNews = newsList[newsIndex-1]
@@ -162,7 +159,7 @@ class Lenta extends React.Component {
   getNewsForced = () => this.getNews(true)
 
   renderItem ({item, index}) {
-    const { guid, title, link, description, pubDate, enclosure, category } = item;
+    const { title, description, pubDate, category } = item;
 
     const dateTimeNews = DateTime.fromRFC2822(pubDate);
     const diffNow = dateTimeNews.diffNow(['hours', 'minute']).toObject();

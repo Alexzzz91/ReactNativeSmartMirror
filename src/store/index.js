@@ -12,17 +12,22 @@ const config = {
   blacklist: ['status'],
 };
 
-const reducer = persistCombineReducers(config, reducers);
+const createReducer = (asyncReducers) => persistCombineReducers(config, {
+  ...reducers,
+  ...asyncReducers
+});
 
 const middleware = [thunk];
 
-const configureStore = () => {
+const configureStore = (asyncReducers = {}) => {
   const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   const store = createStore(
-    reducer,
+    createReducer(),
     composeEnhancer(applyMiddleware(...middleware)),
   );
+
+  store.asyncReducers = {};
 
   const persistor = persistStore(
     store,
@@ -33,4 +38,17 @@ const configureStore = () => {
   return { persistor, store };
 };
 
-export default configureStore;
+const injectReducer = (store, { key, reducer }) => {
+  if (Object.hasOwnProperty.call(store.asyncReducers, key)) return;
+
+  store.asyncReducers[key] = reducer;
+  store.replaceReducer(createReducer(store.asyncReducers))
+};
+
+const { persistor, store } = configureStore();
+
+export {
+  persistor,
+  store,
+  injectReducer
+}

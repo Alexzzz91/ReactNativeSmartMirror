@@ -1,11 +1,12 @@
 import moment from "moment";
+import { rrulestr } from 'rrule'
 
  // Unescape Text re RFC 4.3.11
 const text = (t) => {
   t = t || "";
   return (t
-    .replace(/\\\,/g, ',')
-    .replace(/\\\;/g, ';')
+    .replace(/\\,/g, ',')
+    .replace(/\\;/g, ';')
     .replace(/\\[nN]/g, '\n')
     .replace(/\\\\/g, '\\')
   )
@@ -44,7 +45,7 @@ const parseValue = (val) => {
 const storeParam = (name) => {
   return function(val, params, curr){
     var data;
-    if (params && params.length && !(params.length==1 && params[0]==='CHARSET=utf-8')){
+    if (params && params.length && !(params.length === 1 && params[0] === 'CHARSET=utf-8')){
       data = {params:parseParams(params), val: text(val)}
     }
     else
@@ -81,14 +82,14 @@ const parseTimestamp = (val) => {
   if (comps !== null) {
     const object = {
         year: parseInt(comps[1], 10),
-        month: parseInt(comps[2], 10)-1,
+        month: parseInt(comps[2], 10),
         day: parseInt(comps[3], 10),
         hour: parseInt(comps[4], 10),
         minute: parseInt(comps[5], 10),
         second: parseInt(comps[6], 10),
     }
 
-    if (comps[7] == 'Z'){ // GMT
+    if (comps[7] === 'Z'){ // GMT
       object.zone = 'utc';
     }
 
@@ -110,14 +111,13 @@ const dateParam = (name) => {
       var comps = /^(\d{4})(\d{2})(\d{2})$/.exec(val);
       if (comps !== null) {
         // No TZ info - assume same timezone as this computer
-        curr[name] = new Date(
-          comps[1],
-          parseInt(comps[2], 10)-1,
-          comps[3]
-        );
-
+        curr[name] = moment().set({
+          year: comps[1],
+          month: parseInt(comps[2], 10),
+          day: comps[3],
+        });
         curr[name] = addTZ(curr[name], params);
-  return curr;
+        return curr;
       }
     }
 
@@ -130,26 +130,35 @@ const dateParam = (name) => {
     if (curr[name].length === 0){
       delete curr[name];
     } else if (curr[name].length === 1){
- curr[name] = curr[name][0];
+      curr[name] = curr[name][0];
     }
 
     return curr;
   }
 };
 
-const exdateParam = (name) => {
-  return function(val, params, curr){
-    var date = dateParam(name)(val, params, curr);
-    if (date.exdates === undefined) {
-      date.exdates = [];
-    }
-    if (Array.isArray(date.exdate)){
-      date.exdates = date.exdates.concat(date.exdate);
-    } else {
-      date.exdates.push(date.exdate);
-    }
-    return date;
+const parseRecurrenceRule = () => (val, params, curr) => {
+  curr['rrule'] = rrulestr(val).options;
+  curr['nextRecurrence'] = rrulestr(val).all((date, i)=> {
+    date.setHours(curr.start.hours())
+    date.setMinutes(curr.start.minutes())
+    date.setSeconds(curr.start.seconds())
+    return i < 2;
+  })
+  return curr;
+}
+
+const exdateParam = (name) => (val, params, curr) => {
+  var date = dateParam(name)(val, params, curr);
+  if (date.exdates === undefined) {
+    date.exdates = [];
   }
+  if (Array.isArray(date.exdate)){
+    date.exdates = date.exdates.concat(date.exdate);
+  } else {
+    date.exdates.push(date.exdate);
+  }
+  return date;
 };
 
 const geoParam = (name) => {
@@ -250,7 +259,8 @@ const objectHandlers = {
   'PERCENT-COMPLETE': storeParam('completion'),
   'COMPLETED': dateParam('completed'),
   'CATEGORIES': categoriesParam('categories'),
-  'FREEBUSY': freebusyParam('freebusy')
+  'FREEBUSY': freebusyParam('freebusy'),
+  'RRULE': parseRecurrenceRule()
 };
 
 const parseICS = (str) => {
@@ -284,19 +294,19 @@ const parseICS = (str) => {
   }
 
    // type and params are added to the list of items, get rid of them.
-   delete ctx.type
-   delete ctx.params
+    delete ctx.type
+    delete ctx.params
 
-   return ctx
+    return ctx
 };
 
 const handleObject = (name, val, params, ctx, stack, line) => {
-  if(objectHandlers[name]) {
+  if (objectHandlers[name]) {
     return objectHandlers[name](val, params, ctx, stack, line)
   }
 
   //handling custom properties
-  if(name.match(/X\-[\w\-]+/) && stack.length > 0) {
+  if (name.match(/X\-[\w\-]+/) && stack.length > 0) {
       //trimming the leading and perform storeParam
       name = name.substring(2);
       return (storeParam(name))(val, params, ctx, stack, line);
@@ -314,6 +324,7 @@ export {
   addTZ,
   parseTimestamp,
   dateParam,
+  parseRecurrenceRule,
   exdateParam,
   geoParam,
   categoriesParam,

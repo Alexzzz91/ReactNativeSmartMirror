@@ -1,23 +1,22 @@
 import React from 'react';
-import { DateTime } from 'luxon';
 import moment from "moment";
 import 'moment/locale/en-gb';
-import momentRU from 'moment/locale/ru';
+// import momentRU from 'moment/locale/ru';
 
 // import DeviceInfo from 'react-native-device-info'
 // const deviceLocale = DeviceInfo.getDeviceLocale()
 
-const dayFormat = {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-};
+// const dayFormat = {
+//     weekday: 'long',
+//     month: 'long',
+//     day: 'numeric',
+//     year: 'numeric',
+// };
 
-const timeFormat = {
-  hour: 'numeric',
-  minute: '2-digit',
-};
+// const timeFormat = {
+//   hour: 'numeric',
+//   minute: '2-digit',
+// };
 
 class Clock extends React.Component {
   constructor(props) {
@@ -83,8 +82,6 @@ class Clock extends React.Component {
 export {
   Clock
 };
-
-
 
 const styles = {
   moduleClock: {

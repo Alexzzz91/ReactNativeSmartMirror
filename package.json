@@ -22,7 +22,7 @@
     "ios": "expo start --ios",
     "eject": "expo eject",
     "test": "node_modules/.bin/jest",
-    "web": "PORT=3001 react-scripts start",
+    "web": "HTTPS=true PORT=3001 react-scripts start",
     "web-bundle": "react-scripts build",
     "predeploy": "npm run web-bundle",
     "deploy": "gh-pages -d build",
@@ -63,6 +63,7 @@
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
+    "rrule": "^2.6.2",
     "tcomb-form-native": "^0.6.20",
     "yarn": "^1.15.2"
   },

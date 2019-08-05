@@ -8,7 +8,7 @@ import TemplateNothing from '../components/Templates/Nothing';
 import Home from '../components/Home';
 import Settings from '../components/Settings';
 
-import Error from '../components/Error';
+// import Error from '../components/Error';
 
 const Index = () => (
   <Switch>

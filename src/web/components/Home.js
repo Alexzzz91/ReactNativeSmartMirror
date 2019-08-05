@@ -8,7 +8,7 @@ import { Compliments } from './Modules/Compliments';
 import { Lenta } from './Modules/Lenta';
 
 import moment from "moment";
-import { translate } from '../../i18n';
+// import { translate } from '../../i18n';
 import 'moment/locale/en-gb';
 import momentRU from 'moment/locale/ru';
 
@@ -31,6 +31,18 @@ class Home extends React.PureComponent {
       days: [],
       city: null,
       showTextTime: false,
+    };
+
+     this.config = {
+      hidePrivate: false,
+      hideOngoing: false,
+      maximumNumberOfDays: 365,
+      sliceMultiDayEvents: true,
+      showEnd: false,
+      dateFormat: 'MMM Do',
+      dateEndFormat: 'HH:mm',
+      urgency: 7,
+      timeFormat: 'absolute',
     };
   }
 
@@ -62,9 +74,7 @@ class Home extends React.PureComponent {
     try {
       this.fetchAsync(`https://api.openweathermap.org/data/2.5/forecast?appid=${API_KEY}&units=metric&lang=ru&q=Moscow,RU`)
       .then(({list}) => {
-        const _this = this;
         let item;
-        let temperature;
         let weatherCondition;
         const days = [];
         for(let i = 0; i < list.length; i++) {
@@ -128,7 +138,7 @@ class Home extends React.PureComponent {
         <div style={{...styles.topRow}}>
           <div style={{...styles.topRows}}>
             <Clock/>
-            {/*<CalendarEvents config={this.config}/>*/}
+            <CalendarEvents config={this.config}/>
           </div>
           <div style={{...styles.settingsButtonView}}>
             <Link
@@ -191,6 +201,7 @@ const styles = {
   },
   topRows: {
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'space-between',
   },
   middleRow: {

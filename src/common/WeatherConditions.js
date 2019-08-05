@@ -38,5 +38,10 @@ export const weatherConditions = {
       title: 'Mist',
       icon: 'weather-fog',
       webIcon: 'wi-fog'
+    },
+    Fog: {
+      title: 'Fog',
+      icon: 'weather-fog',
+      webIcon: 'wi-fog'
     }
   }

@@ -14,7 +14,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { DateTime } from 'luxon';
-import { compliments } from '../../../../common/baseCompliments';
+import { compliments } from '../../../common/baseCompliments';
 
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min;
 

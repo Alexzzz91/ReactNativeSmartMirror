@@ -1,6 +1,6 @@
 import React from 'react';
 import { DateTime } from 'luxon';
-import { compliments } from '../../../common/baseCompliments';
+import { compliments } from '../../../../common/baseCompliments';
 
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min;
 
@@ -44,13 +44,13 @@ class Compliments extends React.PureComponent {
         timeOfDay = item;
       }
 
-      if(nowHour == 0 ||
-        nowHour == 1 ||
-        nowHour == 2 ||
-        nowHour == 3 ||
-        nowHour == 4 ||
-        nowHour == 5 ||
-        nowHour == 6
+      if(nowHour === 0 ||
+        nowHour === 1 ||
+        nowHour === 2 ||
+        nowHour === 3 ||
+        nowHour === 4 ||
+        nowHour === 5 ||
+        nowHour === 6
       ) {
         timeOfDay = 'night';
       }

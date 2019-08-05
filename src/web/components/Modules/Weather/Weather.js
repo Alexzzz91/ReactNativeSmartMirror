@@ -1,5 +1,5 @@
 import React from 'react';
-import { weatherConditions } from '../../../common/WeatherConditions'
+import { weatherConditions } from '../../../../common/WeatherConditions'
 
 class Weather extends React.PureComponent {
   render() {
@@ -15,7 +15,6 @@ class Weather extends React.PureComponent {
       return '';
     };
 
-    console.log('days', days);
     return (
       <div>
         <div>
@@ -37,12 +36,11 @@ class Weather extends React.PureComponent {
             {days.map((day, i) =>
               <div
                 key={day.date}
-                style={{...weatherRowStyles(i)}}
+                style={{...weatherRowStyles(i+1)}}
               >
                 <div style={{...styles.weatherRow}}>
                   <span style={{...styles.day}}>{day.date}</span>
                   <i
-                    size={25}
                     className={`wi ${weatherConditions[day.weatherCondition].webIcon}`}
                     style={{...styles.weatherIcon}}
                   />
@@ -95,6 +93,8 @@ const styles = {
   },
   weatherIcon: {
     width: '30px',
+    height: '30px',
+    fontSize: '30px',
     flex: 1,
     marginTop: 0,
     marginBottom: 0,
@@ -102,6 +102,7 @@ const styles = {
     marginRight: '15px',
     padding: 0,
     color: '#fff',
+    display: 'flex',
     justifyContent: 'center',
   },
   tempMax: {
@@ -111,14 +112,18 @@ const styles = {
     color: '#FF8E99',
     fontSize: '22px',
     lineHeight: '25px',
+    display: 'flex',
+    justifyContent: 'center',
   },
   tempMin: {
     margin: 0,
     flex: 2,
     padding: 0,
     color: '#BCDDFF',
+    display: 'flex',
     fontSize: '22px',
     lineHeight: '25px',
+    justifyContent: 'center',
   },
   header: {
     spanTransform: 'uppercase',
@@ -151,8 +156,10 @@ const styles = {
   }
 };
 
-const weatherRowStyles = (number) => ({
-  opacity: 1 / number,
-  margin: 0,
-  padding: 0,
-});
+const weatherRowStyles = (number) => {
+  return{
+    opacity: 1 / number,
+    margin: 0,
+    padding: 0,
+  }
+};
