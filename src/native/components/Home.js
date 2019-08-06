@@ -4,11 +4,11 @@ import {
 } from 'native-base';
 import { View, StyleSheet, Button } from 'react-native';
 import { Clock } from './Modules/Clock';
-// import { CalendarEvents } from './Modules/CalendarEvents';
-// import { Weather } from './Modules/Weather';
-// import { Compliments } from './Modules/Compliments';
-// import { Lenta } from './Modules/Lenta';
-// import { Location, Permissions } from 'expo';
+import { CalendarEvents } from './Modules/CalendarEvents';
+import { Weather } from './Modules/Weather';
+import { Compliments } from './Modules/Compliments';
+import { Lenta } from './Modules/Lenta';
+import { Location, Permissions } from 'expo';
 import { DateTime } from 'luxon';
 import moment from "moment";
 import momentRU from 'moment/locale/ru';

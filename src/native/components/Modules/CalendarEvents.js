@@ -264,11 +264,10 @@ class CalendarEvents extends React.PureComponent {
   createEventList = (calendarData) => {
     const { config } = this.props;
 
-    var events = [];
-    var today = moment().startOf("day");
-    var now = new Date();
-    for (var c in calendarData) {
-      var event = calendarData[c];
+    const now = moment();
+    let events = [];
+    for (const c in calendarData) {
+      const event = calendarData[c];
 
       if(config.hidePrivate) {
         if(event.class === "PRIVATE") {
@@ -276,52 +275,25 @@ class CalendarEvents extends React.PureComponent {
             continue;
         }
       }
+
       if(config.hideOngoing) {
-        if(event.startDate < now) {
+        if(event.start < now) {
           continue;
         }
       }
-      if(this.listContainsEvent(events,event)){
-        continue;
-      }
-      event.url = c;
-      event.today = event.startDate >= today && event.startDate < (today + 24 * 60 * 60 * 1000);
-      if (event.today) {
-        console.log('event', event);
-      }
-      /* if sliceMultiDayEvents is set to true, multiday events (events exceeding at least one midnight) are sliced into days,
-      * otherwise, esp. in dateheaders mode it is not clear how long these events are.
-      */
-      if (config.sliceMultiDayEvents) {
-        var midnight = moment(event.startDate, "x").clone().startOf("day").add(1, "day").format("x");     //next midnight
-        var count = 1;
-        var maxCount = Math.ceil(((event.endDate - 1) - moment(event.startDate, "x").endOf("day").format("x"))/(1000*60*60*24)) + 1
-        if (event.endDate > midnight) {
-          while (event.endDate > midnight) {
-            var nextEvent = JSON.parse(JSON.stringify(event));  //make a copy without reference to the original event
-            nextEvent.startDate = midnight;
-            event.endDate = midnight;
-            event.title += " (" + count + "/" + maxCount + ")";
-            events.push(event);
-            event = nextEvent;
-            count += 1;
-            midnight = moment(midnight, "x").add(1, "day").format("x");   //move further one day for next split
-          }
-          event.title += " ("+count+"/"+maxCount+")";
-        }
-        if (event.type === 'VTIMEZONE') {
-          continue;
-        };
 
-        events.push(event);
-      } else {
-        events.push(event);
-      }
+      if (event.nextRecurrence && event.nextRecurrence.length) {
+        event.nextRecurrence.forEach((dateTime) => {
+          const newEvent = {...event};
+          newEvent.start = moment(dateTime);
+          events.push(newEvent);
+        })
+      };
+
+      events.push(event);
     }
-
-    events.sort(function (a, b) {
-      return a.startDate - b.startDate;
-    });
+    console.log('events', events);
+    events = events.sort((a, b) => b.start - a.start);
 
     return events;
   }

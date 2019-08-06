@@ -33,7 +33,7 @@ class Home extends React.PureComponent {
       showTextTime: false,
     };
 
-     this.config = {
+    this.config = {
       hidePrivate: false,
       hideOngoing: false,
       maximumNumberOfDays: 365,
