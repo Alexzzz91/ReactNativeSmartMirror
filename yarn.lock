@@ -9415,6 +9415,11 @@ react-native-google-signin@^1.2.3:
   resolved "https://registry.yarnpkg.com/react-native-google-signin/-/react-native-google-signin-1.2.3.tgz#700943177a55cd8668a8fb85e370bcf1cb920d1e"
   integrity sha512-9n1vkxYI2uwt91Jvx2BUqL5xeyNivytMnaR5OWIVujVGj1y2bpn4XCwT7R2C2WzYRrcD8xw9R6Pp5R4Linj1hg==
 
+react-native-gpio@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-gpio/-/react-native-gpio-1.0.6.tgz#694151c5fbb82a3f4ee97b6ce7e528d4bc0fb723"
+  integrity sha512-E0jTVesdIIhokTESrQCSMuZG6gIo5yUyAQ4Kv7flXJ9DVvuzCeQwJr4bMnPCVKERBA1YkdmbnKqH0tzcDAA5pw==
+
 react-native-iphone-x-helper@^1.0.3:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.0.tgz#9f8a376eb00bc712115abff4420318a0063fa796"
@@ -11209,6 +11214,11 @@ type-is@~1.6.16:
 typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
+
+typescript@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.3.tgz#c830f657f93f1ea846819e929092f5fe5983e977"
+  integrity sha512-ACzBtm/PhXBDId6a6sDJfroT2pOWt/oOnk4/dElG5G33ZL776N3Y6/6bKZJBFpd+b05F3Ct9qDjMeJmRWtE2/g==
 
 ua-parser-js@^0.7.18, ua-parser-js@^0.7.19:
   version "0.7.19"

@@ -1,6 +1,8 @@
 import { createReducer } from '../../../../../store/helpers/createReducer';
 
 const initialState = {
+  webCalls: [
+  ],
   settings: {
     hidePrivate: false,
     hideOngoing: false,
@@ -11,15 +13,37 @@ const initialState = {
     dateEndFormat: 'HH:mm',
     urgency: 7,
     timeFormat: 'absolute',
-  }
+  },
+  calendarList: [
+
+  ],
+  eventList: [
+  ]
 };
 
 const {reducer, actions} = createReducer(
     initialState,
     {
-        test: (state, payload) => ({
+        setWebcal: (state, payload) => ({
             ...state,
-            hidePrivate: payload,
+            webCalls: [
+              ...state.webCalls,
+              payload
+            ]
+        }),
+        setCalendarList: (state, payload) => ({
+            ...state,
+            calendarList: [
+              ...state.calendarList,
+              payload
+            ]
+        }),
+        setEventList: (state, payload) => ({
+            ...state,
+            eventList: [
+              ...state.eventList,
+              payload
+            ]
         }),
     },
     'calendarEvents'

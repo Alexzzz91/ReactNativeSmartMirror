@@ -13,6 +13,12 @@ import theme from '../../native-base-theme/variables/commonColor';
 import Routes from './routes/index';
 import Loading from './components/Loading';
 
+
+
+import RNGpio from 'react-native-gpio';
+
+
+
 StatusBar.setHidden(true);
 
 export default class App extends React.Component {
@@ -22,6 +28,30 @@ export default class App extends React.Component {
   }
 
   state = { loading: true }
+
+  componentDidMount(){
+
+      // register for gpio pins
+      //RNGpio.subscribeGpio("BCM14");
+      console.log('RNGpio', RNGpio);
+      // console.log('DeviceEventEmitter', DeviceEventEmitter);
+
+      // register for events
+      // DeviceEventEmitter.addListener('RNGPIO', (event: GpioEvent) => {
+        // console.log('event', event);
+        /**
+         * Sample event: {
+         *  "BCM2": true
+         * }
+         */
+        // this.setState({
+        //   pins: {
+        //     ...this.state.pins,
+        //     ...event
+        //   }
+        // })
+      // });
+  }
 
   async componentWillMount() {
     await Font.loadAsync({

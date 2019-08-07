@@ -13,7 +13,7 @@ import {basic} from '../../../../common/basic';
 // import DeviceInfo from 'react-native-device-info'
 // const deviceLocale = DeviceInfo.getDeviceLocale()
 
-const webacalUrls = [
+const webcalUrls = [
   //"https://p11-calendars.icloud.com/published/2/MTM2NzAyMjI0ODEzNjcwMqI5jWSNf6penKtjCEx88rFVTg69KSsCtgSKVETp7hBEmb0puBzTnV2NyhpyWCFxMIRN9wOvOEZliDRsVJxpIr8",
   //"https://calendar.google.com/calendar/ical/nlj3voogbgmajslig5dd9bppe8%40group.calendar.google.com/public/basic.ics",
   //"https://calendar.google.com/calendar/ical/belalex.9132788%40gmail.com/public/basic.ics"
@@ -67,7 +67,7 @@ class CalendarEvents extends React.PureComponent {
 
     // this.setEvents(this.createEventList(calendarEvents3));
 
-    webacalUrls.forEach((webacalUrl) => {
+    webcalUrls.forEach((webacalUrl) => {
       fetch(webacalUrl)
       .then((response) => {
         this.setState({fetching: true});

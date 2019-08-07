@@ -144,7 +144,7 @@ class CalendarEvents extends React.PureComponent {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log('responseJson.items', responseJson.items);
+      // console.log('responseJson.items', responseJson.items);
       this.setEvents(responseJson.items);
     })
   }
@@ -152,7 +152,7 @@ class CalendarEvents extends React.PureComponent {
   capFirst = (string) => string.slice(0, 1) + string.slice(1).toLowerCase()
 
   setEvents(newEvents) {
-    console.log('newEvents', newEvents);
+    // console.log('newEvents', newEvents);
     let now = moment();
     const { events } = this.state;
     const { config } = this.props;
@@ -168,26 +168,26 @@ class CalendarEvents extends React.PureComponent {
         event.end -= oneSecond;
         if (event.today) {
           date = translate(this.capFirst("TODAY"));
-          console.log('1');
+          // console.log('1');
         } else if (event.start - now < oneDay && event.start - now > 0) {
           date = translate(this.capFirst("TOMORROW"));
-          console.log('2');
+          // console.log('2');
         } else if (event.start - now < 2 * oneDay && event.start - now > 0) {
             date = this.capFirst(moment(event.start, "x").fromNow());
-            console.log('3');
+            // console.log('3');
         } else {
           if (config.timeFormat === "absolute") {
             if ((config.urgency > 1) && (event.startDate - now < (config.urgency * oneDay))) {
               // This event falls within the config.urgency period that the user has set
               date = this.capFirst(moment(event.startDate, "x").from(moment().format("YYYYMMDD")));
-              console.log('4');
+              // console.log('4');
             } else {
               date = this.capFirst(moment(event.startDate, "x").format(config.fullDayEventDateFormat));
-              console.log('5');
+              // console.log('5');
             }
           } else {
             date = this.capFirst(moment(event.startDate, "x").from(moment().format("YYYYMMDD")));
-            console.log('6');
+            // console.log('6');
           }
         }
         if(config.showEnd){
@@ -292,7 +292,7 @@ class CalendarEvents extends React.PureComponent {
 
       events.push(event);
     }
-    console.log('events', events);
+    // console.log('events', events);
     events = events.sort((a, b) => b.start - a.start);
 
     return events;
