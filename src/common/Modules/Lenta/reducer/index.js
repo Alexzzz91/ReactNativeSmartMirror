@@ -1,24 +1,7 @@
-import { createReducer } from '../../../../../store/helpers/createReducer';
+import { createReducer } from '../../../../store/helpers/createReducer';
 
 const initialState = {
-  webCalls: [
-  ],
-  settings: {
-    hidePrivate: false,
-    hideOngoing: false,
-    maximumNumberOfDays: 365,
-    sliceMultiDayEvents: true,
-    showEnd: false,
-    dateFormat: 'MMM Do',
-    dateEndFormat: 'HH:mm',
-    urgency: 7,
-    timeFormat: 'absolute',
-  },
-  calendarList: [
 
-  ],
-  eventList: [
-  ]
 };
 
 const {reducer, actions} = createReducer(
@@ -46,7 +29,7 @@ const {reducer, actions} = createReducer(
             ]
         }),
     },
-    'calendarEvents'
+    'lenta'
 );
 
 export {

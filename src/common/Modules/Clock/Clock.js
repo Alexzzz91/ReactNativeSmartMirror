@@ -1,37 +1,25 @@
 import React from 'react';
-import moment from "moment";
-import 'moment/locale/en-gb';
-// import momentRU from 'moment/locale/ru';
+import { moment } from "../../Moment";
 
-// import DeviceInfo from 'react-native-device-info'
-// const deviceLocale = DeviceInfo.getDeviceLocale()
-
-// const dayFormat = {
-//     weekday: 'long',
-//     month: 'long',
-//     day: 'numeric',
-//     year: 'numeric',
-// };
-
-// const timeFormat = {
-//   hour: 'numeric',
-//   minute: '2-digit',
-// };
-
-class Clock extends React.Component {
+class Clock extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = this.getTime();
-    // moment.updateLocale('ru', momentRU);
   }
 
   getTime() {
-      const now = moment();
-      return {
-        dateString: now.format("dddd, MMMM Do YYYY"),
-        time: now.format('hh:mm A'),
-        seconds: now.format('ss'),
-      };
+    const {
+      dateParams,
+      timeParams,
+      secondsParams
+    } = this.props;
+
+    const now = moment();
+    return {
+      dateString: now.format(dateParams.format),
+      time: now.format(`${timeParams.format} ${timeParams.useAmFormat}`),
+      seconds: now.format(secondsParams.format),
+    };
   }
 
   setTimer() {

@@ -1,8 +1,7 @@
 import React from 'react';
-import { DateTime } from 'luxon';
-import { compliments } from '../../../../common/baseCompliments';
-
-const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+import { moment } from '../../../common/Moment';
+import { compliments } from '../../baseCompliments';
+import { getRandomInt } from './reducer/operations';
 
 class Compliments extends React.PureComponent {
   constructor(props) {
@@ -32,7 +31,7 @@ class Compliments extends React.PureComponent {
   getActualCompliment = () => {
     const {weather} = this.props;
 
-    let nowHour = DateTime.local().hour;
+    let nowHour = moment().hour();
 
     let timeOfDay = 'day';
 

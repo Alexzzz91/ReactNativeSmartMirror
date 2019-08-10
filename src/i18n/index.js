@@ -4,6 +4,12 @@ import russian from './ru';
 
 export const DEFAULT_LOCALE = 'ru';
 
+export const Locales = {
+  ru: 'ru',
+  en: 'en',
+  it: 'it',
+};
+
 export const Translations = {
   ru: russian,
   en: english,

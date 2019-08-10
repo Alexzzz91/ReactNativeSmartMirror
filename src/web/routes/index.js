@@ -6,7 +6,7 @@ import TemplateNothing from '../components/Templates/Nothing';
 
 // Routes
 import Home from '../components/Home';
-import Settings from '../components/Settings';
+import { Settings } from '../components/Settings';
 
 // import Error from '../components/Error';
 

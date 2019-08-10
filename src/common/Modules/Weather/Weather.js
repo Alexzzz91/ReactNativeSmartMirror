@@ -1,5 +1,5 @@
 import React from 'react';
-import { weatherConditions } from '../../../../common/WeatherConditions'
+import { weatherConditions } from '../../WeatherConditions'
 
 class Weather extends React.PureComponent {
   render() {

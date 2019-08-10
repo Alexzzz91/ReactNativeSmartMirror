@@ -1,10 +1,9 @@
 import React from 'react';
-import moment from "moment";
-import { translate } from '../../../../i18n';
+import { moment } from "../../../common/Moment";
+import { translate } from '../../../i18n';
 import { VariableSizeList as List } from 'react-window';
-import 'moment/locale/en-gb';
-import * as Ical from '../../../../common/Ical';
-import {basic} from '../../../../common/basic';
+import * as Ical from '../../../common/Ical';
+import {basic} from '../../../common/basic';
 
 // import {basic2} from '../../../common/basic2';
 // import {icloud} from '../../../common/icloud';
@@ -39,9 +38,14 @@ class CalendarEvents extends React.PureComponent {
   }
 
   componentDidMount() {
-    //moment.updateLocale('ru', momentRU);
     this.getByWebCal();
     setInterval(this.getByWebCal, 60000);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.locale !== this.props.locale) {
+      this.forceUpdate();
+    }
   }
 
   getByWebCal = () => {
@@ -280,7 +284,6 @@ class CalendarEvents extends React.PureComponent {
 
     const now = moment();
     let events = [];
-    console.log('calendarData', calendarData);
     for (const c in calendarData) {
       const event = calendarData[c];
 
@@ -307,7 +310,6 @@ class CalendarEvents extends React.PureComponent {
 
       events.push(event);
     }
-    console.log('events', events);
     events = events.sort((a, b) => b.start - a.start);
 
     return events;

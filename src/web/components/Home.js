@@ -1,16 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Clock } from './Modules/Clock';
-import { CalendarEvents } from './Modules/CalendarEvents';
-import { Weather } from './Modules/Weather';
-import { Compliments } from './Modules/Compliments';
-import { Lenta } from './Modules/Lenta';
+import { ClockWeb as Clock } from '../../common/Modules/Clock';
+import { CalendarEventsWeb as CalendarEvents } from '../../common/Modules/CalendarEvents';
+import { WeatherWeb as Weather } from '../../common/Modules/Weather';
+import { ComplimentsWeb as Compliments } from '../../common/Modules/Compliments';
+import { LentaWeb as Lenta } from '../../common/Modules/Lenta';
 
-import moment from "moment";
-// import { translate } from '../../i18n';
-import 'moment/locale/en-gb';
-import momentRU from 'moment/locale/ru';
+import { moment } from '../../common/Moment';
 
 import { API_KEY } from '../../common/WeatherAPIKey'
 
@@ -47,7 +44,6 @@ class Home extends React.PureComponent {
   }
 
   componentDidMount() {
-    moment.updateLocale('ru', momentRU);
     this.fetchWeather();
     setInterval(this.fetchWeather, 60000);
   }
