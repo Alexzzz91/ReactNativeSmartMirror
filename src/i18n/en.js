@@ -5,4 +5,6 @@ export default {
   Today: 'today',
   Tomorrow: 'tomorrow',
   Running: 'Ends in',
+
+  Events: 'Events',
 };

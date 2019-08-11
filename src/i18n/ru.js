@@ -4,5 +4,7 @@ export default {
   Password: 'Пароль',
   Today: 'сегодня',
   Tomorrow: 'завтра',
-  Running: 'Заканчивается через'
+  Running: 'Заканчивается через',
+
+  Events: "События",
 };

@@ -357,7 +357,7 @@ class CalendarEvents extends React.PureComponent {
   };
 
   render() {
-    // const now = DateTime.local();
+    const { locale } = this.props;
     const {
       signedIn,
       calendars,
@@ -399,7 +399,7 @@ class CalendarEvents extends React.PureComponent {
           }
           {!!events.length && (
             <>
-              <h3 style={{...styles.header}}>События</h3>
+              <h3 style={{...styles.header}}>{translate('Events', locale)}</h3>
               <div style={{...styles.eventRows}}>
                 <List
                   height={250}
