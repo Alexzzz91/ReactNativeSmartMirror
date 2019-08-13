@@ -1,5 +1,5 @@
 import { Lenta } from './Lenta'
-import { settings } from './Settings'
+import { Settings } from './Settings'
 import { reducer } from './reducer';
 import { connect } from 'react-redux';
 import { injectReducer, store} from '../../../store';
@@ -24,5 +24,5 @@ const LentaWeb = ConnectedLenta(Lenta);
 
 export {
   LentaWeb,
-  settings as LentaSettings
+  Settings as LentaSettings
 };

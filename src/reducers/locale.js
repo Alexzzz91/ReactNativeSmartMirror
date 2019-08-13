@@ -14,21 +14,30 @@ export const setLocale = (locale) => (dispatch) => {
 
 export default function localeReducer(state = initialState, action) {
   switch (action.type) {
+    case 'persist/REHYDRATE':
+      if (!!action.payload && !!action.payload.locale) {
+        updateMomentLocale(action.payload.locale);
+      }
+      return true;
     case 'LOCALE_REPLACE': {
       if (action.locale) {
-        switch(action.locale) {
-          case Locales.ru:
-            moment.updateLocale('ru', momentRu);
-          break;
-          case Locales.en:
-            moment.updateLocale('en', momentEn);
-          break;
-        }
-        return action.locale;
+        updateMomentLocale(action.locale);
       }
-      return initialState;
+      return action.locale;
     }
     default:
       return state;
   }
+}
+
+
+const updateMomentLocale = (locale) => {
+  switch(locale) {
+      case Locales.ru:
+        moment.updateLocale('ru', momentRu);
+      break;
+      case Locales.en:
+        moment.updateLocale('en', momentEn);
+      break;
+    }
 }

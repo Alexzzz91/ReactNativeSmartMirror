@@ -221,10 +221,20 @@ const styles = {
     marginBottom: '10px',
   },
   settingsButtonView: {
+    opacity: 0.3,
     width: '140px',
-    height: '20px'
+    height: '20px',
+    color: 'white',
+    display: 'flex',
+    textDecoration: 'none',
+    alignItems: 'center',
+    alignContent: 'center',
+    marginTop: '5px',
+    padding: '4px 5px',
+    border: '1px white solid',
   },
   settingsButton: {
-    opacity: 0.5
+    color: 'white',
+    margin: 'auto'
   },
 };

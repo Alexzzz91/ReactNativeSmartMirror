@@ -1,5 +1,5 @@
 import { Compliments } from './Compliments'
-import { settings } from './Settings'
+import { Settings } from './Settings'
 import { reducer } from './reducer';
 import { connect } from 'react-redux';
 import { injectReducer, store} from '../../../store';
@@ -27,5 +27,5 @@ const ComplimentsWeb = ConnectedCompliments(Compliments);
 
 export {
   ComplimentsWeb,
-  settings as ComplimentsSettings
+  Settings as ComplimentsSettings
 };

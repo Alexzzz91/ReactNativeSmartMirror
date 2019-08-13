@@ -5,13 +5,6 @@ import { VariableSizeList as List } from 'react-window';
 import * as Ical from '../../../common/Ical';
 import {basic} from '../../../common/basic';
 
-// import {basic2} from '../../../common/basic2';
-// import {icloud} from '../../../common/icloud';
-// import momentRU from 'moment/locale/ru';
-
-// import DeviceInfo from 'react-native-device-info'
-// const deviceLocale = DeviceInfo.getDeviceLocale()
-
 const webcalUrls = [
   //"https://p11-calendars.icloud.com/published/2/MTM2NzAyMjI0ODEzNjcwMqI5jWSNf6penKtjCEx88rFVTg69KSsCtgSKVETp7hBEmb0puBzTnV2NyhpyWCFxMIRN9wOvOEZliDRsVJxpIr8",
   //"https://calendar.google.com/calendar/ical/nlj3voogbgmajslig5dd9bppe8%40group.calendar.google.com/public/basic.ics",
@@ -21,6 +14,7 @@ const webcalUrls = [
 class CalendarEvents extends React.PureComponent {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
       fetching: false,
       signedIn: false,

@@ -1,14 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import {setLocale } from '../../reducers/locale';
-import { Locales } from '../../i18n';
+import { SettingsComponents } from '../../common/Settings';
 
 class Settings extends React.PureComponent {
   render(){
     const { locale, setLocale } = this.props;
-
-    console.log('locale', locale);
 
     return (
       <div style={{...styles.container}}>
@@ -18,45 +14,31 @@ class Settings extends React.PureComponent {
               style={{...styles.settingsButton}}
               to='/'
             >
-            Вернуться обратно
+              <span
+                className="iconify"
+                data-icon="simple-line-icons:arrow-left"
+                data-inline="false"
+                style={{...styles.iconBack}}
+              />
+              Вернуться обратно
             </Link>
           </div>
         </div>
-        <div
-          style={{...styles.settingsLocales}}
-        >
-          {Object.keys(Locales).map((key) => {
-            return (
-              <div
-                style={{...styles.settingsButtonView}}
-                key={key}
-                selected={key === locale && "selected"}
-                onClick={() => setLocale(key)}
-              >
-                {key}
-              </div>
-            );
-          })}
-        </div>
+        {
+          Object.keys(SettingsComponents.asyncComponents)
+          .map((cKey) => {
+            let component = SettingsComponents.asyncComponents[cKey];
+            component = React.createElement(component);
+            return component;
+          })
+        }
       </div>
     );
   };
 };
 
-const mapStateToProps = (state) => {
-  return {
-    locale: state.locale,
-  }
-};
-
-const mapDispatchToProps = (dispatch) => ({
-    setLocale: (locale) => dispatch(setLocale(locale))
-});
-
-const ConnectedSettings = connect(mapStateToProps, mapDispatchToProps)(Settings);
-
 export {
-  ConnectedSettings as Settings
+  Settings
 };
 
 const styles = {
@@ -65,17 +47,27 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    backgroundColor: '#ededed26',
+    backgroundColor: '#232323e6',
+    padding: '2px',
   },
   settingsLocales: {
-    color: 'black',
+    color: 'white',
     fontSize: '24',
   },
   settingsButtonView: {
     width: '240px',
     height: '20px',
-    textAlign: 'center',
-    margin: 'auto',
+    textAlign: 'left',
+    marginLeft: 16,
+    marginTop: 6,
   },
-
+  settingsButton: {
+    color: 'white',
+    textDecoration: 'none',
+    padding: '5px 15px',
+    border: '1px white solid',
+  },
+  iconBack: {
+    marginRight: 6,
+  }
 };

@@ -1,3 +1,9 @@
+$fa-font-path: "/font/fontawesome-free/webfonts";
+
+@import '/font/fontawesome-free/scss/fontawesome';
+@import '/font/fontawesome-free/scss/solid';
+@import '/font/fontawesome-free/scss/brands';
+
 @font-face {
   font-family: OpenSans_light;
   src: url(font/Open_Sans/OpenSans-Regular.ttf); /* Путь к файлу со шрифтом */

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { injectReducer, store} from '../../../store';
 import { CalendarEvents } from './CalendarEvents';
-import { settings } from './Settings';
+import { Settings } from './Settings';
 import { reducer } from './reducer';
 
 const mapStateToProps = (state) => {
@@ -24,5 +24,5 @@ const CalendarEventsWeb = ConnectedCalendarEvents(CalendarEvents);
 
 export {
   CalendarEventsWeb,
-  settings as CalendarEventsSettings
+  Settings as CalendarEventsSettings
 };
