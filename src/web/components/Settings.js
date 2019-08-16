@@ -29,7 +29,11 @@ class Settings extends React.PureComponent {
           .map((cKey) => {
             let component = SettingsComponents.asyncComponents[cKey];
             component = React.createElement(component);
-            return component;
+            return (
+              <React.Fragment key={cKey}>
+                {component}
+              </React.Fragment>
+            );
           })
         }
       </div>
