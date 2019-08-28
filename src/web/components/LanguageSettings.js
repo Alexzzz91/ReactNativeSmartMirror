@@ -1,56 +1,51 @@
 import React from 'react';
-import Dropdown from 'react-dropdown';
 import { connect } from 'react-redux';
-import { setLocale } from '../../reducers/locale';
+import { SelectBox } from '../../common/Settings/SelectBox';
+import { changeLocale } from '../../reducers/locale';
 import { Locales } from '../../i18n';
 import { SettingsComponents, injectComponent } from '../../common/Settings';
 
 class LanguageSettings extends React.PureComponent {
-  _onSelect = (e) => {
-    console.log('onChange', e);
-    this.props.setLocale(e.value);
+  handleOnChange = (e) => {
+    const { setLocale } = this.props;
+
+    setLocale(e.value);
   }
 
-  render () {
+  render() {
     const { locale } = this.props;
 
-    console.log(121221, Object.keys(Locales).map((k) => ({ value: k, label: Locales[k]})));
-
-
-    const options = [
-      'ru', 'en'
-    ]
+    console.log('locale', locale);
 
     return (
-      <div style={{...styles.settingsLocales}}>
-        <h1>язык</h1>
-          <Dropdown
-            options={options}
-            onChange={this._onSelect}
-
-            placeholder="язык приложения"
-          />
-        </div>
+      <div style={{ ...styles.settingsLocales }}>
+        <h1>Язык интерфейса</h1>
+        <SelectBox
+          placeholder="язык приложения"
+          onChange={this.handleOnChange}
+          value={{ value: locale, label: Locales[locale] }}
+          options={Object.keys(Locales).map(l => ({ value: l, label: Locales[l] }))}
+        />
+      </div>
     );
   }
-};
+}
 
-const mapStateToProps = (state) => {
-  return {
-    locale: state.locale,
-  }
-};
+const mapStateToProps = state => ({
+  locale: state.locale,
+});
 
-const mapDispatchToProps = (dispatch) => ({
-    setLocale: (locale) => dispatch(setLocale(locale))
+const mapDispatchToProps = dispatch => ({
+  setLocale: locale => dispatch(changeLocale(locale)),
 });
 
 const ConnectedLanguageSettings = connect(mapStateToProps, mapDispatchToProps)(LanguageSettings);
 
-injectComponent(SettingsComponents, {key: 'language', component: ConnectedLanguageSettings});
+injectComponent(SettingsComponents, { key: 'language', component: ConnectedLanguageSettings });
 
 const styles = {
   settingsLocales: {
+    width: '100%',
     color: 'white',
     fontSize: '24',
   },

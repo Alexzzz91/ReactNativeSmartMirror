@@ -1,21 +1,21 @@
-import moment from "moment";
-import { rrulestr } from 'rrule'
+import moment from 'moment';
+import { rrulestr } from 'rrule';
 
- // Unescape Text re RFC 4.3.11
+// Unescape Text re RFC 4.3.11
 const text = (t) => {
-  t = t || "";
+  t = t || '';
   return (t
     .replace(/\\,/g, ',')
     .replace(/\\;/g, ';')
     .replace(/\\[nN]/g, '\n')
     .replace(/\\\\/g, '\\')
-  )
+  );
 };
 
 const parseParams = (p) => {
   var out = {}
   for (var i = 0; i< p.length; i++) {
-    if (p[i].indexOf('=') > -1){
+    if (p[i].indexOf('=') > -1) {
       var segs = p[i].split('=');
 
       out[segs[0]] = parseValue(segs.slice(1).join('='));
@@ -306,7 +306,7 @@ const handleObject = (name, val, params, ctx, stack, line) => {
   }
 
   //handling custom properties
-  if (name.match(/X\-[\w\-]+/) && stack.length > 0) {
+  if (name.match(/X\\-[\\w\\-]+/) && stack.length > 0) {
       //trimming the leading and perform storeParam
       name = name.substring(2);
       return (storeParam(name))(val, params, ctx, stack, line);
@@ -332,4 +332,4 @@ export {
   freebusyParam,
   parseICS,
   handleObject,
-}
+};

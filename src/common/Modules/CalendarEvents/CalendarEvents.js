@@ -2,6 +2,8 @@ import React from 'react';
 import { moment } from "../../../common/Moment";
 import { translate } from '../../../i18n';
 import { VariableSizeList as List } from 'react-window';
+import { Scrollbars } from 'react-custom-scrollbars';
+
 import * as Ical from '../../../common/Ical';
 import {basic} from '../../../common/basic';
 
@@ -22,8 +24,6 @@ class CalendarEvents extends React.PureComponent {
       activeCalendar: null,
       calendars: [],
       events: [],
-      name: null,
-      photoUrl: null,
       updateTime: null,
     };
     this.handleItemClick = this.handleItemClick.bind(this);
@@ -395,14 +395,21 @@ class CalendarEvents extends React.PureComponent {
             <>
               <h3 style={{...styles.header}}>{translate('Events', locale)}</h3>
               <div style={{...styles.eventRows}}>
-                <List
-                  height={250}
-                  itemCount={events.length}
-                  itemSize={this.getItemSize}
-                  width={550}
+                <Scrollbars
+                  style={{
+                    width: 525,
+                    height: 250
+                  }}
                 >
-                  {this.getRow}
-                </List>
+                  <List
+                    height={250}
+                    itemCount={events.length}
+                    itemSize={this.getItemSize}
+                    width={550}
+                  >
+                    {this.getRow}
+                  </List>
+                </Scrollbars>
               </div>
             </>
           )}

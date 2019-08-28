@@ -1,23 +1,25 @@
 import React from 'react';
 import {
-  Container, Content, Text, H1, H2, H3, Icon,
+  Container, Text, H3, Icon,
 } from 'native-base';
 import { DateTime } from 'luxon';
-import moment from "moment";
-import { View, StyleSheet, Button, TouchableOpacity, VirtualizedList} from 'react-native';
+import moment from 'moment';
+import {
+  View,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  VirtualizedList,
+} from 'react-native';
 import { translate } from '../../../i18n';
-
-import 'moment/locale/en-gb';
-
 import * as Ical from '../../../common/Ical';
-import momentRU from 'moment/locale/ru';
 
 // import DeviceInfo from 'react-native-device-info'
 // const deviceLocale = DeviceInfo.getDeviceLocale()
 
 // const webacalUrl = "https://p11-calendars.icloud.com/published/2/MTM2NzAyMjI0ODEzNjcwMqI5jWSNf6penKtjCEx88rFVTg69KSsCtgSKVETp7hBEmb0puBzTnV2NyhpyWCFxMIRN9wOvOEZliDRsVJxpIr8";
 const webacalUrls = [
-  "https://calendar.google.com/calendar/ical/nlj3voogbgmajslig5dd9bppe8%40group.calendar.google.com/public/basic.ics",
+  'https://calendar.google.com/calendar/ical/nlj3voogbgmajslig5dd9bppe8%40group.calendar.google.com/public/basic.ics',
   // "ihttps://calendar.google.com/calendar/ical/belalex.9132788%40gmail.com/public/basic.ics"
 ];
 
@@ -31,8 +33,6 @@ class CalendarEvents extends React.PureComponent {
       activeCalendar: null,
       calendars: [],
       events: [],
-      name: null,
-      photoUrl: null,
       updateTime: null,
     };
     this.handleItemClick = this.handleItemClick.bind(this);
@@ -41,7 +41,6 @@ class CalendarEvents extends React.PureComponent {
   }
 
   componentDidMount() {
-    moment.updateLocale('ru', momentRU);
     this.getByWebCal();
     setInterval(this.getByWebCal, 60000);
   }
@@ -50,22 +49,21 @@ class CalendarEvents extends React.PureComponent {
     const { updateTime } = this.state;
     const now = moment();
 
-    if (!!updateTime) {
+    if (updateTime) {
       if (updateTime.diff(now, 'minutes') < 2) {
         return;
       }
     }
     webacalUrls.forEach((webacalUrl) => {
-      fetch(webacalUrl)
-      .then((response) => {
-        this.setState({fetching: true});
-        response.text().then((text) =>  {
+      fetch(webacalUrl).then((response) => {
+        this.setState({ fetching: true });
+        response.text().then((text) => {
           const calendarEvents = Ical.parseICS(text);
 
           this.setEvents(this.createEventList(calendarEvents));
-        })
-      })
-    })
+        });
+      });
+    });
   }
 
   signUpdate(signedIn, accessToken) {

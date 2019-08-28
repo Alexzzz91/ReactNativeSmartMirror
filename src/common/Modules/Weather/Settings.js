@@ -1,24 +1,21 @@
 import React from 'react';
-import Dropdown from 'react-dropdown';
+import { SelectBox } from '../../Settings/SelectBox';
 import { SettingsComponents, injectComponent } from '../../Settings';
 
 class Settings extends React.PureComponent {
-  _onSelect = () => {
-    console.log('onChange');
-  }
-
   render () {
     const options = [
-      'one1', 'two1', 'three1'
+      { value: 'chocolate', label: 'Chocolate' },
+      { value: 'strawberry', label: 'Strawberry' },
+      { value: 'vanilla', label: 'Vanilla' }
     ];
-    const defaultOption = options[0];
     return (
-      <Dropdown
-        options={options}
-        onChange={this._onSelect}
-        value={defaultOption}
-        placeholder="Формат времени"
-      />
+       <div style={{...styles.settingsLocales}}>
+        <h1>Погода</h1>
+        <SelectBox
+          options={options}
+        />
+      </div>
     );
   }
 };
@@ -26,3 +23,12 @@ class Settings extends React.PureComponent {
 injectComponent(SettingsComponents, {key: 'weather', component: Settings});
 
 export { Settings };
+
+const styles = {
+  settingsLocales: {
+    width: '100%',
+    color: 'white',
+    fontSize: '24',
+  },
+};
+

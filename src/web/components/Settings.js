@@ -1,58 +1,89 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Scrollbars } from 'react-custom-scrollbars';
 import { SettingsComponents } from '../../common/Settings';
 
 class Settings extends React.PureComponent {
-  render(){
-    const { locale, setLocale } = this.props;
+  constructor(props) {
+    super(props);
+
+    this.styles = getStyles();
+  }
+
+  render() {
+    const { styles } = this;
 
     return (
-      <div style={{...styles.container}}>
-        <div style={{...styles.topRow}}>
-          <div style={{...styles.settingsButtonView}}>
-            <Link
-              style={{...styles.settingsButton}}
-              to='/'
-            >
-              <span
-                className="iconify"
-                data-icon="simple-line-icons:arrow-left"
-                data-inline="false"
-                style={{...styles.iconBack}}
-              />
-              Вернуться обратно
-            </Link>
+      <Scrollbars
+        style={{
+          backgroundColor: 'rgba (1, 1, 1, 0.4)',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <div style={{ ...styles.container }}>
+          <div style={{ ...styles.topRow }}>
+            <div style={{ ...styles.settingsButtonView }}>
+              <Link
+                style={{ ...styles.settingsButton }}
+                to="/"
+              >
+                <span
+                  className="iconify"
+                  data-icon="simple-line-icons:arrow-left"
+                  data-inline="false"
+                  style={{ ...styles.iconBack }}
+                />
+                Вернуться обратно
+              </Link>
+            </div>
           </div>
+          {Object.keys(SettingsComponents.asyncComponents)
+            .map((cKey) => {
+              let component = SettingsComponents.asyncComponents[cKey];
+              component = React.createElement(component);
+              return (
+                <div
+                  key={cKey}
+                  style={{ ...styles.settingBlock }}
+                >
+                  {component}
+                </div>
+              );
+            })
+          }
         </div>
-        {
-          Object.keys(SettingsComponents.asyncComponents)
-          .map((cKey) => {
-            let component = SettingsComponents.asyncComponents[cKey];
-            component = React.createElement(component);
-            return (
-              <React.Fragment key={cKey}>
-                {component}
-              </React.Fragment>
-            );
-          })
-        }
-      </div>
+      </Scrollbars>
     );
-  };
-};
+  }
+}
 
 export {
-  Settings
+  Settings as default,
+  Settings,
 };
 
-const styles = {
+const getStyles = params => ({
   container: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    backgroundColor: '#232323e6',
-    padding: '2px',
+    flexFlow: 'row wrap',
+    alignContent: 'space-between',
+    backgroundColor: params && params.bg ? params.bg : 'rgba(1, 1, 1, 0.6)',
+    padding: '8px',
+  },
+  topRow: {
+    width: '100%',
+    display: 'flex',
+    padding: '4px',
+    alignContent: 'center',
+    minHeight: '35px',
+    borderRadius: '4px',
+    marginBottom: '5%',
+    boxShadow: '2px 4px 40px 50px black',
+    backgroundColor: 'rgba(1, 1, 1, 0.8)',
   },
   settingsLocales: {
     color: 'white',
@@ -73,5 +104,20 @@ const styles = {
   },
   iconBack: {
     marginRight: 6,
-  }
-};
+  },
+  settingBlock: {
+    display: 'flex',
+    flex: 1,
+    minWidth: '46%',
+    maxWidth: '46%',
+    border: '1px solid black',
+    maxHeight: '500px',
+    margin: '1%',
+    marginBottom: '5%',
+    padding: '8px 12px 50px 12px',
+    boxSizing: 'border-box',
+    borderRadius: '2px',
+    backgroundColor: 'rgba(1, 1, 1, 0.8)',
+    boxShadow: 'black 0px 0px 40px 40px',
+  },
+});

@@ -7,7 +7,6 @@ const initialState = {
   },
   timeParams: {
     status: true,
-    useAmFormat: 'A',
     format: 'hh:mm',
   },
   secondsParams: {

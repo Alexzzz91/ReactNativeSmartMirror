@@ -6,5 +6,5 @@ export default {
   Tomorrow: 'завтра',
   Running: 'Заканчивается через',
 
-  Events: "События",
+  Events: 'События',
 };

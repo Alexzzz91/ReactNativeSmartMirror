@@ -17,7 +17,7 @@ class Clock extends React.PureComponent {
     const now = moment();
     return {
       dateString: now.format(dateParams.format),
-      time: now.format(`${timeParams.format} ${timeParams.useAmFormat}`),
+      time: now.format(timeParams.format),
       seconds: now.format(secondsParams.format),
     };
   }

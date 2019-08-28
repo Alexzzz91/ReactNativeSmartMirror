@@ -41,6 +41,8 @@ class Home extends React.PureComponent {
       urgency: 7,
       timeFormat: 'absolute',
     };
+
+    this.styles = getStyles();
   }
 
   componentDidMount() {
@@ -49,8 +51,8 @@ class Home extends React.PureComponent {
   }
 
   fetchAsync = async (url) => {
-    let response = await fetch(url);
-    let data = await response.json();
+    const response = await fetch(url);
+    const data = await response.json();
 
     return data;
   }
@@ -59,62 +61,59 @@ class Home extends React.PureComponent {
     const { updateTime } = this.state;
     const now = moment();
 
-    if (!!updateTime) {
+    if (updateTime) {
       if (updateTime.diff(now, 'minutes') < 2) {
         return;
       }
     }
 
-    this.setState({ isLoading: true});
+    this.setState({ isLoading: true });
 
     try {
       this.fetchAsync(`https://api.openweathermap.org/data/2.5/forecast?appid=${API_KEY}&units=metric&lang=ru&q=Moscow,RU`)
-      .then(({list}) => {
-        let item;
-        let weatherCondition;
-        const days = [];
-        for(let i = 0; i < list.length; i++) {
-          item = list[i];
-          weatherCondition = item.weather[0].main;
-          const dateTime = moment(item.dt_txt);
-          const day = dateTime.format('ddd')
-          if(!days[day]) {
-            days.push({
-              weatherCondition,
-              tempMax: Math.ceil(item.main.temp_max.toFixed(1)),
-              tempMin: Math.ceil(item.main.temp_min.toFixed(1)),
-              date: day,
-            });
-            days[day] = true;
+        .then(({ list }) => {
+          let item;
+          let weatherCondition;
+          const days = [];
+          for (let i = 0; i < list.length; i++) {
+            item = list[i];
+            weatherCondition = item.weather[0].main;
+            const dateTime = moment(item.dt_txt);
+            const day = dateTime.format('ddd');
+            if (!days[day]) {
+              days.push({
+                weatherCondition,
+                tempMax: Math.ceil(item.main.temp_max.toFixed(1)),
+                tempMin: Math.ceil(item.main.temp_min.toFixed(1)),
+                date: day,
+              });
+              days[day] = true;
+            }
           }
-        };
-        this.setState({days});
-      })
-      .catch(reason => console.log(reason.message))
+          this.setState({ days });
+        })
+        .catch(reason => console.log(reason.message));
       this.fetchAsync(`https://api.openweathermap.org/data/2.5/weather?&appid=${API_KEY}&units=metric&lang=ru&q=Moscow,RU`)
         .then((item) => {
-          let temperature;
-          let weatherCondition;
-          let weatherDescription;
-          temperature = item.main.temp;
-          weatherCondition = item.weather[0].main;
-          weatherDescription = item.weather[0].description;
+          const temperature = item.main.temp;
+          const weatherCondition = item.weather[0].main;
+          const weatherDescription = item.weather[0].description;
           this.setState({
             temperature: Math.ceil(temperature.toFixed(1)),
             weatherCondition,
             weatherDescription,
             // @TODO пофиксить
             city: 'Москве',
-            isLoading: false
+            isLoading: false,
           });
         })
-        .catch(reason => console.log(reason.message))
+        .catch(reason => console.log(reason.message));
     } catch (e) {
-      console.log("error", e)
+      console.log('error', e);
     }
 
     this.setState({
-      updateTime: moment()
+      updateTime: moment(),
     });
   }
 
@@ -129,17 +128,19 @@ class Home extends React.PureComponent {
       city,
     } = this.state;
 
+    const { styles } = this;
+
     return (
-      <div style={{...styles.container}}>
-        <div style={{...styles.topRow}}>
-          <div style={{...styles.topRows}}>
-            <Clock/>
-            <CalendarEvents config={this.config}/>
+      <div style={{ ...styles.container }}>
+        <div style={{ ...styles.topRow }}>
+          <div style={{ ...styles.topRows }}>
+            <Clock />
+            <CalendarEvents config={this.config} />
           </div>
-          <div style={{...styles.settingsButtonView}}>
+          <div style={{ ...styles.settingsButtonView }}>
             <Link
-              style={{...styles.settingsButton}}
-              to='/settings'
+              style={{ ...styles.settingsButton }}
+              to="/settings"
             >
               Settings
             </Link>
@@ -161,7 +162,7 @@ class Home extends React.PureComponent {
             )}
           </div>
         </div>
-        <div style={{...styles.middleRow}}>
+        <div style={{ ...styles.middleRow }}>
           {isLoading
               ? (
                 <span>
@@ -171,7 +172,7 @@ class Home extends React.PureComponent {
                 <Compliments weather={weatherCondition}/>
           )}
         </div>
-        <div style={{...styles.footerRow}}>
+        <div style={{ ...styles.footerRow }}>
           <Lenta />
         </div>
       </div>
@@ -181,13 +182,14 @@ class Home extends React.PureComponent {
 
 export default Home;
 
-const styles = {
+const getStyles = (params) => ({
   container: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     backgroundColor: '#000',
+    textShadow: '0 0 15px rgba(255,255,255,.5), 0 0 10px rgba(255,255,255,.5)',
   },
   topRow: {
     flex: 3,
@@ -237,4 +239,4 @@ const styles = {
     color: 'white',
     margin: 'auto'
   },
-};
+});
