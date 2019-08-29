@@ -361,70 +361,72 @@ class CalendarEvents extends React.PureComponent {
     } = this.state;
 
     return (
-        <div style={{transition: 'opacity 1s ease 0s', opacity: 1}}>
-          { !events.length  && !signedIn && !fetching && (
-            <button
-                onClick={(e) => this.handleItemClick(e, 'sign-in')}
-                style={{...styles.button}}
-            >
-              Авторизоваться в гугле
-            </button>
-          )}
-          { !events.length && !fetching &&
-            <div style={{...styles.eventRows}}>
-              <span> Выбери календарь </span>
-              {calendars.map((calendar, i) =>
-                <div key={calendar.id+i}>
-                  <div style={{...styles.eventRow}}>
-                    <i
-                      className={`icon-calendar`}
-                      style={{...styles.eventIcon}}
-                    />
-                    <div
-                      onClick={() => this.setActiveCalendars(calendar)}
-                      style={{...styles.calendarTitle}}
-                    >
-                      <span> {calendar.summary} </span>
-                    </div>
+      <div style={{ transition: 'opacity 1s ease 0s', opacity: 1 }}>
+        { !events.length  && !signedIn && !fetching && (
+          <button
+            type="button"
+            onClick={e => this.handleItemClick(e, 'sign-in')}
+            style={{ ...styles.button }}
+          >
+            Авторизоваться в гугле
+          </button>
+        )}
+        { !events.length && !fetching && (
+          <div style={{ ...styles.eventRows }}>
+            <span> {translate('Change Calendar', locale)} </span>
+            {calendars.map((calendar, i) =>
+              <div key={calendar.id + i}>
+                <div style={{...styles.eventRow}}>
+                  <i
+                    className={`icon-calendar`}
+                    style={{...styles.eventIcon}}
+                  />
+                  <div
+                    onClick={() => this.setActiveCalendars(calendar)}
+                    style={{...styles.calendarTitle}}
+                  >
+                    <span> {calendar.summary} </span>
                   </div>
                 </div>
-              )}
-            </div>
-          }
-          {!!events.length && (
-            <>
-              <h3 style={{...styles.header}}>{translate('Events', locale)}</h3>
-              <div style={{...styles.eventRows}}>
-                <Scrollbars
-                  style={{
-                    width: 525,
-                    height: 250
-                  }}
-                >
-                  <List
-                    height={250}
-                    itemCount={events.length}
-                    itemSize={this.getItemSize}
-                    width={550}
-                  >
-                    {this.getRow}
-                  </List>
-                </Scrollbars>
               </div>
-            </>
-          )}
-          {signedIn &&
-           !!activeCalendar &&
-            !events.length && (
-            <h3 className="module-header">Ближайших событий нет</h3>
-          )}
-        </div>
+            )}
+          </div>
+        )}
+        {!!events.length && (
+          <>
+            <h3 style={{...styles.header}}>{translate('Events', locale)}</h3>
+            <div style={{...styles.eventRows}}>
+              <Scrollbars
+                style={{
+                  width: 525,
+                  height: 250
+                }}
+              >
+                <List
+                  height={250}
+                  itemCount={events.length}
+                  itemSize={this.getItemSize}
+                  width={550}
+                >
+                  {this.getRow}
+                </List>
+              </Scrollbars>
+            </div>
+          </>
+        )}
+        {signedIn &&
+          !!activeCalendar &&
+          !events.length && (
+          <h3 className="module-header">Ближайших событий нет</h3>
+        )}
+      </div>
     );
   }
-};
+}
 
 export {
-  CalendarEvents
+  CalendarEvents as default,
+  CalendarEvents,
 };
 
 const styles = {

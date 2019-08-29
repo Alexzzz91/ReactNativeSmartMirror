@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { SelectBox } from '../../common/Settings/SelectBox';
 import { changeLocale } from '../../reducers/locale';
-import { Locales } from '../../i18n';
+import { Locales, translate } from '../../i18n';
 import { SettingsComponents, injectComponent } from '../../common/Settings';
 
 class LanguageSettings extends React.PureComponent {
@@ -19,9 +19,12 @@ class LanguageSettings extends React.PureComponent {
 
     return (
       <div style={{ ...styles.settingsLocales }}>
-        <h1>Язык интерфейса</h1>
+        <h2>
+          { translate('Language', locale) }
+        </h2>
         <SelectBox
-          placeholder="язык приложения"
+          label={translate('Language', locale)}
+          placeholder={translate('Language', locale)}
           onChange={this.handleOnChange}
           value={{ value: locale, label: Locales[locale] }}
           options={Object.keys(Locales).map(l => ({ value: l, label: Locales[l] }))}

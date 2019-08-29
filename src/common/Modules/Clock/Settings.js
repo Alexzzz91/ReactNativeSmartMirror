@@ -2,47 +2,49 @@ import React from 'react';
 import { SelectBox } from '../../Settings/SelectBox';
 import { moment } from '../../Moment';
 import { SettingsComponents, injectComponent } from '../../Settings';
+import { translate } from '../../../i18n';
 
-class Settings extends React.PureComponent {
-  render() {
-    const dateFormats = [
-      { value: 'dddd, MMMM Do YYYY', label: moment().format('dddd, MMMM Do YYYY') },
-      { value: 'dddd', label: moment().format('dddd') },
-      { value: 'MMM Do YY', label: moment().format('MMM Do YY') },
-    ];
+const Settings = ({ locale }) => {
+  const dateFormats = [
+    { value: 'off', label: translate('Off', locale) },
+    { value: 'dddd, MMMM Do YYYY', label: moment().format('dddd, MMMM Do YYYY') },
+    { value: 'dddd', label: moment().format('dddd') },
+    { value: 'MMM Do YY', label: moment().format('MMM Do YY') },
+  ];
 
-    const timeFormats = [
-      { value: 'h:mm', label: moment().format('h:mm') },
-      { value: 'h:mm A', label: moment().format('h:mm A') },
-    ];
+  const timeFormats = [
+    { value: 'off', label: translate('Off', locale) },
+    { value: 'h:mm', label: moment().format('h:mm') },
+    { value: 'h:mm A', label: moment().format('h:mm A') },
+  ];
 
-    const secondsFormats = [
-      { value: 'ss', label: moment().format('ss') },
-      { value: 'SS', label: moment().format('SS') },
-    ];
+  const secondsFormats = [
+    { value: 'off', label: translate('Off', locale) },
+    { value: 'ss', label: '6' },
+    { value: 'SS', label: '06' },
+  ];
 
-    return (
-      <div style={{ ...styles.settingsLocales }}>
-        <h1>Время и Дата</h1>
-        <SelectBox
-          placeholder="Формат даты"
-          onChange={this.handleOnChange}
-          options={dateFormats}
-        />
-        <SelectBox
-          placeholder="Формат времени"
-          onChange={this.handleOnChange}
-          options={timeFormats}
-        />
-        <SelectBox
-          placeholder="Формат секунд"
-          onChange={this.handleOnChange}
-          options={secondsFormats}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div style={{ ...styles.settingsLocales }}>
+      <h3> Время и Дата </h3>
+      <SelectBox
+        label="Формат даты"
+        placeholder="Формат даты"
+        options={dateFormats}
+      />
+      <SelectBox
+        label="Формат времени"
+        placeholder="Формат времени"
+        options={timeFormats}
+      />
+      <SelectBox
+        label="Формат секунд"
+        placeholder="Формат секунд"
+        options={secondsFormats}
+      />
+    </div>
+  );
+};
 
 injectComponent(SettingsComponents, { key: 'clock', component: Settings });
 

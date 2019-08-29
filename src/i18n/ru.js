@@ -6,5 +6,8 @@ export default {
   Tomorrow: 'завтра',
   Running: 'Заканчивается через',
 
+  Language: 'Язык приложения',
   Events: 'События',
+  'Change Calendar': 'Выбери календарь',
+  Off: 'отключить',
 };

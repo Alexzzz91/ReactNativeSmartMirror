@@ -16,7 +16,7 @@ class Settings extends React.PureComponent {
     return (
       <Scrollbars
         style={{
-          backgroundColor: 'rgba (1, 1, 1, 0.4)',
+          backgroundColor: 'rgba (1, 1, 1, 0.9)',
           width: '100%',
           height: '100%',
         }}
@@ -71,8 +71,10 @@ const getStyles = params => ({
     justifyContent: 'space-between',
     flexFlow: 'row wrap',
     alignContent: 'space-between',
-    backgroundColor: params && params.bg ? params.bg : 'rgba(1, 1, 1, 0.6)',
+    backgroundColor: params && params.bg ? params.bg : 'rgba(1, 1, 1, 0.97)',
     padding: '8px',
+    paddingBottom: '50px',
+    minHeight: '100vh',
   },
   topRow: {
     width: '100%',
@@ -108,16 +110,16 @@ const getStyles = params => ({
   settingBlock: {
     display: 'flex',
     flex: 1,
-    minWidth: '46%',
-    maxWidth: '46%',
-    border: '1px solid black',
+    minWidth: '48%',
+    maxWidth: '48%',
     maxHeight: '500px',
     margin: '1%',
-    marginBottom: '5%',
-    padding: '8px 12px 50px 12px',
+    marginBottom: '2%',
+    padding: '4px 6px 25px 6px',
     boxSizing: 'border-box',
+    border: '1px solid white',
     borderRadius: '2px',
     backgroundColor: 'rgba(1, 1, 1, 0.8)',
-    boxShadow: 'black 0px 0px 40px 40px',
+    boxShadow: 'black 0px 0px 10px 20px, white 0px 0px 6px 12px',
   },
 });

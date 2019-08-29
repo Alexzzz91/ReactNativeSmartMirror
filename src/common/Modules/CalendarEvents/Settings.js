@@ -2,28 +2,29 @@ import React from 'react';
 import { SelectBox } from '../../Settings/SelectBox';
 import { SettingsComponents, injectComponent } from '../../Settings';
 
-class Settings extends React.PureComponent {
-  render () {
-    const options = [
-      { value: 'chocolate', label: 'Chocolate' },
-      { value: 'strawberry', label: 'Strawberry' },
-      { value: 'vanilla', label: 'Vanilla' }
-    ];
+const Settings = () => {
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' },
+  ];
 
-    return (
-      <div style={{...styles.settingsLocales}}>
-        <h1>Календарь на сегодня</h1>
-        <SelectBox
-          options={options}
-        />
-      </div>
-    );
-  }
+  return (
+    <div style={{ ...styles.settingsLocales }}>
+      <h3>Календарь на сегодня</h3>
+      <SelectBox
+        options={options}
+      />
+    </div>
+  );
 };
 
-injectComponent(SettingsComponents, {key: 'calendarEvents', component: Settings});
+injectComponent(SettingsComponents, { key: 'calendarEvents', component: Settings });
 
-export { Settings };
+export {
+  Settings as default,
+  Settings,
+};
 
 
 const styles = {

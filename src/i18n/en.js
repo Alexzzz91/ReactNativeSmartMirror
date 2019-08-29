@@ -6,5 +6,8 @@ export default {
   Tomorrow: 'tomorrow',
   Running: 'Ends in',
 
+  Language: 'Language',
   Events: 'Events',
+  'Change Calendar': 'Change Calendar',
+  Off: 'off',
 };

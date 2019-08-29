@@ -182,7 +182,7 @@ class Home extends React.PureComponent {
 
 export default Home;
 
-const getStyles = (params) => ({
+const getStyles = () => ({
   container: {
     flex: 1,
     display: 'flex',
