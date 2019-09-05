@@ -28,6 +28,7 @@ export function translate(message, locale = DEFAULT_LOCALE) {
     if (Translations[DEFAULT_LOCALE] && Translations[DEFAULT_LOCALE][message]) {
       return Translations[DEFAULT_LOCALE][message];
     }
+    return message;
   }
 
   return '???';

@@ -12,14 +12,14 @@ const config = {
   blacklist: ['status'],
 };
 
-const createReducer = (asyncReducers) => persistCombineReducers(config, {
+const createReducer = asyncReducers => persistCombineReducers(config, {
   ...reducers,
-  ...asyncReducers
+  ...asyncReducers,
 });
 
 const middleware = [thunk];
 
-const configureStore = (asyncReducers = {}) => {
+const configureStore = () => {
   const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   const store = createStore(
@@ -41,8 +41,9 @@ const configureStore = (asyncReducers = {}) => {
 const injectReducer = (store, { key, reducer }) => {
   if (Object.hasOwnProperty.call(store.asyncReducers, key)) return;
 
+  // eslint-disable-next-line no-param-reassign
   store.asyncReducers[key] = reducer;
-  store.replaceReducer(createReducer(store.asyncReducers))
+  store.replaceReducer(createReducer(store.asyncReducers));
 };
 
 const { persistor, store } = configureStore();
@@ -50,5 +51,5 @@ const { persistor, store } = configureStore();
 export {
   persistor,
   store,
-  injectReducer
-}
+  injectReducer,
+};

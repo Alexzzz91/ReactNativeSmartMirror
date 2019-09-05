@@ -5,6 +5,17 @@ $fa-font-path: "/font/fontawesome-free/webfonts";
 @import '/font/fontawesome-free/scss/brands';
 
 @font-face {
+  font-family: AvenirNextCyr;
+  src: url(font/AvenirNextCyr/AvenirNextCyr-Regular.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+  font-family: Roboto_condensed_light;
+  src: url(font/roboto/Roboto-Regular.ttf); /* Путь к файлу со шрифтом */
+}
+
+
+@font-face {
   font-family: OpenSans_light;
   src: url(font/Open_Sans/OpenSans-Regular.ttf); /* Путь к файлу со шрифтом */
 }
@@ -401,6 +412,7 @@ body,
   padding: 0;
   margin: 0;
   color: white;
+  font-family: Courier, monospace;
 }
 
 h2,

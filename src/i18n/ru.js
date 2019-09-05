@@ -10,4 +10,6 @@ export default {
   Events: 'События',
   'Change Calendar': 'Выбери календарь',
   Off: 'отключить',
+  Settings: 'Настройки',
+  Fonts: 'Шрифты',
 };

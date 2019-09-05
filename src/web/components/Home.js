@@ -1,15 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import { ClockWeb as Clock } from '../../common/Modules/Clock';
 import { CalendarEventsWeb as CalendarEvents } from '../../common/Modules/CalendarEvents';
 import { WeatherWeb as Weather } from '../../common/Modules/Weather';
 import { ComplimentsWeb as Compliments } from '../../common/Modules/Compliments';
 import { LentaWeb as Lenta } from '../../common/Modules/Lenta';
+import { FaceWeb as Face } from '../../common/Modules/FaceApi';
+import { translate } from '../../i18n';
 
 import { moment } from '../../common/Moment';
 
-import { API_KEY } from '../../common/WeatherAPIKey'
+import { API_KEY } from '../../common/WeatherAPIKey';
 
 /*
 import { TextClock } from './TextClock';
@@ -27,7 +30,6 @@ class Home extends React.PureComponent {
       weatherDescription: null,
       days: [],
       city: null,
-      showTextTime: false,
     };
 
     this.config = {
@@ -42,12 +44,20 @@ class Home extends React.PureComponent {
       timeFormat: 'absolute',
     };
 
-    this.styles = getStyles();
+    this.styles = getStyles({ font: props.fonts.current });
   }
 
   componentDidMount() {
     this.fetchWeather();
     setInterval(this.fetchWeather, 60000);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { fonts } = this.props;
+
+    if (prevProps.fonts.current !== fonts.current) {
+      this.styles = getStyles({ font: fonts.current });
+    }
   }
 
   fetchAsync = async (url) => {
@@ -75,7 +85,7 @@ class Home extends React.PureComponent {
           let item;
           let weatherCondition;
           const days = [];
-          for (let i = 0; i < list.length; i++) {
+          for (let i = 0; i < list.length; i += 1) {
             item = list[i];
             weatherCondition = item.weather[0].main;
             const dateTime = moment(item.dt_txt);
@@ -128,6 +138,8 @@ class Home extends React.PureComponent {
       city,
     } = this.state;
 
+    const { locale } = this.props;
+    console.log('this.props', this.props);
     const { styles } = this;
 
     return (
@@ -142,47 +154,58 @@ class Home extends React.PureComponent {
               style={{ ...styles.settingsButton }}
               to="/settings"
             >
-              Settings
+              {translate('Settings', locale)}
             </Link>
           </div>
           <div>
-            {isLoading ?
-              (
-                <span>
-                  Загружаются данные о погоде
-                </span>
-              ) : (
-                <Weather
-                   weather={weatherCondition}
-                   temperature={temperature}
-                   description={weatherDescription}
-                   days={days}
-                   city={city}
-                />
+            {isLoading ? (
+              <span>
+                Загружаются данные о погоде
+              </span>
+            ) : (
+              <Weather
+                weather={weatherCondition}
+                temperature={temperature}
+                description={weatherDescription}
+                days={days}
+                city={city}
+              />
             )}
           </div>
         </div>
         <div style={{ ...styles.middleRow }}>
           {isLoading
-              ? (
-                <span>
-                  Загружаются данные о погоде
-                </span>
-              ) : (
-                <Compliments weather={weatherCondition}/>
-          )}
+            ? (
+              <span>
+                Загружаются данные о погоде
+              </span>
+            ) : (
+              <Compliments weather={weatherCondition}/>
+            )}
         </div>
         <div style={{ ...styles.footerRow }}>
           <Lenta />
         </div>
+        <Face />
       </div>
-    )
+    );
   }
 }
 
-export default Home;
+const mapStateToProps = state => ({
+  locale: state.common.locale,
+  fonts: state.common.fonts,
+});
 
-const getStyles = () => ({
+const ConnectedHome = connect(mapStateToProps)(Home);
+
+export {
+  ConnectedHome as default,
+  ConnectedHome as Home,
+};
+
+
+const getStyles = options => ({
   container: {
     flex: 1,
     display: 'flex',
@@ -190,6 +213,7 @@ const getStyles = () => ({
     justifyContent: 'space-between',
     backgroundColor: '#000',
     textShadow: '0 0 15px rgba(255,255,255,.5), 0 0 10px rgba(255,255,255,.5)',
+    fontFamily: !!options && !!options.font ? options.font : 'AvenirNextCyr',
   },
   topRow: {
     flex: 3,
@@ -212,7 +236,7 @@ const getStyles = () => ({
     alignContent: 'center',
     textAlign: 'center',
   },
-  footerRow:{
+  footerRow: {
     flex: 1,
     width: '100%',
     flexDirection: 'column',
@@ -237,6 +261,6 @@ const getStyles = () => ({
   },
   settingsButton: {
     color: 'white',
-    margin: 'auto'
+    margin: 'auto',
   },
 });

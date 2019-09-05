@@ -7,7 +7,7 @@ import { PersistGate } from 'redux-persist/es/integration/react';
 
 import { persistor, store } from '../store/index';
 import * as serviceWorker from './serviceWorker';
-import './components/LanguageSettings';
+import './components/CommonSettings';
 import Routes from './routes/index';
 
 // Components

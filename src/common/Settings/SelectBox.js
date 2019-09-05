@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 
-const customStyles = {
+const getCustomStyles = styles => ({
   option: (provided, state) => {
     let color = state.isSelected ? '#8bf3fd' : 'white';
 
@@ -14,12 +14,14 @@ const customStyles = {
       background: '#191919',
       color,
       padding: 10,
+      ...(styles && styles.option ? { ...styles.option() } : {}),
     };
   },
   control: () => ({
     // none of react-select's styles are passed to <Control />
     width: '100%',
     display: 'flex',
+    ...(styles && styles.control ? { ...styles.control() } : {}),
   }),
   singleValue: (provided) => {
     const opacity = 1;
@@ -31,19 +33,23 @@ const customStyles = {
       opacity,
       transition,
       color,
+      ...(styles && styles.singleValue ? { ...styles.singleValue() } : {}),
     };
   },
-};
+});
 
 const SelectBox = (props) => {
-  const { label } = props;
+  const { label, styles } = props;
+
+  const selectBoxStyles = getStyles();
 
   const id = Math.round(Math.random() * 100);
+
   return (
-    <form style={{ ...styles.form }}>
+    <form style={{ ...selectBoxStyles.form }}>
       {label && (
         <label
-          style={{ ...styles.label }}
+          style={{ ...selectBoxStyles.label }}
           htmlFor={id}
         >
           { label }
@@ -51,7 +57,7 @@ const SelectBox = (props) => {
       }
       <Select
         id={id}
-        styles={customStyles}
+        styles={getCustomStyles(styles)}
         {...props}
       />
     </form>
@@ -65,7 +71,7 @@ export {
 };
 
 
-const styles = {
+const getStyles = () => ({
   form: {
     position: 'relative',
     border: '1px solid white',
@@ -79,4 +85,4 @@ const styles = {
     background: 'black',
     left: '5px',
   },
-};
+});

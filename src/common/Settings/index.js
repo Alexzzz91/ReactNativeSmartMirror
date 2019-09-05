@@ -1,36 +1,32 @@
 const components = {};
 
-const replaceComponents = (newComponents) => {
-  return{
-    ...components,
-    ...newComponents
-  }
-};
+const replaceComponents = newComponents => ({
+  ...components,
+  ...newComponents,
+});
 
 const createComponents = (asyncComponents = {}) => ({
   ...components,
-  ...asyncComponents
+  ...asyncComponents,
 });
 
 const getComponents = () => {
-  const components = createComponents(components);
-  console.log('components123123', components);
+  const newComponents = createComponents(components);
 
-  return (asyncComponents = {}) => {
-    components.asyncComponents = {};
-    components.replaceComponents = replaceComponents;
+  return () => {
+    newComponents.asyncComponents = {};
+    newComponents.replaceComponents = replaceComponents;
 
-    console.log('components 123123', components);
-    return components;
-  }
+    return newComponents;
+  };
 };
 
-const injectComponent = (components, { key, component }) => {
-  console.log('components', components);
+const injectComponent = (injComponents = {}, { key, component }) => {
   // if (Object.hasOwnProperty.call(components.asyncComponents, key)) return;
 
-  components.asyncComponents[key] = component;
-  return components.replaceComponents(createComponents(components.asyncComponents));
+  // eslint-disable-next-line no-param-reassign
+  injComponents.asyncComponents[key] = component;
+  return injComponents.replaceComponents(createComponents(injComponents.asyncComponents));
 };
 
 const SettingsComponents = getComponents()();

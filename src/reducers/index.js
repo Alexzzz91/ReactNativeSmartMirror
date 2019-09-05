@@ -1,4 +1,4 @@
-import locale from './locale';
+import common from './common';
 
 const rehydrated = (state = false, action) => {
   switch (action.type) {
@@ -11,5 +11,5 @@ const rehydrated = (state = false, action) => {
 
 export default {
   rehydrated,
-  locale,
+  common,
 };

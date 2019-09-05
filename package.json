@@ -38,6 +38,7 @@
     "expo-app-auth": "4.0.0",
     "expo-google-sign-in": "4.0.0",
     "expokit": "32.1.1",
+    "face-api.js": "^0.20.1",
     "firebase": "5.8.3",
     "jsc-android": "241213.1.0",
     "luxon": "1.12.1",

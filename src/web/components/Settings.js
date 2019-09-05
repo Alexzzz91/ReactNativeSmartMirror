@@ -117,9 +117,8 @@ const getStyles = params => ({
     marginBottom: '2%',
     padding: '4px 6px 25px 6px',
     boxSizing: 'border-box',
-    border: '1px solid white',
     borderRadius: '2px',
     backgroundColor: 'rgba(1, 1, 1, 0.8)',
-    boxShadow: 'black 0px 0px 10px 20px, white 0px 0px 6px 12px',
+    boxShadow: 'black 0px 0px 8px 10px, white 0px 0px 3px 6px',
   },
 });

@@ -5,7 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 import TemplateNothing from '../components/Templates/Nothing';
 
 // Routes
-import Home from '../components/Home';
+import { Home } from '../components/Home';
 import { Settings } from '../components/Settings';
 
 // import Error from '../components/Error';
