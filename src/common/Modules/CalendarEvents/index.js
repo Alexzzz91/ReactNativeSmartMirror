@@ -5,15 +5,16 @@ import { Settings } from './Settings';
 import { reducer } from './reducer';
 
 const mapStateToProps = (state) => {
-  return {
-    locale: state.locale
-  }
+	console.log('state', state);
+  	return {
+    	locale: state.locale
+  	}
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {
+  	return {
 
-  };
+  	};
 }
 
 const ConnectedCalendarEvents = (Module) => connect(mapStateToProps, mapDispatchToProps)(Module);

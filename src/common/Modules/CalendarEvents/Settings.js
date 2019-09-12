@@ -9,6 +9,7 @@ const Settings = () => {
     { value: 'vanilla', label: 'Vanilla' },
   ];
 
+
   return (
     <div style={{ ...styles.settingsLocales }}>
       <h3>Календарь на сегодня</h3>
@@ -27,10 +28,10 @@ export {
 };
 
 
-const styles = {
+const styles = () => ({
   settingsLocales: {
     width: '100%',
     color: 'white',
     fontSize: '24',
   },
-};
+});
