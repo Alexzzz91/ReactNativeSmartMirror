@@ -1,7 +1,8 @@
 {
   "short_name": "React Smart Mirror",
   "name": "React(web/react-native) Smart Mirror",
-  "start_url": "/",
+  "start_url": "/?homescreen=1",
+  "scope": "/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#000000",
