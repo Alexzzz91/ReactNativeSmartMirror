@@ -1,0 +1,39 @@
+{
+  "env": {
+    "development": {
+      "plugins": [
+        "dynamic-import-node",
+        "react-hot-loader/babel",
+      ]
+    }
+  },
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["./", "./src"]
+      }
+    ],
+    "add-module-exports",
+    "loadable-components/babel",
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "helpers": false
+      }
+    ]
+  ],
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": "last 2 versions",
+          "node": "current"
+        }
+      }
+    ],
+    "@babel/preset-react",
+    "@babel/preset-flow"
+  ]
+}

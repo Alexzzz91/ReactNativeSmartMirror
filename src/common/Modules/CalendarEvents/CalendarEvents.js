@@ -5,18 +5,17 @@ import { VariableSizeList as List } from 'react-window';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 import * as Ical from '../../../common/Ical';
-import {basic} from '../../../common/basic';
 
 const webcalUrls = [
-  //"https://p11-calendars.icloud.com/published/2/MTM2NzAyMjI0ODEzNjcwMqI5jWSNf6penKtjCEx88rFVTg69KSsCtgSKVETp7hBEmb0puBzTnV2NyhpyWCFxMIRN9wOvOEZliDRsVJxpIr8",
-  //"https://calendar.google.com/calendar/ical/nlj3voogbgmajslig5dd9bppe8%40group.calendar.google.com/public/basic.ics",
-  //"https://calendar.google.com/calendar/ical/belalex.9132788%40gmail.com/public/basic.ics"
+  // "https://p11-calendars.icloud.com/published/2/MTM2NzAyMjI0ODEzNjcwMqI5jWSNf6penKtjCEx88rFVTg69KSsCtgSKVETp7hBEmb0puBzTnV2NyhpyWCFxMIRN9wOvOEZliDRsVJxpIr8",
+  // "https://calendar.google.com/calendar/ical/nlj3voogbgmajslig5dd9bppe8%40group.calendar.google.com/public/basic.ics",
+  // "https://calendar.google.com/calendar/ical/belalex.9132788%40gmail.com/public/basic.ics"
 ];
 
 class CalendarEvents extends React.PureComponent {
   constructor(props) {
     super(props);
-    console.log(props);
+
     this.state = {
       fetching: false,
       signedIn: false,
@@ -52,30 +51,24 @@ class CalendarEvents extends React.PureComponent {
       }
     }
 
-
-    const calendarEvents1 = Ical.parseICS(basic);
-
-    this.setEvents(this.createEventList(calendarEvents1));
-
-    // const calendarEvents2 = Ical.parseICS(basic2);
-
-    // this.setEvents(this.createEventList(calendarEvents2));
-
-    // const calendarEvents3 = Ical.parseICS(icloud);
-
-    // this.setEvents(this.createEventList(calendarEvents3));
-
     webcalUrls.forEach((webacalUrl) => {
-      fetch(webacalUrl)
+      fetch(webacalUrl, {
+        mode: 'cors',
+        headers: {
+          "Content-Type": "text/calendar; charset=UTF-8"
+        },
+      })
       .then((response) => {
+        console.log('response', response);
         this.setState({fetching: true});
         response.text().then((text) =>  {
+          console.log('text', text);
           const calendarEvents = Ical.parseICS(text);
 
           this.setEvents(this.createEventList(calendarEvents));
         })
       })
-      .catch(e => console.log(e))
+      .catch(e => console.error(e))
     })
   }
 
@@ -86,7 +79,7 @@ class CalendarEvents extends React.PureComponent {
     });
   }
 
-  handleItemClick(event, name) {
+  handleItemClick(_event, name) {
     if (name === 'sign-in') {
       this.signIn();
     }
