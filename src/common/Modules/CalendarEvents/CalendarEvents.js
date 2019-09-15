@@ -1,15 +1,15 @@
 import React from 'react';
-import { moment } from "../../../common/Moment";
-import { translate } from '../../../i18n';
 import { VariableSizeList as List } from 'react-window';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { moment } from '../../Moment';
+import { translate } from '../../../i18n';
 
-import * as Ical from '../../../common/Ical';
+import * as Ical from '../../Ical';
 
 const webcalUrls = [
-  // "https://p11-calendars.icloud.com/published/2/MTM2NzAyMjI0ODEzNjcwMqI5jWSNf6penKtjCEx88rFVTg69KSsCtgSKVETp7hBEmb0puBzTnV2NyhpyWCFxMIRN9wOvOEZliDRsVJxpIr8",
-  // "https://calendar.google.com/calendar/ical/nlj3voogbgmajslig5dd9bppe8%40group.calendar.google.com/public/basic.ics",
-  // "https://calendar.google.com/calendar/ical/belalex.9132788%40gmail.com/public/basic.ics"
+  'https://p11-calendars.icloud.com/published/2/MTM2NzAyMjI0ODEzNjcwMqI5jWSNf6penKtjCEx88rFVTg69KSsCtgSKVETp7hBEmb0puBzTnV2NyhpyWCFxMIRN9wOvOEZliDRsVJxpIr8',
+  'https://calendar.google.com/calendar/ical/nlj3voogbgmajslig5dd9bppe8%40group.calendar.google.com/public/basic.ics',
+  'https://calendar.google.com/calendar/ical/belalex.9132788%40gmail.com/public/basic.ics'
 ];
 
 class CalendarEvents extends React.PureComponent {
@@ -36,7 +36,8 @@ class CalendarEvents extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.locale !== this.props.locale) {
+    const { locale } = this.props;
+    if (prevProps.locale !== locale) {
       this.forceUpdate();
     }
   }
@@ -45,31 +46,31 @@ class CalendarEvents extends React.PureComponent {
     const { updateTime } = this.state;
     const now = moment();
 
-    if (!!updateTime) {
+    if (updateTime) {
       if (updateTime.diff(now, 'minutes') < 2) {
         return;
       }
     }
 
-    webcalUrls.forEach((webacalUrl) => {
-      fetch(webacalUrl, {
-        mode: 'cors',
+    webcalUrls.forEach((webcalUrl) => {
+      const body = { url: webcalUrl };
+      fetch('http://localhost:1337/calendar', {
+        method: 'POST',
         headers: {
-          "Content-Type": "text/calendar; charset=UTF-8"
+          'Content-Type': 'application/json; charset=utf-8',
         },
+        body: JSON.stringify(body),
       })
-      .then((response) => {
-        console.log('response', response);
-        this.setState({fetching: true});
-        response.text().then((text) =>  {
-          console.log('text', text);
-          const calendarEvents = Ical.parseICS(text);
+        .then((response) => {
+          this.setState({ fetching: true });
+          response.text().then((text) => {
+            const calendarEvents = Ical.parseICS(text);
 
-          this.setEvents(this.createEventList(calendarEvents));
+            this.setEvents(this.createEventList(calendarEvents));
+          });
         })
-      })
-      .catch(e => console.error(e))
-    })
+        .catch(e => console.error(e));
+    });
   }
 
   signUpdate(signedIn, accessToken) {

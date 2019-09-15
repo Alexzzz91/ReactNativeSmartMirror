@@ -1,21 +1,21 @@
 import React from 'react';
 import * as rssParser from 'react-native-rss-parser';
-import Carousel from "nuka-carousel";
+import Carousel from 'nuka-carousel';
 import { DateTime } from 'luxon';
 
 const lentsUrl = [
-  // {
-  //   "title":"Наука",
-  //   "url":"http://lenta.ru/rss/news/science/science/"
-  // },
-  // {
-  //   "title":"Космос",
-  //   "url":"http://lenta.ru/rss/news/science/cosmos/"
-  // },
-  // {
-  //   "title":"Все Новости",
-  //   "url":"http://lenta.ru/rss"
-  // },
+  {
+    title: 'Наука',
+    url: 'http://lenta.ru/rss/news/science/science/',
+  },
+  {
+    title: 'Космос',
+    url: 'http://lenta.ru/rss/news/science/cosmos/',
+  },
+  {
+    title: 'Все Новости',
+    url: 'http://lenta.ru/rss',
+  },
 ];
 
 class Lenta extends React.Component {
@@ -24,7 +24,6 @@ class Lenta extends React.Component {
     this.state = {
       watched: {},
       newsList: [],
-      activeSlide: 0,
       updateTime: null,
       news: undefined,
     };
@@ -52,18 +51,24 @@ class Lenta extends React.Component {
   }
 
   getNewsList = () => {
-    lentsUrl.forEach(({title, url}) => {
-      fetch(url)
-        .then((response) => response.text())
-        .then((responseData) => rssParser.parse(responseData))
+    lentsUrl.forEach(({ url }) => {
+      const body = { url };
+      fetch('http://localhost:1337/lenta', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        body: JSON.stringify(body),
+      })
+        .then(response => response.text())
+        .then(responseData => rssParser.parse(responseData))
         .then((rss) => {
           const newsList = rss.items.map((item) => {
-
-            if (!!item.published) {
+            if (item.published) {
               const dateTimeNews = DateTime.fromRFC2822(item.published);
               const diffNow = dateTimeNews.diffNow(['days', 'hours']).toObject();
 
-              if (!!Math.abs(diffNow.days)) {
+              if (Math.abs(diffNow.days)) {
                 return false;
               }
               if (Math.abs(diffNow.hours) > 23) {
@@ -81,11 +86,11 @@ class Lenta extends React.Component {
               category: !!item.categories && item.categories.length ? item.categories[0].name : '',
             };
           }).filter(Boolean);
-          this.setState({newsList});
+          this.setState({ newsList });
         });
     });
 
-    this.setState({watched: {}});
+    this.setState({ watched: {} });
   }
 
   getNextNews = () => {
@@ -96,9 +101,9 @@ class Lenta extends React.Component {
     let nNews;
 
     if (newsIndex === newsList.length-1) {
-      nNews = newsList[0]
+      nNews = newsList[0];
     } else {
-      nNews = newsList[newsIndex+1]
+      nNews = newsList[newsIndex+1];
     };
 
     this.setState({
@@ -114,9 +119,9 @@ class Lenta extends React.Component {
     let nNews;
 
     if (newsIndex === -1) {
-      nNews = newsList[newsList.length-1]
+      nNews = newsList[newsList.length-1];
     } else {
-      nNews = newsList[newsIndex-1]
+      nNews = newsList[newsIndex-1];
     };
 
     this.setState({
@@ -146,7 +151,7 @@ class Lenta extends React.Component {
       }
     });
 
-    if (this._carousel) {
+    if (this._carousel && this._carousel.snapToNext) {
       this._carousel.snapToNext(index);
     }
 
@@ -158,22 +163,27 @@ class Lenta extends React.Component {
 
   getNewsForced = () => this.getNews(true)
 
-  renderItem ({item, index}) {
-    const { title, description, pubDate, category } = item;
+  renderItem = (item, index) => {
+    const {
+      title,
+      description,
+      pubDate,
+      category,
+    } = item;
 
     const dateTimeNews = DateTime.fromRFC2822(pubDate);
     const diffNow = dateTimeNews.diffNow(['hours', 'minute']).toObject();
 
     let diffString = '';
-    if (!!Math.abs(diffNow.hours)) {
+    if (Math.abs(diffNow.hours)) {
       if (Math.abs(diffNow.hours) > 1) {
-        diffString += `час `;
+        diffString += 'час ';
       } else {
         diffString += `${Math.abs(diffNow.hours)} часа, `;
       }
     }
 
-    if (!!Math.abs(diffNow.minutes)) {
+    if (Math.abs(diffNow.minutes)) {
       if (Math.abs(diffNow.minutes) > 10) {
         diffString += `${Math.ceil(Math.abs(diffNow.minutes))} минут, `;
       }
@@ -182,17 +192,17 @@ class Lenta extends React.Component {
     return (
       <div
         key={index}
-        style={{...styles.base}}
+        style={{ ...styles.base }}
       >
         <div onClick={this.getNewsForced}>
-          <span style={{...styles.themeAndTime}}>
+          <span style={{ ...styles.themeAndTime }}>
             {category}, {diffString} назад:
           </span>
         </div>
-        <span style={{...styles.title}}>
+        <span style={{ ...styles.title }}>
           {title}
         </span>
-        <span style={{...styles.summary}}>
+        <span style={{ ...styles.summary }}>
           {description}
         </span>
       </div>
@@ -205,9 +215,9 @@ class Lenta extends React.Component {
     if (!news) {
       return (
         <div>
-          <div style={{...styles.base}}>
+          <div style={{ ...styles.base }}>
             <div onClick={this.getNewsList}>
-              <span style={{...styles.themeAndTime}}>
+              <span style={{ ...styles.themeAndTime }}>
                 Нет новых новостей (нажмите для загрузки новостей)
               </span>
             </div>
@@ -217,25 +227,25 @@ class Lenta extends React.Component {
     }
 
     return (
-      <div>
+      <div style={{ ...styles.base }}>
         <Carousel
           ref={(c) => { this._carousel = c; }}
-          data={newsList}
-          sliderWidth={'100%'}
-          itemWidth={'100%'}
+          sliderWidth="100%"
+          itemWidth="100%"
           activeSlideOffset={80}
-          loop={true}
-          onSnapToItem={(index) => this.setState({ activeSlide: index }) }
+          withoutControls
+          loop
         >
           {newsList.map(this.renderItem)}
         </Carousel>
       </div>
     );
   }
-};
+}
 
 export {
-  Lenta
+  Lenta as default,
+  Lenta,
 };
 
 const styles = {
@@ -245,27 +255,28 @@ const styles = {
     alignItems: 'center',
     alignContent: 'center',
     textAlign: 'center',
+    maxWidth: '100vw',
   },
   themeAndTime: {
-    fontFamily: "OpenSans_light",
+    fontFamily: 'OpenSans_light',
     color: '#666',
-    fontWeight: "100",
+    fontWeight: '100',
     fontSize: '20px',
     lineHeight: '25px',
     textAlign: 'center',
   },
   title: {
-    fontFamily: "Roboto_condensed_light",
+    fontFamily: 'Roboto_condensed_light',
     color: '#fff',
-    fontWeight: "200",
+    fontWeight: '200',
     fontSize: '30px',
     lineHeight: '35px',
     textAlign: 'center',
   },
   summary: {
-    fontFamily: "OpenSans_light",
+    fontFamily: 'OpenSans_light',
     color: '#aaa',
-    fontWeight: "300",
+    fontWeight: '300',
     fontSize: '20px',
     lineHeight: '25px',
     textAlign: 'center',
