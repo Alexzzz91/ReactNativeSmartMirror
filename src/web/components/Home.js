@@ -139,7 +139,7 @@ class Home extends React.PureComponent {
     } = this.state;
 
     const { locale } = this.props;
-    console.log('this.props', this.props);
+    // console.log('this.props', this.props);
     const { styles } = this;
 
     return (
