@@ -76,6 +76,7 @@
     "react-router-dom": "5.0.1",
     "react-select": "^3.0.4",
     "react-timer-mixin": "0.13.4",
+    "react-webcam": "^3.0.1",
     "react-window": "1.8.4",
     "reactstrap": "7.1.0",
     "redux": "4.0.1",

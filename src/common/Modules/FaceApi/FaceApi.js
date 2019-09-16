@@ -1,65 +1,168 @@
 import React from 'react';
-import * as faceapi from 'face-api.js';
+import Webcam from 'react-webcam';
+import {loadModels, getFullFaceDescription, createMatcher} from './api/face';
 
-const MODEL_URL = '/models';
+const WIDTH = 420;
+const HEIGHT = 420;
+const inputSize = 160;
 
 class Face extends React.Component {
   constructor(props) {
     super(props);
+    this.webcam = React.createRef();
     this.state = {
+      fullDesc: null,
+      detections: null,
+      descriptors: null,
+      faceMatcher: null,
+      match: null,
+      facingMode: null
     };
 
     this.style = getStyles();
-    this.inputVideo = React.createRef();
-    this.overlay = React.createRef();
   }
 
-  async componentDidMount() {
-    await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
-    await faceapi.loadFaceLandmarkModel(MODEL_URL);
-    await faceapi.loadFaceRecognitionModel(MODEL_URL);
-    this.run();
+  componentDidMount = async () => {
+    await loadModels();
+
+    const {profiles} = this.props;
+
+    this.setState({faceMatcher: await createMatcher(profiles)});
+    this.setInputDevice();
+  };
+
+  setInputDevice = () => {
+    navigator.mediaDevices.enumerateDevices().then(async devices => {
+      let inputDevice = await devices.filter(
+        device => device.kind === 'videoinput'
+      );
+      if (inputDevice.length < 2) {
+        await this.setState({
+          facingMode: 'user'
+        });
+      } else {
+        await this.setState({
+          facingMode: {exact: 'environment'}
+        });
+      }
+      this.startCapture();
+    });
+  };
+
+  startCapture = () => {
+    this.interval = setInterval(() => {
+      this.capture();
+    }, 1500);
+  };
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
-  run = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-    const videoEl = this.inputVideo.current;
-    videoEl.srcObject = stream;
-  }
-  onPlay = async () => {
-    console.log(this);
-    const videoEl = this.inputVideo.current;
+  capture = async () => {
+    if (!!this.webcam.current) {
+      await getFullFaceDescription(
+        this.webcam.current.getScreenshot(),
+        inputSize
+      ).then(fullDesc => {
+        if (!!fullDesc) {
+          this.setState({
+            detections: fullDesc.map(fd => fd.detection),
+            descriptors: fullDesc.map(fd => fd.descriptor)
+          });
+        }
+      });
 
-    if (videoEl.paused || videoEl.ended) {
-      return setTimeout(() => this.onPlay());
+      if (!!this.state.descriptors && !!this.state.faceMatcher) {
+        let match = await this.state.descriptors.map(descriptor =>
+          this.state.faceMatcher.findBestMatch(descriptor)
+        );
+        this.setState({match});
+      }
     }
-
-    let minConfidence = 0.5;
-
-    const options = new faceapi.SsdMobilenetv1Options({ minConfidence });
-
-    const result = await faceapi.detectSingleFace(videoEl, options);
-
-    if (result) {
-      const canvas = this.inputVideo.current;
-      const dims = faceapi.matchDimensions(canvas, videoEl, true);
-      faceapi.draw.drawDetections(canvas, faceapi.resizeResults(result, dims));
-    }
-
-    setTimeout(() => this.onPlay());
-  }
+  };
 
   render() {
+    const {detections, match, facingMode} = this.state;
+    let videoConstraints = null;
+    let camera = '';
+    if (!!facingMode) {
+      videoConstraints = {
+        width: WIDTH,
+        height: HEIGHT,
+        facingMode: facingMode
+      };
+      if (facingMode === 'user') {
+        camera = 'Front';
+      } else {
+        camera = 'Back';
+      }
+    }
+
+    let drawBox = null;
+    if (!!detections) {
+      drawBox = detections.map((detection, i) => {
+        let _H = detection.box.height;
+        let _W = detection.box.width;
+        let _X = detection.box._x;
+        let _Y = detection.box._y;
+        return (
+          <div key={i}>
+            <div
+              style={{
+                position: 'absolute',
+                border: 'solid',
+                borderColor: 'blue',
+                height: _H,
+                width: _W,
+                transform: `translate(${_X}px,${_Y}px)`
+              }}
+            >
+              {!!match && !!match[i] ? (
+                <p
+                  style={{
+                    backgroundColor: 'blue',
+                    border: 'solid',
+                    borderColor: 'blue',
+                    width: _W,
+                    marginTop: 0,
+                    color: '#fff',
+                    transform: `translate(-3px,${_H}px)`
+                  }}
+                >
+                  {match[i]._label}
+                </p>
+              ) : null}
+            </div>
+          </div>
+        );
+      });
+    }
+
     return (
-      <div style={{ ...this.style.base }}>
-        <video
-          onLoadedMetadata={this.onPlay}
-          ref={this.inputVideo}
-          autoPlay
-          muted
-          playsInline
-        />
-        <canvas ref={this.overlay} />
+      <div style={{...this.style.base}}>
+        <div
+          style={{
+            width: WIDTH,
+            height: HEIGHT
+          }}
+        >
+          <div style={{position: 'relative', width: WIDTH}}>
+            {!!videoConstraints ? (
+              <div style={{position: 'absolute'}}>
+                <Webcam
+                  audio={false}
+                  width={WIDTH}
+                  height={HEIGHT}
+                  ref={this.webcam}
+                  screenshotFormat="image/jpeg"
+                  videoConstraints={videoConstraints}
+                />
+              </div>
+            ) : null}
+            {!!drawBox ? drawBox : null}
+          </div>
+        </div>
       </div>
     );
   }

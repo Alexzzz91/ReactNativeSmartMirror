@@ -12076,6 +12076,11 @@ react-tween-state@^0.1.5:
     raf "^3.1.0"
     tween-functions "^1.0.1"
 
+react-webcam@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-webcam/-/react-webcam-3.0.1.tgz#093c12a1a0b5d3a6e3d952af5cdfc61cf70fbccc"
+  integrity sha512-Kwe5m+OWViSsOYv3M/JoIb+5wwa6rlbaubXJ3/dSvEU2wjjJ9e4pJ0QVpRSGle0bCQDuWRDzUcgCG8+bLYKjug==
+
 react-window@1.8.4:
   version "1.8.4"
   resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.8.4.tgz#8b1fde6cd0664895b0dfa8547ed416e895d611c1"

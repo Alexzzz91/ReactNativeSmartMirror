@@ -5,6 +5,7 @@ import { reducer } from './reducer';
 import { injectReducer, store } from '../../../store';
 
 const mapStateToProps = state => ({
+  profiles: state.face.profiles,
   locale: state.locale,
 });
 

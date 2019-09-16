@@ -11,7 +11,6 @@ router.post('/', async (req, res) => {
 
     const letnaUrl = req.body.url;
     const result = await fetch(letnaUrl);
-    console.log('result', result);
     const innerLenta = await result.text();
     res.type('application/xml').status(200).send(innerLenta);
   } catch (error) {
