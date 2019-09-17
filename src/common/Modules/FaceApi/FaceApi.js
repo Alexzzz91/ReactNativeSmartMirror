@@ -85,18 +85,12 @@ class Face extends React.Component {
   render() {
     const {detections, match, facingMode} = this.state;
     let videoConstraints = null;
-    let camera = '';
     if (!!facingMode) {
       videoConstraints = {
         width: WIDTH,
         height: HEIGHT,
         facingMode: facingMode
       };
-      if (facingMode === 'user') {
-        camera = 'Front';
-      } else {
-        camera = 'Back';
-      }
     }
 
     let drawBox = null;
