@@ -271,6 +271,7 @@ const styles = {
     fontWeight: '200',
     fontSize: '30px',
     lineHeight: '35px',
+    display: 'block',
     textAlign: 'center',
   },
   summary: {
