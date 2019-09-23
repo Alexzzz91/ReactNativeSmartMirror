@@ -1,5 +1,6 @@
 import React from 'react';
-import { moment } from "../../Moment";
+import { moment } from '../../Moment';
+
 
 class Clock extends React.PureComponent {
   constructor(props) {
@@ -7,11 +8,21 @@ class Clock extends React.PureComponent {
     this.state = this.getTime();
   }
 
+  componentDidMount() {
+    this.setTimer();
+  }
+
+  componentWillUnmount() {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+  }
+
   getTime() {
     const {
       dateParams,
       timeParams,
-      secondsParams
+      secondsParams,
     } = this.props;
 
     const now = moment();
@@ -30,16 +41,6 @@ class Clock extends React.PureComponent {
     this.setState(this.getTime, this.setTimer);
   }
 
-  componentDidMount() {
-    this.setTimer();
-  }
-
-  componentWillUnmount() {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-    }
-  }
-
   render() {
     const {
       dateString,
@@ -48,33 +49,30 @@ class Clock extends React.PureComponent {
     } = this.state;
 
     return (
-      <div style={{...styles.moduleClock}}>
-        <span style={{...styles.dateClock}}>
+      <div style={{ ...styles.moduleClock }}>
+        <span style={{ ...styles.dateClock }}>
           { dateString }
         </span>
-        <div style={{...styles.timeClock}}>
-          <h2 style={{...styles.timeClockThin}}>
+        <div style={{ ...styles.timeClock }}>
+          <h2 style={{ ...styles.timeClockThin }}>
             { time }
           </h2>
-          <span style={{...styles.timeClockDimmed}}>
+          <span style={{ ...styles.timeClockDimmed }}>
             { seconds }
           </span>
         </div>
-        <span style={{...styles.weekClock}}>
-        </span>
+        <span style={{ ...styles.weekClock }} />
       </div>
     );
   }
-};
+}
 
 export {
-  Clock
+  Clock as default,
+  Clock,
 };
 
 const styles = {
-  moduleClock: {
-
-  },
   dateClock: {
     color: '#999',
     fontSize: '30px',
@@ -82,8 +80,8 @@ const styles = {
   },
   timeClock: {
     marginTop: '10px',
-    fontFamily: "OpenSans_light",
-    fontWeight: "300",
+    fontFamily: 'OpenSans_light',
+    fontWeight: '300',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -91,18 +89,16 @@ const styles = {
   },
   timeClockThin: {
     margin: 0,
-    fontFamily: "OpenSans_light",
+    fontFamily: 'OpenSans_light',
     color: '#fff',
-    fontWeight: "300",
+    fontWeight: '300',
     fontSize: '60px',
     lineHeight: '65px',
   },
   timeClockDimmed: {
-    fontWeight: "300",
+    fontWeight: '300',
     fontSize: '30px',
     lineHeight: '32px',
     color: '#666',
-  },
-  weekClock:{
   },
 };

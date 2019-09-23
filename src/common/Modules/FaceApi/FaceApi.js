@@ -11,12 +11,11 @@ class Face extends React.Component {
     super(props);
     this.webcam = React.createRef();
     this.state = {
-      fullDesc: null,
       detections: null,
       descriptors: null,
       faceMatcher: null,
       match: null,
-      facingMode: null
+      facingMode: null,
     };
 
     this.style = getStyles();
@@ -25,9 +24,9 @@ class Face extends React.Component {
   componentDidMount = async () => {
     await loadModels();
 
-    const {profiles} = this.props;
+    const { profiles } = this.props;
 
-    this.setState({faceMatcher: await createMatcher(profiles)});
+    this.setState({ faceMatcher: await createMatcher(profiles)} );
     this.setInputDevice();
   };
 
@@ -52,7 +51,7 @@ class Face extends React.Component {
   startCapture = () => {
     this.interval = setInterval(() => {
       this.capture();
-    }, 1500);
+    }, 1500000);
   };
 
   componentWillUnmount() {
@@ -77,13 +76,13 @@ class Face extends React.Component {
         let match = await this.state.descriptors.map(descriptor =>
           this.state.faceMatcher.findBestMatch(descriptor)
         );
-        this.setState({match});
+        this.setState({ match });
       }
     }
   };
 
   render() {
-    const {detections, match, facingMode} = this.state;
+    const { detections, match, facingMode } = this.state;
     let videoConstraints = null;
     if (!!facingMode) {
       videoConstraints = {
@@ -169,6 +168,7 @@ export {
 
 const getStyles = () => ({
   base: {
+    top: '-100%',
     position: 'absolute',
     flex: 1,
   },

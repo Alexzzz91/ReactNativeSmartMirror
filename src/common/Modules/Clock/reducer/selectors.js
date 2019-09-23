@@ -14,5 +14,5 @@ const calendarEventsSelector = createSelector(
 export {
   events,
   calendarEvents,
-  calendarEventsSelector
+  calendarEventsSelector,
 };

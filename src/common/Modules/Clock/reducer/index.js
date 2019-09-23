@@ -1,5 +1,3 @@
-import { createReducer } from '../../../../store/helpers/createReducer';
-
 const initialState = {
   dateParams: {
     status: true,
@@ -15,35 +13,55 @@ const initialState = {
   },
 };
 
-const {reducer, actions} = createReducer(
-    initialState,
-    {
-        setDateParams: (state, payload) => ({
-            ...state,
-            dateParams: [
-              ...state.dateParams,
-              payload
-            ]
-        }),
-        setTimeParams: (state, payload) => ({
-            ...state,
-            timeParams: [
-              ...state.timeParams,
-              payload
-            ]
-        }),
-        setSecondsParams: (state, payload) => ({
-            ...state,
-            secondsParams: [
-              ...state.secondsParams,
-              payload
-            ]
-        }),
-    },
-    'clock'
-);
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'CHANGE_DATE_CONFIG':
+      return {
+        ...state,
+        dateParams: [
+          ...state.dateParams,
+          action.payload,
+        ],
+      };
+    case 'CHANGE_TIME_CONFIG':
+      return {
+        ...state,
+        timeParams: [
+          ...state.timeParams,
+          action.payload,
+        ],
+      };
+    case 'CHANGE_SECONDS_CONFIG':
+      console.log('action', action);
+      return {
+        ...state,
+        secondsParams: [
+          ...state.secondsParams,
+          action.payload,
+        ],
+      };
+    default:
+      return state;
+  }
+};
+
+const actions = {
+  setDateParams: payload => ({
+    type: 'CHANGE_DATE_CONFIG',
+    payload,
+  }),
+  setTimeParams: payload => ({
+    type: 'CHANGE_TIME_CONFIG',
+    payload,
+  }),
+  setSecondsParams: payload => ({
+    type: 'CHANGE_SECONDS_CONFIG',
+    payload,
+  }),
+};
 
 export {
-    reducer,
-    actions,
+  reducer,
+  actions,
+  initialState,
 };

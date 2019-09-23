@@ -11,9 +11,7 @@ const mapStateToProps = state => ({
   secondsParams: state.clock.secondsParams,
 });
 
-const mapDispatchToProps = () => ({ });
-
-const ConnectedClock = Module => connect(mapStateToProps, mapDispatchToProps)(Module);
+const ConnectedClock = Module => connect(mapStateToProps)(Module);
 
 injectReducer(store, { key: 'clock', reducer });
 

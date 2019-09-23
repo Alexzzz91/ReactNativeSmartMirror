@@ -7,18 +7,12 @@ import { CalendarEventsWeb as CalendarEvents } from '../../common/Modules/Calend
 import { WeatherWeb as Weather } from '../../common/Modules/Weather';
 import { ComplimentsWeb as Compliments } from '../../common/Modules/Compliments';
 import { LentaWeb as Lenta } from '../../common/Modules/Lenta';
-import { FaceWeb as Face } from '../../common/Modules/FaceApi';
+// import { FaceWeb as Face } from '../../common/Modules/FaceApi';
 import { translate } from '../../i18n';
 
 import { moment } from '../../common/Moment';
 
 import { API_KEY } from '../../common/WeatherAPIKey';
-
-/*
-import { TextClock } from './TextClock';
-import { ModuleClock } from './ModuleClock';
-import { ModuleCalendarEvents } from './ModuleCalendarEvents';
-*/
 
 class Home extends React.PureComponent {
   constructor(props) {
@@ -30,18 +24,6 @@ class Home extends React.PureComponent {
       weatherDescription: null,
       days: [],
       city: null,
-    };
-
-    this.config = {
-      hidePrivate: false,
-      hideOngoing: false,
-      maximumNumberOfDays: 365,
-      sliceMultiDayEvents: true,
-      showEnd: false,
-      dateFormat: 'MMM Do',
-      dateEndFormat: 'HH:mm',
-      urgency: 7,
-      timeFormat: 'absolute',
     };
 
     this.styles = getStyles({ font: props.fonts.current });
@@ -147,7 +129,7 @@ class Home extends React.PureComponent {
         <div style={{ ...styles.topRow }}>
           <div style={{ ...styles.topRows }}>
             <Clock />
-            <CalendarEvents config={this.config} />
+            <CalendarEvents/>
           </div>
           <div style={{ ...styles.settingsButtonView }}>
             <Link
@@ -186,7 +168,7 @@ class Home extends React.PureComponent {
         <div style={{ ...styles.footerRow }}>
           <Lenta />
         </div>
-        <Face />
+        {/* <Face /> */}
       </div>
     );
   }

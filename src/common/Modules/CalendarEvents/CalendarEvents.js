@@ -1,5 +1,5 @@
 import React from 'react';
-import { VariableSizeList as List } from 'react-window';
+import {VariableSizeList as List, shouldComponentUpdate } from 'react-window';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { moment } from '../../Moment';
 import { translate } from '../../../i18n';
@@ -28,6 +28,7 @@ class CalendarEvents extends React.PureComponent {
     this.handleItemClick = this.handleItemClick.bind(this);
     this.signUpdate = this.signUpdate.bind(this);
     this.setCalendars = this.setCalendars.bind(this);
+    this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
   }
 
   componentDidMount() {
@@ -114,25 +115,25 @@ class CalendarEvents extends React.PureComponent {
     fetch('https://www.googleapis.com/calendar/v3/users/me/calendarList', {
       headers: { Authorization: `Bearer ${accessToken}` },
     })
-      .then((response) => response.json())
+      .then(response => response.json())
       .then((responseJson) => {
         this.setCalendars(responseJson.items);
-      })
+      });
   }
 
   setCalendars(calendars) {
     this.setState({
       calendars,
-    })
-  };
+    });
+  }
 
   setActiveCalendars(activeCalendar) {
     this.setState({
       activeCalendar,
-    }, () => this.getEvents(activeCalendar.id))
-  };
+    }, () => this.getEvents(activeCalendar.id));
+  }
 
-  getEvents = async (id) => {
+  getEvents = async () => {
     const vars = {
       timeMin: moment().subtract(1, 'days').toISOString(),
       timeMax: moment().add(7, 'days').toISOString(),
@@ -145,72 +146,72 @@ class CalendarEvents extends React.PureComponent {
     } = this.state;
 
     fetch(`https://content.googleapis.com/calendar/v3/calendars/${activeCalendar.id}/events?${queries}`, {
-      headers: { Authorization: `Bearer ${accessToken}` }
+      headers: { Authorization: `Bearer ${accessToken}` },
     })
-    .then((response) => response.json())
+    .then(response => response.json())
     .then((responseJson) => {
       console.log('responseJson.items', responseJson.items);
       this.setEvents(responseJson.items);
-    })
+    });
   }
 
-  capFirst = (string) => string.slice(0, 1) + string.slice(1).toLowerCase()
+  capFirst = string => string.slice(0, 1) + string.slice(1).toLowerCase()
 
-  setEvents(newEvents) {
-    let now = moment();
+  setEvents(rawEvents) {
+    const now = moment();
     const { events } = this.state;
-    const { config } = this.props;
+    const { settings } = this.props;
 
-    newEvents = newEvents.map((event) => {
+    const newEvents = rawEvents.map((event) => {
       if (!event || !event.start) {
         return null;
-      };
+      }
       // Define second, minute, hour, and day variables
-      var oneSecond = 1000; // 1,000 milliseconds
-      var oneMinute = oneSecond * 60;
-      var oneHour = oneMinute * 60;
-      var oneDay = oneHour * 24;
+      const oneSecond = 1000; // 1,000 milliseconds
+      const oneMinute = oneSecond * 60;
+      const oneHour = oneMinute * 60;
+      const oneDay = oneHour * 24;
       let date;
       let eventMoment;
       if (event.fullDayEvent) {
         event.end -= oneSecond;
         if (event.today) {
-          date = translate(this.capFirst("TODAY"));
+          date = translate(this.capFirst('TODAY'));
         } else if (event.start - now < oneDay && event.start - now > 0) {
-          date = translate(this.capFirst("TOMORROW"));
+          date = translate(this.capFirst('TOMORROW'));
         } else if (event.start - now < 2 * oneDay && event.start - now > 0) {
-            date = this.capFirst(moment(event.start, "x").fromNow());
+          date = this.capFirst(moment(event.start, 'x').fromNow());
         } else {
-          if (config.timeFormat === "absolute") {
-            if ((config.urgency > 1) && (event.start - now < (config.urgency * oneDay))) {
-              // This event falls within the config.urgency period that the user has set
-              date = this.capFirst(moment(event.start, "x").from(moment().format("YYYYMMDD")));
+          if (settings.timeFormat === 'absolute') {
+            if ((settings.urgency > 1) && (event.start - now < (settings.urgency * oneDay))) {
+              // This event falls within the settings.urgency period that the user has set
+              date = this.capFirst(moment(event.start, "x").from(moment().format('YYYYMMDD')));
             eventMoment = event.start;
             } else {
-              date = this.capFirst(moment(event.start, "x").format(config.fullDayEventDateFormat));
+              date = this.capFirst(moment(event.start, "x").format(settings.fullDayEventDateFormat));
             eventMoment = event.start;
             }
           } else {
-            date = this.capFirst(moment(event.start, "x").from(moment().format("YYYYMMDD")));
+            date = this.capFirst(moment(event.start, "x").from(moment().format('YYYYMMDD')));
             eventMoment = event.start;
           }
         }
-        if(config.showEnd){
-          date += "-" ;
-          date += this.capFirst(moment(event.end  , "x").format(config.fullDayEventDateFormat));
+        if (settings.showEnd) {
+          date += '-';
+          date += this.capFirst(moment(event.end, 'x').format(settings.fullDayEventDateFormat));
         }
       } else {
         const start = moment(event.start);
         if (start >= moment()) {
           if (event.start - now < 2 * oneDay) {
             // This event is within the next 48 hours (2 days)
-            if (event.start - now < config.getRelative * oneHour) {
+            if (event.start - now < settings.getRelative * oneHour) {
               // If event is within 6 hour, display 'in xxx' time format or moment.fromNow()
-              date = this.capFirst(moment(event.start, "x").fromNow());
+              date = this.capFirst(moment(event.start, 'x').fromNow());
               eventMoment = event.start;
             } else {
-              if(config.timeFormat === "absolute") {
-                date = this.capFirst(moment(event.start, "x").format(config.dateFormat));
+              if (settings.timeFormat === 'absolute') {
+                date = this.capFirst(moment(event.start, "x").format(settings.dateFormat));
                 eventMoment = event.start;
               } else {
                 // Otherwise just say 'Today/Tomorrow at such-n-such time'
@@ -219,27 +220,27 @@ class CalendarEvents extends React.PureComponent {
               }
             }
           } else {
-            if (config.timeFormat === "absolute") {
-              if ((config.urgency > 1) && (event.start - now < (config.urgency * oneDay))) {
-                // This event falls within the config.urgency period that the user has set
-                date = this.capFirst(moment(event.start, "x").fromNow());
+            if (settings.timeFormat === 'absolute') {
+              if ((settings.urgency > 1) && (event.start - now < (settings.urgency * oneDay))) {
+                // This event falls within the settings.urgency period that the user has set
+                date = this.capFirst(moment(event.start, 'x').fromNow());
                 eventMoment = event.start;
               } else {
-                date = this.capFirst(moment(event.start, "x").format(config.dateFormat));
+                date = this.capFirst(moment(event.start, 'x').format(settings.dateFormat));
                 eventMoment = event.start;
               }
             } else {
-              date = this.capFirst(moment(event.start, "x").fromNow());
+              date = this.capFirst(moment(event.start, 'x').fromNow());
               eventMoment = event.start;
             }
           }
         } else if(moment(event.end) > moment()) {
-          date = translate(this.capFirst("RUNNING"));
+          date = translate(this.capFirst('RUNNING'));
           eventMoment = event.start;
         }
-        if (config.showEnd && moment(event.end) > moment()) {
-          date += "-";
-          date += this.capFirst(moment(event.end, "x").format(config.dateEndFormat));
+        if (settings.showEnd && moment(event.end) > moment()) {
+          date += '-';
+          date += this.capFirst(moment(event.end, 'x').format(settings.dateEndFormat));
         }
       }
 
@@ -253,47 +254,48 @@ class CalendarEvents extends React.PureComponent {
         summary: event.summary || event.title,
         location: event.location,
         date,
-        eventMoment
-      }
+        eventMoment,
+      };
     })
-    .filter(Boolean);
+      .filter(Boolean);
 
     const sortedNewEvents = events.concat(newEvents).sort((a, b) => a.eventMoment - b.eventMoment);
 
     this.setState({
       events: sortedNewEvents,
       fetching: false,
-      updateTime: moment()
+      updateTime: moment(),
     });
   }
 
   createEventList = (calendarData) => {
-    const { config } = this.props;
+    const { settings } = this.props;
 
     const now = moment();
     let events = [];
+
     for (const c in calendarData) {
       const event = calendarData[c];
 
-      if(config.hidePrivate) {
+      if(settings.hidePrivate) {
         if(event.class === "PRIVATE") {
             // do not add the current event, skip it
             continue;
         }
       }
 
-      if(config.hideOngoing) {
+      if(settings.hideOngoing) {
         if(event.start < now) {
           continue;
         }
       }
 
       if (event.nextRecurrence && event.nextRecurrence.length) {
-        event.nextRecurrence.forEach((dateTime) => {
+        for (const dateTime in event.nextRecurrence) {
           const newEvent = {...event};
           newEvent.start = moment(dateTime);
           events.push(newEvent);
-        })
+        };
       };
 
       events.push(event);
@@ -303,41 +305,42 @@ class CalendarEvents extends React.PureComponent {
     return events;
   }
 
-  getItemSize = index => {
-    const {events} = this.state;
-    return events[index].location ? 50 : 35;
+  getItemSize = (index) => {
+    const { events } = this.state;
+    return events[index].location ? 150 : 55;
   };
 
   getRow = ({ index, style }) => {
-    const {events} = this.state;
+    const { events } = this.state;
     const item = events[index];
+
     return (
-      <div style={{...style, ...eventRowStyles(index+1, !!item.location)}}>
-        <div style={{...styles.eventRow}}>
+      <div style={{ ...style, ...eventRowStyles(index + 1, !!item.location) }}>
+        <div style={{ ...styles.eventRow }}>
           <i
-            className={`icon-calendar`}
-            style={{...styles.eventIcon}}
+            className="icon-calendar"
+            style={{ ...styles.eventIcon }}
           />
-          <div style={{...styles.eventMiddleRow}}>
-            <span style={{...styles.eventTitle}}>
+          <div style={{ ...styles.eventMiddleRow }}>
+            <span style={{ ...styles.eventTitle }}>
               { item.summary }
             </span>
           </div>
-          <span style={{...styles.eventTime}}>
+          <span style={{ ...styles.eventTime }}>
             { item.date }
           </span>
         </div>
-         {!!item.location && (
-           <div style={{...styles.locationMiddleRow}}>
-               <>
-                 <i
-                    className={`icon-pin`}
-                    style={{...styles.locationIcon}}
-                 />
-                 <span style={{...styles.eventLocation}}>
-                   { item.location.substr(0, 60) }
-                 </span>
-               </>
+        {!!item.location && (
+          <div style={{ ...styles.locationMiddleRow }}>
+              <>
+                <i
+                  className="icon-pin"
+                  style={{ ...styles.locationIcon }}
+                />
+                <span style={{ ...styles.eventLocation }}>
+                  { item.location.substr(0, 60) }
+                </span>
+              </>
           </div>
         )}
       </div>
@@ -356,7 +359,7 @@ class CalendarEvents extends React.PureComponent {
 
     return (
       <div style={{ transition: 'opacity 1s ease 0s', opacity: 1 }}>
-        { !events.length  && !signedIn && !fetching && (
+        { !events.length && !signedIn && !fetching && (
           <button
             type="button"
             onClick={e => this.handleItemClick(e, 'sign-in')}
@@ -367,33 +370,40 @@ class CalendarEvents extends React.PureComponent {
         )}
         { !events.length && !fetching && (
           <div style={{ ...styles.eventRows }}>
-            <span> {translate('Change Calendar', locale)} </span>
-            {calendars.map((calendar, i) =>
-              <div key={calendar.id + i}>
-                <div style={{...styles.eventRow}}>
+            <span>
+              { translate('Change Calendar', locale) }
+            </span>
+            {calendars.map(calendar => (
+              <div key={calendar.id}>
+                <div style={{ ...styles.eventRow }}>
                   <i
-                    className={`icon-calendar`}
-                    style={{...styles.eventIcon}}
+                    className="icon-calendar"
+                    style={{ ...styles.eventIcon }}
                   />
                   <div
                     onClick={() => this.setActiveCalendars(calendar)}
-                    style={{...styles.calendarTitle}}
+                    style={{ ...styles.calendarTitle }}
                   >
-                    <span> {calendar.summary} </span>
+                    <span>
+                      { calendar.summary }
+                    </span>
                   </div>
                 </div>
               </div>
-            )}
+            ))
+          }
           </div>
         )}
         {!!events.length && (
           <>
-            <h3 style={{...styles.header}}>{translate('Events', locale)}</h3>
-            <div style={{...styles.eventRows}}>
+            <h3 style={{ ...styles.header }}>
+              {translate('Events', locale)}
+            </h3>
+            <div style={{ ...styles.eventRows }}>
               <Scrollbars
                 style={{
                   width: 525,
-                  height: 250
+                  height: 250,
                 }}
               >
                 <List
@@ -436,7 +446,7 @@ const styles = {
     borderWidth: '1px',
   },
   eventRow: {
-    minHeight: '25px',
+    minHeight: '35px',
     width: '500px',
     margin: 0,
     padding: 0,
@@ -479,8 +489,9 @@ const styles = {
     textAlign: 'left',
     justifyContent: 'center',
   },
-  eventLocation : {
+  eventLocation: {
     fontSize: '12px',
+    marginLeft: '26px',
     color: '#fbf6f6',
     textAlign: 'center',
     justifyContent: 'center',
@@ -498,7 +509,7 @@ const styles = {
   header: {
     textTransform: 'uppercase',
     fontSize: '20px',
-    fontFamily: "Roboto_condensed_light",
+    fontFamily: 'Roboto_condensed_light',
     fontWeight: '400',
     borderBottomWidth: '1px',
     borderBottomColor: '#666',
@@ -507,19 +518,21 @@ const styles = {
     marginBottom: '2px',
     marginTop: '2px',
     color: '#999',
-  }
+  },
 };
 
 const eventRowStyles = (number, hasLocation) => {
+  let opacity;
   if (number < 5) {
-    number = number/1.5;
+    opacity = number / 1.5;
   } else {
-    number = 5;
+    opacity = 5;
   }
   return {
-    opacity: 1 / number,
-    minHeight: hasLocation ? '45px' : '35px',
+    opacity: 1 / opacity,
+    minHeight: hasLocation ? '55px' : '35px',
     margin: 0,
     padding: 0,
-  }
+    overflow: 'hidden',
+  };
 };
