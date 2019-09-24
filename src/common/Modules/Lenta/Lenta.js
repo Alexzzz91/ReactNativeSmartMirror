@@ -100,11 +100,11 @@ class Lenta extends React.Component {
     const newsIndex = newsList.indexOf(news);
     let nNews;
 
-    if (newsIndex === newsList.length-1) {
+    if (newsIndex === newsList.length - 1) {
       nNews = newsList[0];
     } else {
-      nNews = newsList[newsIndex+1];
-    };
+      nNews = newsList[newsIndex + 1];
+    }
 
     this.setState({
       news: nNews,
@@ -119,10 +119,10 @@ class Lenta extends React.Component {
     let nNews;
 
     if (newsIndex === -1) {
-      nNews = newsList[newsList.length-1];
+      nNews = newsList[newsList.length - 1];
     } else {
-      nNews = newsList[newsIndex-1];
-    };
+      nNews = newsList[newsIndex - 1];
+    }
 
     this.setState({
       news: nNews,

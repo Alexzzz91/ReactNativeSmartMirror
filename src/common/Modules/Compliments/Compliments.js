@@ -1,6 +1,5 @@
 import React from 'react';
-import { moment } from '../../../common/Moment';
-import { compliments } from '../../baseCompliments';
+import { moment } from '../../Moment';
 import { getRandomInt } from './reducer/operations';
 
 class Compliments extends React.PureComponent {
@@ -18,10 +17,9 @@ class Compliments extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (
-      prevProps.weather === this.props.weather &&
-      prevState.compliment === this.state.compliment
-    ){
+    const { weather } = this.props;
+    const { compliment } = this.state;
+    if (prevProps.weather === weather && prevState.compliment === compliment) {
       return;
     }
 
@@ -29,28 +27,20 @@ class Compliments extends React.PureComponent {
   }
 
   getActualCompliment = () => {
-    const {weather} = this.props;
+    const { weather, compliments } = this.props;
 
-    let nowHour = moment().hour();
+    const nowHour = moment().hour();
 
     let timeOfDay = 'day';
 
-    Object.keys(compliments).forEach((item, i, arr) => {
-      let target = compliments[item];
-
+    Object.keys(compliments).forEach((item) => {
+      const target = compliments[item];
 
       if (target.time_start <= nowHour && nowHour <= target.time_stop) {
         timeOfDay = item;
       }
 
-      if(nowHour === 0 ||
-        nowHour === 1 ||
-        nowHour === 2 ||
-        nowHour === 3 ||
-        nowHour === 4 ||
-        nowHour === 5 ||
-        nowHour === 6
-      ) {
+      if (nowHour >= 0 || nowHour <= 6) {
         timeOfDay = 'night';
       }
     });
@@ -62,6 +52,7 @@ class Compliments extends React.PureComponent {
 
     let compliment = '';
     if (complimentVariants.length) {
+      // eslint-disable-next-line prefer-destructuring
       compliment = complimentVariants[0];
 
       if (complimentVariants.length > 1) {
@@ -73,7 +64,7 @@ class Compliments extends React.PureComponent {
       complimentVariants,
       compliment,
       prevCompliment: compliment,
-    })
+    });
   }
 
   getRandomCompliment = (complimentVariants, prevCompliment) => {
@@ -97,22 +88,22 @@ class Compliments extends React.PureComponent {
       return;
     }
 
-    let actiualCompliment = this.getRandomCompliment(complimentVariants, prevCompliment);
+    const actiualCompliment = this.getRandomCompliment(complimentVariants, prevCompliment);
 
     this.setState({
       compliment: actiualCompliment,
       prevCompliment: compliment,
-    })
+    });
   }
 
   render() {
-    const {compliment} = this.state;
+    const { compliment } = this.state;
 
     return (
       <div>
         <div onClick={this.changeCompliment}>
-          <span style={{...styles.bright}}>
-            {compliment}
+          <span style={{ ...styles.bright }}>
+            { compliment }
           </span>
         </div>
       </div>
