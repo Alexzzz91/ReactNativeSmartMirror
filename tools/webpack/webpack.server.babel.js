@@ -1,10 +1,10 @@
-import nodeExternals from 'webpack-node-externals';
-import { env, isDevelopment } from 'config/env';
-import { joinPath } from 'utils/path';
-import getModule from 'tools/webpack/getModule';
-import getServerPlugins from 'tools/webpack/getServerPlugins';
+import nodeExternals from "webpack-node-externals";
+import { env, isDevelopment } from "config/env";
+import { joinPath } from "utils/path";
+import getModule from "tools/webpack/getModule";
+import getServerPlugins from "tools/webpack/getServerPlugins";
 
-export default webpackEnv => {
+export default (webpackEnv) => {
   const isAnalyze = webpackEnv.analyze;
 
   return {
@@ -14,9 +14,9 @@ export default webpackEnv => {
     devtool: isDevelopment
       ? 'cheap-module-eval-source-map'
       : 'hidden-source-map',
-    entry: ['@babel/polyfill', './src/server.js'],
+    entry: ['@babel/polyfill', './src/web/server.js'],
     output: {
-      path: joinPath('dist'),
+      path: joinPath('build'),
       filename: 'server.js',
     },
     plugins: getServerPlugins(isAnalyze),

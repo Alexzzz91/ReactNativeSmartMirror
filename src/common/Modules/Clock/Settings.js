@@ -1,14 +1,22 @@
-import React, { useReducer } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
+import { actions } from './reducer';
 import { SelectBox } from '../../Settings/SelectBox';
 import { moment } from '../../Moment';
-import { reducer, initialState, actions } from './reducer';
 
 import { SettingsComponents, injectComponent } from '../../Settings';
 import { translate } from '../../../i18n';
 
-
-const Settings = ({ locale }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+const Settings = (props) => {
+  const {
+    locale,
+    dateParams,
+    timeParams,
+    secondsParams,
+    setDateParams,
+    setTimeParams,
+    setSecondsParams,
+  } = props;
 
   const dateFormats = [
     { value: 'off', label: translate('Off', locale) },
@@ -30,30 +38,27 @@ const Settings = ({ locale }) => {
   ];
 
   const setDateFormats = (params) => {
-    console.log('params', params);
-    console.log('actions.setSecondsParams({ status: false })', actions.setSecondsParams({status: false}));
-
     if (params.value === 'off') {
-      return dispatch(actions.setSecondsParams({ status: false }));
+      return setSecondsParams({ status: false });
     }
 
-    return dispatch(actions.setDateParams({ format: params.value, ...{ status: true } }));
+    return setDateParams({ format: params.value, ...{ status: true } });
   };
 
   const setTimeFormats = (params) => {
     if (params.value === 'off') {
-      return dispatch(actions.setSecondsParams({ status: false }));
+      return setSecondsParams({ status: false });
     }
 
-    return dispatch(actions.setTimeParams({ format: params.value, ...{ status: true } }));
+    return setTimeParams({ format: params.value, ...{ status: true } });
   };
 
   const setSecondsFormats = (params) => {
     if (params.value === 'off') {
-      return dispatch(actions.setSecondsParams({ status: false }));
+      return setSecondsParams({ status: false });
     }
 
-    return dispatch(actions.setSecondsParams({ format: params.value, ...{ status: true } }));
+    return setSecondsParams({ format: params.value, ...{ status: true } });
   };
 
   return (
@@ -64,31 +69,46 @@ const Settings = ({ locale }) => {
         placeholder="Формат даты"
         options={dateFormats}
         onChange={setDateFormats}
-        value={dateFormats.find(f => f.value === state.dateParams.format || f.value === state.dateParams.status)}
+        value={dateFormats.find(f => f.value === dateParams.format || f.value === dateParams.status)}
       />
       <SelectBox
         label="Формат времени"
         placeholder="Формат времени"
         options={timeFormats}
         onChange={setTimeFormats}
-        value={dateFormats.find(f => f.value === state.timeParams.format || f.value === state.timeParams.status)}
+        value={timeFormats.find(f => f.value === timeParams.format || f.value === timeParams.status)}
       />
       <SelectBox
         label="Формат секунд"
         placeholder="Формат секунд"
         options={secondsFormats}
         onChange={setSecondsFormats}
-        value={dateFormats.find(f => f.value === state.secondsParams.format || f.value === state.secondsParams.status)}
+        value={secondsFormats.find(f => f.value === secondsParams.format || f.value === secondsParams.status)}
       />
     </div>
   );
 };
 
-injectComponent(SettingsComponents, { key: 'clock', component: Settings });
+const mapStateToProps = state => ({
+  locale: state.locale,
+  dateParams: state.clock.dateParams,
+  timeParams: state.clock.timeParams,
+  secondsParams: state.clock.secondsParams,
+});
+
+const mapDispatchToProps = dispatch => ({
+  setDateParams: params => dispatch(actions.setDateParams(params)),
+  setTimeParams: params => dispatch(actions.setTimeParams(params)),
+  setSecondsParams: params => dispatch(actions.setSecondsParams(params)),
+});
+
+const ConnectedSettings = connect(mapStateToProps, mapDispatchToProps)(Settings);
+
+injectComponent(SettingsComponents, { key: 'clock', component: ConnectedSettings });
 
 export {
-  Settings as default,
-  Settings,
+  ConnectedSettings as default,
+  ConnectedSettings as Settings,
 };
 
 

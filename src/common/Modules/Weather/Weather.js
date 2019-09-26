@@ -1,5 +1,5 @@
 import React from 'react';
-import { weatherConditions } from '../../WeatherConditions'
+import { weatherConditions } from '../../WeatherConditions';
 
 class Weather extends React.PureComponent {
   render() {
@@ -13,51 +13,62 @@ class Weather extends React.PureComponent {
 
     if (!weather) {
       return '';
-    };
+    }
 
     return (
       <div>
         <div>
-          <div style={{...styles.headerContainer}}>
+          <div style={{ ...styles.headerContainer }}>
             <i
-              style={{fontSize:52}}
+              style={{ fontSize: 52 }}
               className={`wi ${weatherConditions[weather].webIcon}`}
-              color={'#fff'}
+              color="#fff"
             />
-            <span style={{...styles.bright}}>{temperature}˚</span>
+            <span style={{ ...styles.bright }}>
+              { temperature }
+              ˚
+            </span>
           </div>
-          <div style={{...styles.bodyContainer}}>
-            <span style={{...styles.title}}>{description}</span>
+          <div style={{ ...styles.bodyContainer }}>
+            <span style={{ ...styles.title }}>
+              {description}
+            </span>
           </div>
         </div>
         <div>
-          <h2 style={{...styles.header}}>Прогноз в {city}</h2>
-          <div style={{...styles.eventRows}}>
-            {days.map((day, i) =>
+          <h2 style={{ ...styles.header }}>
+            Прогноз в
+            { city }
+          </h2>
+          <div style={{ ...styles.eventRows }}>
+            {days.map((day, i) => (
               <div
                 key={day.date}
-                style={{...weatherRowStyles(i+1)}}
+                style={{ ...weatherRowStyles(i + 1) }}
               >
-                <div style={{...styles.weatherRow}}>
-                  <span style={{...styles.day}}>{day.date}</span>
+                <div style={{ ...styles.weatherRow }}>
+                  <span style={{ ...styles.day }}>
+                    {day.date}
+                  </span>
                   <i
                     className={`wi ${weatherConditions[day.weatherCondition].webIcon}`}
-                    style={{...styles.weatherIcon}}
+                    style={{ ...styles.weatherIcon }}
                   />
-                  <span style={{...styles.tempMax}}>{day.tempMax}</span>
-                  <span style={{...styles.tempMin}}>{day.tempMin}</span>
+                  <span style={{ ...styles.tempMax }}>{day.tempMax}</span>
+                  <span style={{ ...styles.tempMin }}>{day.tempMin}</span>
                 </div>
               </div>
-            )}
+            ))}
           </div>
         </div>
       </div>
     );
   }
-};
+}
 
 export {
-  Weather
+  Weather as default,
+  Weather,
 };
 
 const styles = {
@@ -128,7 +139,7 @@ const styles = {
   header: {
     spanTransform: 'uppercase',
     fontSize: '20px',
-    fontFamily: "Roboto_condensed_light",
+    fontFamily: 'Roboto_condensed_light',
     fontWeight: '400',
     borderBottomWidth: '1px',
     borderBottomColor: '#666',
@@ -143,9 +154,9 @@ const styles = {
     justifyContent: 'center',
   },
   bright: {
-    fontFamily: "OpenSans_light",
+    fontFamily: 'OpenSans_light',
     color: '#fff',
-    fontWeight: "100",
+    fontWeight: '100',
     fontSize: '60px',
     lineHeight: '70px',
     marginTop: '15px',
@@ -153,13 +164,11 @@ const styles = {
   brightRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-  }
+  },
 };
 
-const weatherRowStyles = (number) => {
-  return{
-    opacity: 1 / number,
-    margin: 0,
-    padding: 0,
-  }
-};
+const weatherRowStyles = number => ({
+  opacity: 1 / number,
+  margin: 0,
+  padding: 0,
+});

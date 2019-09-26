@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { Clock } from './Clock';
 import { Settings } from './Settings';
-import { reducer } from './reducer';
+import { reducer, actions } from './reducer';
 import { injectReducer, store } from '../../../store';
 
 const mapStateToProps = state => ({
@@ -11,7 +11,13 @@ const mapStateToProps = state => ({
   secondsParams: state.clock.secondsParams,
 });
 
-const ConnectedClock = Module => connect(mapStateToProps)(Module);
+const mapDispatchToProps = dispatch => ({
+  setDateParams: params => dispatch(actions.setDateParams(params)),
+  setTimeParams: params => dispatch(actions.setTimeParams(params)),
+  setSecondsParams: params => dispatch(actions.setSecondsParams(params)),
+});
+
+const ConnectedClock = Module => connect(mapStateToProps, mapDispatchToProps)(Module);
 
 injectReducer(store, { key: 'clock', reducer });
 

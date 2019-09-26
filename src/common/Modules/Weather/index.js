@@ -1,28 +1,18 @@
-import { Weather } from './Weather'
-import { Settings } from './Settings'
-import { reducer } from './reducer';
 import { connect } from 'react-redux';
-import { injectReducer, store} from '../../../store';
+import { Weather } from './Weather';
+import { Settings } from './Settings';
+import { reducer } from './reducer';
+import { injectReducer, store } from '../../../store';
 
-const mapStateToProps = (state) => {
-  return {
+const mapStateToProps = state => ({});
 
-  }
-};
+const ConnectedWeather = Module => connect(mapStateToProps)(Module);
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-
-  };
-}
-
-const ConnectedWeather = (Module) => connect(mapStateToProps, mapDispatchToProps)(Module);
-
-injectReducer(store, {key: 'weather', reducer});
+injectReducer(store, { key: 'weather', reducer });
 
 const WeatherWeb = ConnectedWeather(Weather);
 
 export {
   WeatherWeb,
-  Settings as WeatherSettings
+  Settings as WeatherSettings,
 };

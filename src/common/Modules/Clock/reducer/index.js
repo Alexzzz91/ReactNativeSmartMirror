@@ -32,7 +32,6 @@ const reducer = (state = initialState, action) => {
         ],
       };
     case 'CHANGE_SECONDS_CONFIG':
-      console.log('action', action);
       return {
         ...state,
         secondsParams: [
