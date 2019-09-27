@@ -1,10 +1,11 @@
 import React from 'react';
-import {VariableSizeList as List, shouldComponentUpdate } from 'react-window';
+import { VariableSizeList as List, shouldComponentUpdate } from 'react-window';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { moment } from '../../Moment';
 import { translate } from '../../../i18n';
 
 import * as Ical from '../../Ical';
+import { origin } from '../../../config/url';
 
 const webcalUrls = [
   'https://p11-calendars.icloud.com/published/2/MTM2NzAyMjI0ODEzNjcwMqI5jWSNf6penKtjCEx88rFVTg69KSsCtgSKVETp7hBEmb0puBzTnV2NyhpyWCFxMIRN9wOvOEZliDRsVJxpIr8',
@@ -55,7 +56,7 @@ class CalendarEvents extends React.PureComponent {
 
     webcalUrls.forEach((webcalUrl) => {
       const body = { url: webcalUrl };
-      fetch('http://localhost:1337/calendar', {
+      fetch(`${origin}/calendar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -307,7 +308,7 @@ class CalendarEvents extends React.PureComponent {
 
   getItemSize = (index) => {
     const { events } = this.state;
-    return events[index].location ? 150 : 55;
+    return events[index].location ? 45 : 30;
   };
 
   getRow = ({ index, style }) => {
@@ -446,7 +447,7 @@ const styles = {
     borderWidth: '1px',
   },
   eventRow: {
-    minHeight: '35px',
+    // minHeight: '35px',
     width: '500px',
     margin: 0,
     padding: 0,
@@ -476,7 +477,8 @@ const styles = {
     width: '26px',
     height: '18px',
     fontSize: '12px',
-    marginRight: '24px',
+    marginLeft: '12px',
+    marginRight: '10px',
     padding: 0,
     color: '#fff',
     textAlign: 'center',
@@ -521,7 +523,7 @@ const styles = {
   },
 };
 
-const eventRowStyles = (number, hasLocation) => {
+const eventRowStyles = (number, _hasLocation) => {
   let opacity;
   if (number < 5) {
     opacity = number / 1.5;
@@ -530,7 +532,7 @@ const eventRowStyles = (number, hasLocation) => {
   }
   return {
     opacity: 1 / opacity,
-    minHeight: hasLocation ? '55px' : '35px',
+    // minHeight: hasLocation ? '35px' : '25px',
     margin: 0,
     padding: 0,
     overflow: 'hidden',

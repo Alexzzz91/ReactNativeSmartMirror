@@ -2,6 +2,7 @@ import React from 'react';
 import * as rssParser from 'react-native-rss-parser';
 import Carousel from 'nuka-carousel';
 import { DateTime } from 'luxon';
+import { origin } from '../../../config/url';
 
 const lentsUrl = [
   {
@@ -53,7 +54,7 @@ class Lenta extends React.Component {
   getNewsList = () => {
     lentsUrl.forEach(({ url }) => {
       const body = { url };
-      fetch('http://localhost:1337/lenta', {
+      fetch(`${origin}/lenta`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
