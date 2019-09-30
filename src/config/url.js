@@ -5,7 +5,7 @@ import { isDevelopment } from './env';
 export const port = 1337;
 export const origin = isDevelopment
   ? `http://localhost:${port}`
-  : 'http://aimirror.website';
+  : 'https://aimirror.website';
 // export const endpoint = {
 //   landing: '/',
 //   home: '/home',
