@@ -12,4 +12,7 @@ export default {
   Off: 'отключить',
   Settings: 'Настройки',
   Fonts: 'Шрифты',
+  Back: 'Назад',
+  InWindow: 'В окне',
+  FullScreen: 'Полноэкранный режим',
 };

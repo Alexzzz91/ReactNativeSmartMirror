@@ -1,6 +1,6 @@
 {
-  "short_name": "React Smart Mirror",
-  "name": "React(web/react-native) Smart Mirror",
+  "short_name": "AIMirror",
+  "name": "Smart Mirror with artificial intellect",
   "start_url": "/?homescreen=1",
   "scope": "/",
   "display": "standalone",

@@ -11,4 +11,7 @@ export default {
   'Change Calendar': 'Change Calendar',
   Off: 'off',
   Fonts: 'Fonts',
+  Back: 'Back',
+  InWindow: 'in window',
+  FullScreen: 'Fullscreen',
 };

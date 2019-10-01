@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { ClockWeb as Clock } from '../../common/Modules/Clock';
@@ -8,11 +7,11 @@ import { WeatherWeb as Weather } from '../../common/Modules/Weather';
 import { ComplimentsWeb as Compliments } from '../../common/Modules/Compliments';
 import { LentaWeb as Lenta } from '../../common/Modules/Lenta';
 // import { FaceWeb as Face } from '../../common/Modules/FaceApi';
-import { translate } from '../../i18n';
 
 import { moment } from '../../common/Moment';
 
 import { API_KEY } from '../../common/WeatherAPIKey';
+import { SettingsButton } from './SettingsButton';
 
 class Home extends React.PureComponent {
   constructor(props) {
@@ -121,7 +120,6 @@ class Home extends React.PureComponent {
     } = this.state;
 
     const { locale } = this.props;
-    // console.log('this.props', this.props);
     const { styles } = this;
 
     return (
@@ -129,16 +127,9 @@ class Home extends React.PureComponent {
         <div style={{ ...styles.topRow }}>
           <div style={{ ...styles.topRows }}>
             <Clock />
-            <CalendarEvents/>
+            <CalendarEvents />
           </div>
-          <div style={{ ...styles.settingsButtonView }}>
-            <Link
-              style={{ ...styles.settingsButton }}
-              to="/settings"
-            >
-              {translate('Settings', locale)}
-            </Link>
-          </div>
+          <SettingsButton locale={locale} />
           <div>
             {isLoading ? (
               <span>

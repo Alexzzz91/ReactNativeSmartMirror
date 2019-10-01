@@ -6,6 +6,7 @@ import { DEFAULT_LOCALE, Locales } from '../i18n';
 const constants = {
   LOCALE_REPLACE: 'LOCALE_REPLACE',
   FONT_REPLACE: 'FONT_REPLACE',
+  FULLSCREEN_MODE_REPLACE: 'FULLSCREEN_MODE_REPLACE',
 };
 
 export const initialState = {
@@ -18,6 +19,7 @@ export const initialState = {
       'Roboto_condensed_light',
     ],
   },
+  fullscreenMode: false,
 };
 
 export const changeLocale = locale => ({
@@ -28,6 +30,10 @@ export const changeLocale = locale => ({
 export const changeFont = font => ({
   type: constants.FONT_REPLACE,
   font,
+});
+
+export const changeFullscreenMode = () => ({
+  type: constants.FULLSCREEN_MODE_REPLACE,
 });
 
 const updateMomentLocale = (locale) => {
@@ -62,6 +68,12 @@ export default function localeReducer(state = initialState, action) {
           ...state.fonts,
           current: action.font,
         },
+      };
+    }
+    case constants.FULLSCREEN_MODE_REPLACE: {
+      return {
+        ...state,
+        fullscreenMode: !state.fullscreenMode,
       };
     }
     default:

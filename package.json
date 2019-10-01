@@ -26,7 +26,7 @@
     "web": "HTTPS=true PORT=8080 react-scripts start",
     "web:build": "npm run web:client && npm run web:server",
     "web-bundle": "react-scripts build",
-    "predeploy": "PUBLIC_URL=https://aimirror.website/ npm run web-bundle && npm run build:server",
+    "predeploy": "NODE_ENV=production PUBLIC_URL=https://aimirror.website/ npm run web-bundle && npm run build:server",
     "build:server": "NODE_ENV=production webpack --progress --env --config ./tools/webpack/webpack.server.babel.js",
     "deploy": "gh-pages -d build",
     "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=19001'"
@@ -56,6 +56,7 @@
     "global": "^4.4.0",
     "jsc-android": "241213.1.0",
     "loadable-components": "^2.2.3",
+    "lodash.debounce": "^4.0.8",
     "luxon": "1.12.1",
     "moment": "^2.24.0",
     "native-base": "2.11.0",

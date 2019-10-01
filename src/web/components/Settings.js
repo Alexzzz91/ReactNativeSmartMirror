@@ -1,7 +1,11 @@
+/* eslint-disable no-undef */
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { SettingsComponents } from '../../common/Settings';
+import { translate } from '../../i18n';
+import { changeFullscreenMode } from '../../reducers/common';
 
 class Settings extends React.PureComponent {
   constructor(props) {
@@ -10,8 +14,20 @@ class Settings extends React.PureComponent {
     this.styles = getStyles();
   }
 
+  handleResizeClick = () => {
+    const { changeFScreenMode, fullscreenMode } = this.props;
+
+    changeFScreenMode();
+    if (fullscreenMode) {
+      cancelFullscreen();
+    } else {
+      launchFullScreen();
+    }
+  }
+
   render() {
     const { styles } = this;
+    const { locale, fullscreenMode } = this.props;
 
     return (
       <Scrollbars
@@ -34,8 +50,25 @@ class Settings extends React.PureComponent {
                   data-inline="false"
                   style={{ ...styles.iconBack }}
                 />
-                Вернуться обратно
+                { translate('Back', locale) }
               </Link>
+            </div>
+            <div
+              style={{ ...styles.resizeButton }}
+              onClick={this.handleResizeClick}
+            >
+              { translate(
+                fullscreenMode ? 'InWindow' : 'FullScreen',
+                locale,
+              )}
+              <span
+                className="iconify"
+                data-icon={fullscreenMode ? 'fe:compress' : 'fe:expand'}
+                data-inline="false"
+                width="2em"
+                height="2em"
+                style={{ ...styles.iconResize }}
+              />
             </div>
           </div>
           {Object.keys(SettingsComponents.asyncComponents)
@@ -58,9 +91,20 @@ class Settings extends React.PureComponent {
   }
 }
 
+const mapStateToProps = state => ({
+  locale: state.common.locale,
+  fullscreenMode: state.common.fullscreenMode,
+});
+
+const mapDispatchToProps = dispatch => ({
+  changeFScreenMode: () => dispatch(changeFullscreenMode()),
+});
+
+const ConnectedSettings = connect(mapStateToProps, mapDispatchToProps)(Settings);
+
 export {
-  Settings as default,
-  Settings,
+  ConnectedSettings as default,
+  ConnectedSettings as Settings,
 };
 
 const getStyles = params => ({
@@ -81,6 +125,7 @@ const getStyles = params => ({
     display: 'flex',
     padding: '4px',
     alignContent: 'center',
+    justifyContent: 'space-between',
     minHeight: '35px',
     borderRadius: '4px',
     marginBottom: '5%',
@@ -92,11 +137,19 @@ const getStyles = params => ({
     fontSize: '24',
   },
   settingsButtonView: {
-    width: '240px',
+    width: '140px',
     height: '20px',
     textAlign: 'left',
     marginLeft: 16,
     marginTop: 6,
+  },
+  resizeButton: {
+    height: '30px',
+    display: 'flex',
+    alignItems: 'center',
+    padding: '1px 15px',
+    border: '1px white solid',
+    cursor: 'pointer',
   },
   settingsButton: {
     color: 'white',
@@ -106,6 +159,9 @@ const getStyles = params => ({
   },
   iconBack: {
     marginRight: 6,
+  },
+  iconResize: {
+    marginLeft: 6,
   },
   settingBlock: {
     display: 'flex',
@@ -122,3 +178,26 @@ const getStyles = params => ({
     boxShadow: 'black 0px 0px 8px 10px, white 0px 0px 3px 6px',
   },
 });
+
+
+function launchFullScreen() {
+  const element = document.documentElement;
+  if (element.requestFullScreen) {
+    element.requestFullScreen();
+  } else if (element.mozRequestFullScreen) {
+    element.mozRequestFullScreen();
+  } else if (element.webkitRequestFullScreen) {
+    element.webkitRequestFullScreen();
+  }
+}
+
+// Выход из полноэкранного режима
+function cancelFullscreen() {
+  if (document.cancelFullScreen) {
+    document.cancelFullScreen();
+  } else if (document.mozCancelFullScreen) {
+    document.mozCancelFullScreen();
+  } else if (document.webkitCancelFullScreen) {
+    document.webkitCancelFullScreen();
+  }
+}
