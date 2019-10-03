@@ -19,46 +19,51 @@ const Settings = (props) => {
   } = props;
 
   const dateFormats = [
-    { value: 'off', label: translate('Off', locale) },
+    { value: false, label: translate('Off', locale) },
     { value: 'dddd, MMMM Do YYYY', label: moment().format('dddd, MMMM Do YYYY') },
     { value: 'dddd', label: moment().format('dddd') },
     { value: 'MMM Do YY', label: moment().format('MMM Do YY') },
   ];
 
   const timeFormats = [
-    { value: 'off', label: translate('Off', locale) },
+    { value: false, label: translate('Off', locale) },
     { value: 'hh:mm', label: moment().format('hh:mm') },
     { value: 'hh:mm A', label: moment().format('hh:mm A') },
   ];
 
   const secondsFormats = [
-    { value: 'off', label: translate('Off', locale) },
+    { value: false, label: translate('Off', locale) },
     { value: 'ss', label: '6' },
-    { value: 'SS', label: '06' },
   ];
 
   const setDateFormats = (params) => {
-    if (params.value === 'off') {
-      return setSecondsParams({ status: false });
+    let payload = { format: params.value, ...{ status: true } };
+
+    if (!params.value) {
+      payload = { status: false };
     }
 
-    return setDateParams({ format: params.value, ...{ status: true } });
+    return setDateParams(payload);
   };
 
   const setTimeFormats = (params) => {
-    if (params.value === 'off') {
-      return setSecondsParams({ status: false });
+    let payload = { format: params.value, ...{ status: true } };
+
+    if (!params.value) {
+      payload = { status: false };
     }
 
-    return setTimeParams({ format: params.value, ...{ status: true } });
+    return setTimeParams(payload);
   };
 
   const setSecondsFormats = (params) => {
-    if (params.value === 'off') {
-      return setSecondsParams({ status: false });
+    let payload = { format: params.value, ...{ status: true } };
+
+    if (!params.value) {
+      payload = { status: false };
     }
 
-    return setSecondsParams({ format: params.value, ...{ status: true } });
+    return setSecondsParams(payload);
   };
 
   return (
@@ -69,21 +74,21 @@ const Settings = (props) => {
         placeholder="Формат даты"
         options={dateFormats}
         onChange={setDateFormats}
-        value={dateFormats.find(f => f.value === dateParams.format || f.value === dateParams.status)}
+        value={dateFormats.find(f => f.value === dateParams.status || f.value === dateParams.format)}
       />
       <SelectBox
         label="Формат времени"
         placeholder="Формат времени"
         options={timeFormats}
         onChange={setTimeFormats}
-        value={timeFormats.find(f => f.value === timeParams.format || f.value === timeParams.status)}
+        value={timeFormats.find(f => f.value === timeParams.status || f.value === timeParams.format)}
       />
       <SelectBox
         label="Формат секунд"
         placeholder="Формат секунд"
         options={secondsFormats}
         onChange={setSecondsFormats}
-        value={secondsFormats.find(f => f.value === secondsParams.format || f.value === secondsParams.status)}
+        value={secondsFormats.find(f => f.value === secondsParams.status || f.value === secondsParams.format)}
       />
     </div>
   );

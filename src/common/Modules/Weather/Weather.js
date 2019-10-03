@@ -1,70 +1,73 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { weatherConditions } from '../../WeatherConditions';
 
-class Weather extends React.PureComponent {
-  render() {
-    const {
-      weather,
-      temperature,
-      description,
-      days,
-      city,
-    } = this.props;
+const Weather = (props) => {
+  const {
+    weather,
+    temperature,
+    description,
+    days,
+    city,
+    getWeatherdata,
+  } = props;
 
-    if (!weather) {
-      return '';
-    }
+  useEffect(() => getWeatherdata(), []);
 
-    return (
+  if (!weather) {
+    return '';
+  }
+
+  return (
+    <div>
       <div>
-        <div>
-          <div style={{ ...styles.headerContainer }}>
-            <i
-              style={{ fontSize: 52 }}
-              className={`wi ${weatherConditions[weather].webIcon}`}
-              color="#fff"
-            />
-            <span style={{ ...styles.bright }}>
-              { temperature }
-              ˚
-            </span>
-          </div>
-          <div style={{ ...styles.bodyContainer }}>
-            <span style={{ ...styles.title }}>
-              {description}
-            </span>
-          </div>
+        <div style={{ ...styles.headerContainer }}>
+          <i
+            style={{ fontSize: 52 }}
+            className={`wi ${weatherConditions[weather].webIcon}`}
+            color="#fff"
+          />
+          <span style={{ ...styles.bright }}>
+            { temperature }
+            ˚
+          </span>
         </div>
-        <div>
-          <h2 style={{ ...styles.header }}>
-            Прогноз в
-            { city }
-          </h2>
-          <div style={{ ...styles.eventRows }}>
-            {days.map((day, i) => (
-              <div
-                key={day.date}
-                style={{ ...weatherRowStyles(i + 1) }}
-              >
-                <div style={{ ...styles.weatherRow }}>
-                  <span style={{ ...styles.day }}>
-                    {day.date}
-                  </span>
-                  <i
-                    className={`wi ${weatherConditions[day.weatherCondition].webIcon}`}
-                    style={{ ...styles.weatherIcon }}
-                  />
-                  <span style={{ ...styles.tempMax }}>{day.tempMax}</span>
-                  <span style={{ ...styles.tempMin }}>{day.tempMin}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div style={{ ...styles.bodyContainer }}>
+          <span style={{ ...styles.title }}>
+            {description}
+          </span>
         </div>
       </div>
-    );
-  }
-}
+      <div>
+        <h2 style={{ ...styles.header }}>
+          Прогноз в
+          <span style={{ ...styles.headerSpan }}>
+            { city }
+          </span>
+        </h2>
+        <div style={{ ...styles.eventRows }}>
+          {days.map((day, i) => (
+            <div
+              key={day.date}
+              style={{ ...weatherRowStyles(i + 1) }}
+            >
+              <div style={{ ...styles.weatherRow }}>
+                <span style={{ ...styles.day }}>
+                  {day.date}
+                </span>
+                <i
+                  className={`wi ${weatherConditions[day.weatherCondition].webIcon}`}
+                  style={{ ...styles.weatherIcon }}
+                />
+                <span style={{ ...styles.tempMax }}>{day.tempMax}</span>
+                <span style={{ ...styles.tempMin }}>{day.tempMin}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export {
   Weather as default,
@@ -148,6 +151,9 @@ const styles = {
     marginBottom: '2px',
     marginTop: '2px',
     color: '#999',
+  },
+  headerSpan: {
+    marginLeft: '4px',
   },
   headerContainer: {
     flexDirection: 'row',

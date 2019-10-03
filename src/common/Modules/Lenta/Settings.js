@@ -19,7 +19,7 @@ const Settings = () => {
   );
 };
 
-injectComponent(SettingsComponents, { key: 'lenta', component: Settings });
+// injectComponent(SettingsComponents, { key: 'lenta', component: Settings });
 
 export {
   Settings as default,

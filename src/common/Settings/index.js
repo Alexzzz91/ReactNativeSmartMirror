@@ -22,10 +22,13 @@ const getComponents = () => {
 };
 
 const injectComponent = (injComponents = {}, { key, component }) => {
-  // if (Object.hasOwnProperty.call(components.asyncComponents, key)) return;
+  if (components.asyncComponents && Object.hasOwnProperty.call(components.asyncComponents, key)) {
+    return;
+  }
 
   // eslint-disable-next-line no-param-reassign
   injComponents.asyncComponents[key] = component;
+  // eslint-disable-next-line consistent-return
   return injComponents.replaceComponents(createComponents(injComponents.asyncComponents));
 };
 

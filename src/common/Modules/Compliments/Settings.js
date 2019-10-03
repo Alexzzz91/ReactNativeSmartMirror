@@ -19,7 +19,7 @@ const Settings = () => {
   );
 };
 
-injectComponent(SettingsComponents, { key: 'compliments', component: Settings });
+// injectComponent(SettingsComponents, { key: 'compliments', component: Settings });
 
 export {
   Settings as default,

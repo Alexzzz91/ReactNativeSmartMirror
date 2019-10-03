@@ -1,14 +1,12 @@
 import { createSelector } from 'reselect';
 
-const calendarEvents = (state) => state.calendarEvents;
+const calendarEvents = state => state.calendarEvents;
 
-const events = (state) => calendarEvents(state).seriesIds;
+const events = state => calendarEvents(state).seriesIds;
 
 const calendarEventsSelector = createSelector(
-    [events],
-    (content) => {
-      return [];
-    }
+  [events],
+  content => [content, content],
 );
 
 export {

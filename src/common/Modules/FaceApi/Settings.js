@@ -19,7 +19,7 @@ const Settings = () => {
   );
 };
 
-injectComponent(SettingsComponents, { key: 'face', component: Settings });
+// injectComponent(SettingsComponents, { key: 'face', component: Settings });
 
 export {
   Settings as default,

@@ -48,17 +48,23 @@ class Clock extends React.PureComponent {
       seconds,
     } = this.state;
 
+    const {
+      dateParams,
+      timeParams,
+      secondsParams,
+    } = this.props;
+
     return (
       <div style={{ ...styles.moduleClock }}>
         <span style={{ ...styles.dateClock }}>
-          { dateString }
+          { dateParams.status && dateString }
         </span>
         <div style={{ ...styles.timeClock }}>
           <h2 style={{ ...styles.timeClockThin }}>
-            { time }
+            { timeParams.status && time }
           </h2>
           <span style={{ ...styles.timeClockDimmed }}>
-            { seconds }
+            { secondsParams.status && seconds }
           </span>
         </div>
         <span style={{ ...styles.weekClock }} />

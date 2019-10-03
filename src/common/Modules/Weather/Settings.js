@@ -18,7 +18,7 @@ const Settings = () => {
   );
 };
 
-injectComponent(SettingsComponents, { key: 'weather', component: Settings });
+// injectComponent(SettingsComponents, { key: 'weather', component: Settings });
 
 export {
   Settings as default,

@@ -18,26 +18,26 @@ const reducer = (state = initialState, action) => {
     case 'CHANGE_DATE_CONFIG':
       return {
         ...state,
-        dateParams: [
+        dateParams: {
           ...state.dateParams,
-          action.payload,
-        ],
+          ...action.payload,
+        },
       };
     case 'CHANGE_TIME_CONFIG':
       return {
         ...state,
-        timeParams: [
+        timeParams: {
           ...state.timeParams,
-          action.payload,
-        ],
+          ...action.payload,
+        },
       };
     case 'CHANGE_SECONDS_CONFIG':
       return {
         ...state,
-        secondsParams: [
+        secondsParams: {
           ...state.secondsParams,
-          action.payload,
-        ],
+          ...action.payload,
+        },
       };
     default:
       return state;

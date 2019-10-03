@@ -7,12 +7,6 @@ import { translate } from '../../../i18n';
 import * as Ical from '../../Ical';
 import { origin } from '../../../config/url';
 
-const webcalUrls = [
-  'https://p11-calendars.icloud.com/published/2/MTM2NzAyMjI0ODEzNjcwMqI5jWSNf6penKtjCEx88rFVTg69KSsCtgSKVETp7hBEmb0puBzTnV2NyhpyWCFxMIRN9wOvOEZliDRsVJxpIr8',
-  'https://calendar.google.com/calendar/ical/nlj3voogbgmajslig5dd9bppe8%40group.calendar.google.com/public/basic.ics',
-  'https://calendar.google.com/calendar/ical/belalex.9132788%40gmail.com/public/basic.ics'
-];
-
 class CalendarEvents extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -46,6 +40,7 @@ class CalendarEvents extends React.PureComponent {
 
   getByWebCal = () => {
     const { updateTime } = this.state;
+    const { webCalls } = this.props;
     const now = moment();
 
     if (updateTime) {
@@ -54,7 +49,7 @@ class CalendarEvents extends React.PureComponent {
       }
     }
 
-    webcalUrls.forEach((webcalUrl) => {
+    webCalls.forEach((webcalUrl) => {
       const body = { url: webcalUrl };
       fetch(`${origin}/calendar`, {
         method: 'POST',

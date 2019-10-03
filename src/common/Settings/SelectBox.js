@@ -5,7 +5,7 @@ const getCustomStyles = styles => ({
   option: (provided, state) => {
     let color = state.isSelected ? '#8bf3fd' : 'white';
 
-    if (state.value === 'off') {
+    if (!state.value) {
       color = 'red';
     }
 

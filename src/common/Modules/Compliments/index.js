@@ -7,6 +7,7 @@ import { injectReducer, store } from '../../../store';
 
 const mapStateToProps = state => ({
   locale: state.locale,
+  weather: state.weather.weatherCondition,
   compliments: state.compliments.allCompliments,
 });
 

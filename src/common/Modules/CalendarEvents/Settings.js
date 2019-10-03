@@ -9,7 +9,6 @@ const Settings = () => {
     { value: 'vanilla', label: 'Vanilla' },
   ];
 
-
   return (
     <div style={{ ...styles.settingsLocales }}>
       <h3>Календарь на сегодня</h3>
@@ -20,7 +19,7 @@ const Settings = () => {
   );
 };
 
-injectComponent(SettingsComponents, { key: 'calendarEvents', component: Settings });
+// injectComponent(SettingsComponents, { key: 'calendarEvents', component: Settings });
 
 export {
   Settings as default,

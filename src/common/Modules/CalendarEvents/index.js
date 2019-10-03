@@ -5,6 +5,7 @@ import { Settings } from './Settings';
 import { reducer } from './reducer';
 
 const mapStateToProps = state => ({
+  webCalls: state.calendarEvents.webCalls,
   settings: state.calendarEvents.settings,
   locale: state.locale,
 });

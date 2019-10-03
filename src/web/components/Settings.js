@@ -114,7 +114,7 @@ const getStyles = params => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     flexFlow: 'row wrap',
-    alignContent: 'space-between',
+    alignContent: 'baseline',
     backgroundColor: params && params.bg ? params.bg : 'rgba(1, 1, 1, 0.97)',
     padding: '8px',
     paddingBottom: '50px',
