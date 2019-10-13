@@ -1,5 +1,6 @@
 import React from 'react';
 import { SelectBox } from '../../Settings/SelectBox';
+import { TextArea } from '../../Settings/TextArea';
 import { SettingsComponents, injectComponent } from '../../Settings';
 
 const Settings = () => {
@@ -11,6 +12,9 @@ const Settings = () => {
   return (
     <div style={{ ...styles.settingsLocales }}>
       <h3> Погода </h3>
+      <TextArea
+        value="wed "
+      />
       <SelectBox
         options={options}
       />
@@ -18,7 +22,7 @@ const Settings = () => {
   );
 };
 
-// injectComponent(SettingsComponents, { key: 'weather', component: Settings });
+injectComponent(SettingsComponents, { key: 'weather', component: Settings });
 
 export {
   Settings as default,

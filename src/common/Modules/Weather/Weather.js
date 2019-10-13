@@ -1,73 +1,78 @@
-import React, { useEffect } from 'react';
+import React, { PureComponent } from 'react';
 import { weatherConditions } from '../../WeatherConditions';
 
-const Weather = (props) => {
-  const {
-    weather,
-    temperature,
-    description,
-    days,
-    city,
-    getWeatherdata,
-  } = props;
+class Weather extends PureComponent {
+  componentDidMount() {
+    const { getWeatherdata } = this.props;
 
-  useEffect(() => getWeatherdata(), []);
-
-  if (!weather) {
-    return '';
+    getWeatherdata();
   }
 
-  return (
-    <div>
+  render() {
+    const {
+      weather,
+      temperature,
+      description,
+      days,
+      city,
+    } = this.props;
+
+    if (!weather) {
+      return '';
+    }
+
+    return (
       <div>
-        <div style={{ ...styles.headerContainer }}>
-          <i
-            style={{ fontSize: 52 }}
-            className={`wi ${weatherConditions[weather].webIcon}`}
-            color="#fff"
-          />
-          <span style={{ ...styles.bright }}>
-            { temperature }
-            ˚
+        <div>
+          <div style={{ ...styles.headerContainer }}>
+            <i
+              style={{ fontSize: 52 }}
+              className={`wi ${weatherConditions[weather].webIcon}`}
+              color="#fff"
+            />
+            <span style={{ ...styles.bright }}>
+              {temperature}
+              ˚
           </span>
+          </div>
+          <div style={{ ...styles.bodyContainer }}>
+            <span style={{ ...styles.title }}>
+              {description}
+            </span>
+          </div>
         </div>
-        <div style={{ ...styles.bodyContainer }}>
-          <span style={{ ...styles.title }}>
-            {description}
-          </span>
-        </div>
-      </div>
-      <div>
-        <h2 style={{ ...styles.header }}>
-          Прогноз в
-          <span style={{ ...styles.headerSpan }}>
-            { city }
-          </span>
-        </h2>
-        <div style={{ ...styles.eventRows }}>
-          {days.map((day, i) => (
-            <div
-              key={day.date}
-              style={{ ...weatherRowStyles(i + 1) }}
-            >
-              <div style={{ ...styles.weatherRow }}>
-                <span style={{ ...styles.day }}>
-                  {day.date}
-                </span>
-                <i
-                  className={`wi ${weatherConditions[day.weatherCondition].webIcon}`}
-                  style={{ ...styles.weatherIcon }}
-                />
-                <span style={{ ...styles.tempMax }}>{day.tempMax}</span>
-                <span style={{ ...styles.tempMin }}>{day.tempMin}</span>
+        <div>
+          <h2 style={{ ...styles.header }}>
+            Прогноз в
+            <span style={{ ...styles.headerSpan }}>
+              { city }
+            </span>
+          </h2>
+          <div style={{ ...styles.eventRows }}>
+            {days.map((day, i) => (
+              <div
+                key={day.date}
+                style={{ ...weatherRowStyles(i + 1)}}
+              >
+                <div style={{ ...styles.weatherRow }}>
+                  <span style={{ ...styles.day }}>
+                    {day.date}
+                  </span>
+                  <i
+                    className={`wi ${weatherConditions[day.weatherCondition].webIcon}`}
+                    style={{ ...styles.weatherIcon }}
+                  />
+                  <span style={{ ...styles.tempMax }}>{day.tempMax}</span>
+                  <span style={{ ...styles.tempMin }}>{day.tempMin}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 export {
   Weather as default,

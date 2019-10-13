@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { SelectBox } from '../../common/Settings/SelectBox';
-import { changeLocale, changeFont } from '../../reducers/common';
+import { Toggle } from '../../common/Settings/Toggle';
+import { changeLocale, changeFont, changeWebcamMode } from '../../reducers/common';
 import { Locales, translate } from '../../i18n';
 import { SettingsComponents, injectComponent } from '../../common/Settings';
 
@@ -52,7 +53,11 @@ class CommonSettings extends React.PureComponent {
   }
 
   render() {
-    const { locale, fonts } = this.props;
+    const {
+      locale,
+      fonts,
+      webcamMode,
+    } = this.props;
 
     console.log('locale', locale);
 
@@ -79,6 +84,13 @@ class CommonSettings extends React.PureComponent {
           value={{ value: fonts.current, label: fonts.current }}
           options={fonts.list.map(label => ({ value: label, label }))}
         />
+        <h2>
+          {translate('UseCamera', locale)}
+        </h2>
+        <Toggle
+          label={translate('Active', locale)}
+          value={webcamMode}
+        />
       </div>
     );
   }
@@ -87,11 +99,13 @@ class CommonSettings extends React.PureComponent {
 const mapStateToProps = state => ({
   locale: state.common.locale,
   fonts: state.common.fonts,
+  webcamMode: state.common.webcamMode,
 });
 
 const mapDispatchToProps = dispatch => ({
   setLocale: locale => dispatch(changeLocale(locale)),
   setFont: font => dispatch(changeFont(font)),
+  toogleWebcamMode: () => dispatch(changeWebcamMode()),
 });
 
 const ConnectedCommonSettings = connect(mapStateToProps, mapDispatchToProps)(CommonSettings);

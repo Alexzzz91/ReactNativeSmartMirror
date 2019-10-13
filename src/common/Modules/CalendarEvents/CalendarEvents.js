@@ -1,5 +1,5 @@
-import React from 'react';
-import { VariableSizeList as List, shouldComponentUpdate } from 'react-window';
+import React, { PureComponent } from 'react';
+import { VariableSizeList as List } from 'react-window';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { moment } from '../../Moment';
 import { translate } from '../../../i18n';
@@ -7,7 +7,7 @@ import { translate } from '../../../i18n';
 import * as Ical from '../../Ical';
 import { origin } from '../../../config/url';
 
-class CalendarEvents extends React.PureComponent {
+class CalendarEvents extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -23,7 +23,7 @@ class CalendarEvents extends React.PureComponent {
     this.handleItemClick = this.handleItemClick.bind(this);
     this.signUpdate = this.signUpdate.bind(this);
     this.setCalendars = this.setCalendars.bind(this);
-    this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
+    // this.shouldComponentUpdate = shouldComponentUpdate.bind(this);
   }
 
   componentDidMount() {

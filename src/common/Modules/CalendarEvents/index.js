@@ -10,9 +10,9 @@ const mapStateToProps = state => ({
   locale: state.locale,
 });
 
-const mapDispatchToProps = dispatch => ({});
+// const mapDispatchToProps = dispatch => ({});
 
-const ConnectedCalendarEvents = Module => connect(mapStateToProps, mapDispatchToProps)(Module);
+const ConnectedCalendarEvents = Module => connect(mapStateToProps)(Module);
 
 injectReducer(store, { key: 'calendarEvents', reducer });
 

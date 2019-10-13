@@ -6,7 +6,7 @@ import { CalendarEventsWeb as CalendarEvents } from '../../common/Modules/Calend
 import { WeatherWeb as Weather } from '../../common/Modules/Weather';
 import { ComplimentsWeb as Compliments } from '../../common/Modules/Compliments';
 import { LentaWeb as Lenta } from '../../common/Modules/Lenta';
-// import { FaceWeb as Face } from '../../common/Modules/FaceApi';
+import { FaceWeb as Face } from '../../common/Modules/FaceApi';
 
 import { SettingsButton } from './SettingsButton';
 
@@ -25,7 +25,11 @@ class Home extends React.PureComponent {
   }
 
   render() {
-    const { locale, isWeatherLoading } = this.props;
+    const {
+      locale,
+      isWeatherLoading,
+      isWebcamActive,
+    } = this.props;
     const { styles } = this;
 
     return (
@@ -59,7 +63,7 @@ class Home extends React.PureComponent {
         <div style={{ ...styles.footerRow }}>
           <Lenta />
         </div>
-        {/* <Face /> */}
+        { isWebcamActive &&  <Face /> }
       </div>
     );
   }
@@ -68,6 +72,7 @@ class Home extends React.PureComponent {
 const mapStateToProps = state => ({
   locale: state.common.locale,
   fonts: state.common.fonts,
+  isWebcamActive: state.common.isWebcamActive,
   isWeatherLoading: state.weather.isLoading,
 });
 

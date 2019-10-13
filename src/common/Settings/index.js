@@ -13,16 +13,15 @@ const createComponents = (asyncComponents = {}) => ({
 const getComponents = () => {
   const newComponents = createComponents(components);
 
-  return () => {
-    newComponents.asyncComponents = {};
-    newComponents.replaceComponents = replaceComponents;
+  newComponents.asyncComponents = {};
+  newComponents.replaceComponents = replaceComponents;
 
-    return newComponents;
-  };
+  return newComponents;
 };
 
 const injectComponent = (injComponents = {}, { key, component }) => {
-  if (components.asyncComponents && Object.hasOwnProperty.call(components.asyncComponents, key)) {
+  console.log('injComponents', injComponents);
+  if (!injComponents.asyncComponents || injComponents.asyncComponents[key]) {
     return;
   }
 
@@ -32,7 +31,7 @@ const injectComponent = (injComponents = {}, { key, component }) => {
   return injComponents.replaceComponents(createComponents(injComponents.asyncComponents));
 };
 
-const SettingsComponents = getComponents()();
+const SettingsComponents = getComponents();
 
 export {
   SettingsComponents,

@@ -7,6 +7,7 @@ const constants = {
   LOCALE_REPLACE: 'LOCALE_REPLACE',
   FONT_REPLACE: 'FONT_REPLACE',
   FULLSCREEN_MODE_REPLACE: 'FULLSCREEN_MODE_REPLACE',
+  WEBCAM_MODE_REPLACE: 'WEBCAM_MODE_REPLACE',
 };
 
 export const initialState = {
@@ -20,6 +21,7 @@ export const initialState = {
     ],
   },
   fullscreenMode: false,
+  isWebcamActive: false,
 };
 
 export const changeLocale = locale => ({
@@ -36,6 +38,10 @@ export const changeFullscreenMode = () => ({
   type: constants.FULLSCREEN_MODE_REPLACE,
 });
 
+export const changeWebcamMode = () => ({
+  type: constants.WEBCAM_MODE_REPLACE,
+});
+
 const updateMomentLocale = (locale) => {
   switch (locale) {
     case Locales.ru:
@@ -48,7 +54,6 @@ const updateMomentLocale = (locale) => {
       break;
   }
 };
-
 
 export default function localeReducer(state = initialState, action) {
   switch (action.type) {
@@ -74,6 +79,12 @@ export default function localeReducer(state = initialState, action) {
       return {
         ...state,
         fullscreenMode: !state.fullscreenMode,
+      };
+    }
+    case constants.WEBCAM_MODE_REPLACE: {
+      return {
+        ...state,
+        isWebcamActive: !state.isWebcamActive,
       };
     }
     default:

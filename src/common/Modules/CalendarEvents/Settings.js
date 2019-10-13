@@ -1,6 +1,6 @@
 import React from 'react';
 import { SelectBox } from '../../Settings/SelectBox';
-import { SettingsComponents, injectComponent } from '../../Settings';
+// import { SettingsComponents, injectComponent } from '../../Settings';
 
 const Settings = () => {
   const options = [
