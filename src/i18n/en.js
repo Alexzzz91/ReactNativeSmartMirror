@@ -1,6 +1,4 @@
 export default {
-  Login: 'Войти',
-  Email: 'Емайл',
   Password: 'Пароль',
   Today: 'today',
   Tomorrow: 'tomorrow',
@@ -14,4 +12,21 @@ export default {
   Back: 'Back',
   InWindow: 'in window',
   FullScreen: 'Fullscreen',
+
+  'Use Camera': 'Use camera (for persons module)',
+  'Date format': 'Date format',
+  'Time format': 'Time format',
+  'Seconds format': 'Seconds format',
+  'Upcoming events': 'Upcoming events',
+  Compliment: '"Compliment"',
+  appid: 'app id for OpenWeather',
+  Active: 'Active',
+  Celsius: 'Celsius',
+  Kelvin: 'Kelvin',
+  Fahrenheit: 'Fahrenheit',
+  Weather: 'Weather',
+  City: 'City',
+  'Units format': 'Units format',
+  News: 'News',
+  Persons: 'Persons',
 };

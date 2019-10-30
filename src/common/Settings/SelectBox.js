@@ -36,6 +36,9 @@ const getCustomStyles = styles => ({
       ...(styles && styles.singleValue ? { ...styles.singleValue() } : {}),
     };
   },
+  menu: () => ({
+    background: '#121212',
+  }),
 });
 
 const SelectBox = (props) => {

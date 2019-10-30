@@ -1,3 +1,6 @@
-import moment from "moment";
+import moment from 'moment';
 
-export { moment }
+export {
+  moment as default,
+  moment,
+};

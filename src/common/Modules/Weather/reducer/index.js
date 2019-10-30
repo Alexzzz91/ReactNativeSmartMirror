@@ -11,6 +11,7 @@ const initialState = {
   temperature: null,
   weatherDescription: null,
   days: [],
+  active: true,
 };
 
 const { reducer, actions } = createReducer(
@@ -23,6 +24,10 @@ const { reducer, actions } = createReducer(
     setWeatherParams: (state, payload) => ({
       ...state,
       ...payload,
+    }),
+    toggleActive: state => ({
+      ...state,
+      active: !state.active,
     }),
   },
   'weather',

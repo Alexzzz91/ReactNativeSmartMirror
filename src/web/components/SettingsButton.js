@@ -1,59 +1,47 @@
-import React from 'react';
-// import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
+import jss from 'jss';
 
 import { Link } from 'react-router-dom';
 import { translate } from '../../i18n';
-// import { useDebounce } from '../../common/debounce';
+import { useDebounce } from '../../common/debounce';
+
+let timeout;
 
 const SettingsButton = (props) => {
-  // const [searchTerm, setSearchTerm] = useState('');
+  const [isShowing, setIsShowing] = useState(false);
 
-  // const [results, setResults] = useState([]);
+  const debouncedShowing = useDebounce(isShowing, 1000);
 
-  // const [isSearching, setIsSearching] = useState(false);
+  const myFunction = () => {
+    setIsShowing(true);
+    timeout = setTimeout(() => {
+      if (debouncedShowing) {
+        setIsShowing(false);
+      }
+    }, 5000);
+    if (debouncedShowing) {
+      setIsShowing(false);
+    }
+  };
 
-  // const myFunction = () => {
-  //   console.log('q112123');
-  // };
+  useEffect(() => {
+    window.addEventListener('mousemove', myFunction);
 
-  // useEffect (() => {
-  //   // eslint-disable-next-line no-undef
-  //   window.document.addEventListener('mousemove', myFunction);
-  // }, []);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener('mousemove', myFunction);
+    };
+  }, [debouncedShowing]);
 
-  // useEffect(() => () => {
-  //   window.document.removeEventListener('mousemove', myFunction);
-  // }, []);
-
-  // const debouncedButtonStyle = useDebounce(searchTerm, 50);
-
-  // useEffect(
-  //   () => {
-  //     // Make sure we have a value (user has entered something in input)
-  //     console.log('debouncedButtonStyle', debouncedButtonStyle);
-  //     if (debouncedButtonStyle) {
-  //       // Set isSearching state
-  //       setIsSearching(true);
-  //       // Fire off our API call
-  //       console.log('23');
-  //     } else {
-  //       setResults([]);
-  //     }
-  //   },
-  //   // This is the useEffect input array
-  //   // Our useEffect function will only execute if this value changes ...
-  //   // ... and thanks to our hook it will only change if the original ...
-  //   // value (searchTerm) hasn't changed for more than 500ms.
-  //   [debouncedButtonStyle]
-  // );
-
-  const styles = getStyles();
+  const styles = getStyles({ showing: debouncedShowing });
+  const { classes } = jss.createStyleSheet(styles).attach();
   const { locale } = props;
 
   return (
-    <div style={{ ...styles.settingsButtonView }}>
+    <div className={classes.settingsButtonView}>
       <Link
-        style={{ ...styles.settingsButton }}
+        className={classes.settingsButton}
         to="/settings"
       >
         { translate('Settings', locale) }
@@ -67,17 +55,19 @@ export {
   SettingsButton,
 };
 
-const getStyles = params => ({
+const getStyles = ({ showing }) => ({
   settingsButtonView: {
     width: '240px',
     height: '20px',
-    textAlign: 'left',
-    marginLeft: 16,
-    marginTop: 6,
+    'text-align': 'left',
+    'margin-left': '16px',
+    'margin-top': '6px',
+    opacity: showing ? '1' : '0.1',
+    transition: 'opacity 1s ease-out 0.5s',
   },
   settingsButton: {
     color: 'white',
-    textDecoration: 'none',
+    'text-decoration': 'none',
     padding: '5px 15px',
     border: '1px white solid',
   },

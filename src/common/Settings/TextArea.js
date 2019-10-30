@@ -50,5 +50,10 @@ const getStyles = () => ({
   textarea: {
     width: '100%',
     height: '100%',
+    color: 'white',
+    boxSizing: 'border-box',
+    background: 'transparent',
+    border: 'transparent',
+    padding: '5px 0 0 0',
   },
 });

@@ -29,6 +29,10 @@ class Home extends React.PureComponent {
       locale,
       isWeatherLoading,
       isWebcamActive,
+      isWeatherActive,
+      isLentaActive,
+      isClockActive,
+      isCalendarActive,
     } = this.props;
     const { styles } = this;
 
@@ -36,34 +40,44 @@ class Home extends React.PureComponent {
       <div style={{ ...styles.container }}>
         <div style={{ ...styles.topRow }}>
           <div style={{ ...styles.topRows }}>
-            <Clock />
-            <CalendarEvents />
+            {isClockActive && (
+              <Clock />
+            )}
+            {isCalendarActive && (
+              <CalendarEvents />)
+            }
           </div>
           <SettingsButton locale={locale} />
-          <div>
-            {isWeatherLoading ? (
-              <span>
-                Загружаются данные о погоде
-              </span>
-            ) : (
-              <Weather />
-            )}
-          </div>
+          { isWeatherActive && (
+            <>
+              {isWeatherLoading ? (
+                <span>
+                  Загружаются данные о погоде
+                </span>
+              ) : (
+                <Weather />
+              )}
+            </>
+          )}
         </div>
         <div style={{ ...styles.middleRow }}>
-          {isWeatherLoading
-            ? (
-              <span>
-                Загружаются данные о погоде
-              </span>
-            ) : (
-              <Compliments />
-            )}
+          {isWeatherActive && (
+            <>
+              {isWeatherLoading
+                ? (
+                  <span>
+                    Загружаются данные о погоде
+                  </span>
+                ) : (
+                  <Compliments />
+                )}
+            </>
+          )}
         </div>
         <div style={{ ...styles.footerRow }}>
-          <Lenta />
+          {isLentaActive && <Lenta />}
         </div>
-        { isWebcamActive &&  <Face /> }
+        { isWebcamActive && <Face /> }
       </div>
     );
   }
@@ -74,6 +88,10 @@ const mapStateToProps = state => ({
   fonts: state.common.fonts,
   isWebcamActive: state.common.isWebcamActive,
   isWeatherLoading: state.weather.isLoading,
+  isWeatherActive: state.weather.active,
+  isLentaActive: state.lenta.active,
+  isClockActive: state.clock.active,
+  isCalendarActive: state.calendarEvents.active,
 });
 
 const ConnectedHome = connect(mapStateToProps)(Home);

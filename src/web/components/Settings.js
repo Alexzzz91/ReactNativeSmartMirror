@@ -166,8 +166,8 @@ const getStyles = params => ({
   settingBlock: {
     display: 'flex',
     flex: 1,
-    minWidth: '48%',
-    maxWidth: '48%',
+    minWidth: '31%',
+    maxWidth: '31%',
     maxHeight: '500px',
     margin: '1%',
     marginBottom: '2%',

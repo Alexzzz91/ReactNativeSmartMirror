@@ -1,25 +1,45 @@
 import React from 'react';
-import { SelectBox } from '../../Settings/SelectBox';
+import { connect } from 'react-redux';
+import { translate } from '../../../i18n';
+import { Toggle } from '../../Settings/Toggle';
 import { SettingsComponents, injectComponent } from '../../Settings';
+import { actions } from './reducer';
 
-const Settings = () => {
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-  ];
+const Settings = (props) => {
+  const {
+    locale,
+    complimentsActive,
+    toggleActive,
+  } = props;
+
+  const handleToggleActive = () => toggleActive();
 
   return (
     <div style={{ ...styles.settingsLocales }}>
-      <h3> 'Комплимент' </h3>
-      <SelectBox
-        options={options}
+      <h3>
+        { translate('Compliment', locale) }
+      </h3>
+      <Toggle
+        label={translate('Active', locale)}
+        value={complimentsActive}
+        onChange={handleToggleActive}
       />
     </div>
   );
 };
 
-// injectComponent(SettingsComponents, { key: 'compliments', component: Settings });
+const mapStateToProps = state => ({
+  locale: state.common.locale,
+  complimentsActive: state.compliments.active,
+});
+
+const mapDispatchToProps = dispatch => ({
+  toggleActive: () => dispatch(actions.toggleActive()),
+});
+
+const ConnectedSettings = connect(mapStateToProps, mapDispatchToProps)(Settings);
+
+injectComponent(SettingsComponents, { key: 'compliments', component: ConnectedSettings });
 
 export {
   Settings as default,

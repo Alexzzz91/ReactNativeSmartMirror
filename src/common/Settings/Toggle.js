@@ -1,9 +1,9 @@
 import React from 'react';
 
 const Toggle = (props) => {
-  const { label } = props;
+  const { label, value } = props;
 
-  const styles = getStyles();
+  const styles = getStyles({ value });
 
   const id = Math.round(Math.random() * 100);
 
@@ -23,10 +23,11 @@ const Toggle = (props) => {
         <input
           style={{ ...styles.input }}
           type="checkbox"
+          value={value}
           id={id}
           {...props}
         />
-        <span />
+        <span style={{ ...styles.view }} />
       </div>
     </form>
   );
@@ -38,8 +39,7 @@ export {
   Toggle,
 };
 
-
-const getStyles = () => ({
+const getStyles = ({ value }) => ({
   form: {
     position: 'relative',
     border: '1px solid white',
@@ -58,18 +58,32 @@ const getStyles = () => ({
     width: '45px',
     height: '24px',
     borderRadius: '40px',
+    border: '1px solid',
+    margin: '5px',
   },
   input: {
     width: '100%',
     height: '100%',
-    // position: 'absolute',
-    // top: '0px',
-    // left: '0px',
-    // right: '0px',
-    // bottom: '0px',
-    // margin: '0px',
-    // cursor: 'pointer',
-    // opacity: '0',
-    // zIndex: '2',
+    position: 'absolute',
+    top: '0px',
+    left: '0px',
+    right: '0px',
+    bottom: '0px',
+    margin: '0px',
+    cursor: 'pointer',
+    opacity: '0',
+    zIndex: '2',
+  },
+  view: {
+    width: '22px',
+    height: '22px',
+    position: 'relative',
+    display: 'block',
+    background: 'white',
+    borderRadius: '50%',
+    left: '1px',
+    top: '1px',
+    transform: !value ? 'translateX(21px)' : 'translateX(0px)',
+    transition: 'transform 0.5s ease 0s',
   },
 });

@@ -20,7 +20,6 @@ const getComponents = () => {
 };
 
 const injectComponent = (injComponents = {}, { key, component }) => {
-  console.log('injComponents', injComponents);
   if (!injComponents.asyncComponents || injComponents.asyncComponents[key]) {
     return;
   }

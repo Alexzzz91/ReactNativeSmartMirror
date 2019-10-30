@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { actions } from './reducer';
 import { SelectBox } from '../../Settings/SelectBox';
 import { moment } from '../../Moment';
-
+import { Toggle } from '../../Settings/Toggle';
 import { SettingsComponents, injectComponent } from '../../Settings';
 import { translate } from '../../../i18n';
 
@@ -12,6 +12,8 @@ const Settings = (props) => {
     locale,
     dateParams,
     timeParams,
+    clockActive,
+    toggleActive,
     secondsParams,
     setDateParams,
     setTimeParams,
@@ -68,24 +70,31 @@ const Settings = (props) => {
 
   return (
     <div style={{ ...styles.settingsLocales }}>
-      <h3> Время и Дата </h3>
+      <h3>
+        {translate('Date and time', locale)}
+      </h3>
+      <Toggle
+        label={translate('Active', locale)}
+        value={clockActive}
+        onChange={toggleActive}
+      />
       <SelectBox
-        label="Формат даты"
-        placeholder="Формат даты"
+        label={translate('Date format', locale)}
+        placeholder={translate('Date format', locale)}
         options={dateFormats}
         onChange={setDateFormats}
         value={dateFormats.find(f => f.value === dateParams.status || f.value === dateParams.format)}
       />
       <SelectBox
-        label="Формат времени"
-        placeholder="Формат времени"
+        label={translate('Time format', locale)}
+        placeholder={translate('Time format', locale)}
         options={timeFormats}
         onChange={setTimeFormats}
         value={timeFormats.find(f => f.value === timeParams.status || f.value === timeParams.format)}
       />
       <SelectBox
-        label="Формат секунд"
-        placeholder="Формат секунд"
+        label={translate('Seconds format', locale)}
+        placeholder={translate('Seconds format', locale)}
         options={secondsFormats}
         onChange={setSecondsFormats}
         value={secondsFormats.find(f => f.value === secondsParams.status || f.value === secondsParams.format)}
@@ -95,13 +104,15 @@ const Settings = (props) => {
 };
 
 const mapStateToProps = state => ({
-  locale: state.locale,
+  locale: state.common.locale,
+  clockActive: state.clock.active,
   dateParams: state.clock.dateParams,
   timeParams: state.clock.timeParams,
   secondsParams: state.clock.secondsParams,
 });
 
 const mapDispatchToProps = dispatch => ({
+  toggleActive: () => dispatch(actions.toggleActive()),
   setDateParams: params => dispatch(actions.setDateParams(params)),
   setTimeParams: params => dispatch(actions.setTimeParams(params)),
   setSecondsParams: params => dispatch(actions.setSecondsParams(params)),
@@ -115,7 +126,6 @@ export {
   ConnectedSettings as default,
   ConnectedSettings as Settings,
 };
-
 
 const styles = {
   settingsLocales: {

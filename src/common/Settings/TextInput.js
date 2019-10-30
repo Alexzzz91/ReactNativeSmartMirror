@@ -1,45 +1,7 @@
 import React from 'react';
-import Select from 'react-select';
 
-const getCustomStyles = styles => ({
-  option: (provided, state) => {
-    let color = state.isSelected ? '#8bf3fd' : 'white';
-
-    if (!state.value) {
-      color = 'red';
-    }
-
-    return {
-      ...provided,
-      background: '#191919',
-      color,
-      padding: 10,
-      ...(styles && styles.option ? { ...styles.option() } : {}),
-    };
-  },
-  control: () => ({
-    // none of react-select's styles are passed to <Control />
-    width: '100%',
-    display: 'flex',
-    ...(styles && styles.control ? { ...styles.control() } : {}),
-  }),
-  singleValue: (provided) => {
-    const opacity = 1;
-    const color = 'white';
-    const transition = 'opacity 300ms';
-
-    return {
-      ...provided,
-      opacity,
-      transition,
-      color,
-      ...(styles && styles.singleValue ? { ...styles.singleValue() } : {}),
-    };
-  },
-});
-
-const SelectBox = (props) => {
-  const { label, styles } = props;
+const TextInpit = (props) => {
+  const { label } = props;
 
   const selectBoxStyles = getStyles();
 
@@ -55,9 +17,10 @@ const SelectBox = (props) => {
           { label }
         </label>)
       }
-      <Select
+      <input
+        type="text"
         id={id}
-        styles={getCustomStyles(styles)}
+        style={{ ...selectBoxStyles.input }}
         {...props}
       />
     </form>
@@ -66,8 +29,8 @@ const SelectBox = (props) => {
 
 
 export {
-  SelectBox as default,
-  SelectBox,
+  TextInpit as default,
+  TextInpit,
 };
 
 
@@ -84,5 +47,15 @@ const getStyles = () => ({
     top: '-5px',
     background: 'black',
     left: '5px',
+  },
+  input: {
+    width: '100%',
+    height: '100%',
+    color: 'white',
+    background: 'transparent',
+    border: 'transparent',
+    boxSizing: 'border-box',
+    minHeight: '36px',
+    padding: '0 5px',
   },
 });

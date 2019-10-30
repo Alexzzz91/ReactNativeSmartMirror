@@ -1,35 +1,58 @@
 import React from 'react';
-import { SelectBox } from '../../Settings/SelectBox';
+import { connect } from 'react-redux';
+import { translate } from '../../../i18n';
 import { SettingsComponents, injectComponent } from '../../Settings';
+import { Button } from '../../Settings/Button';
 
-const Settings = () => {
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-  ];
+const Settings = (props) => {
+  const {
+    locale,
+    profiles,
+    isActive,
+  } = props;
+
+  const styles = getStyles({ active: isActive });
 
   return (
-    <div style={{ ...styles.settingsLocales }}>
-      <h3> Новости </h3>
-      <SelectBox
-        options={options}
-      />
+    <div style={{ ...styles.settingsFaceApi }}>
+      <h3>
+        {translate('Persons', locale)}
+      </h3>
+      {Object.keys(profiles).map((profileKey) => {
+        const profile = profiles[profileKey];
+        return (
+          <div key={profileKey}>
+            { profile.name }
+          </div>
+        );
+      })}
+      <Button disabled={!isActive}>
+        {translate('Add persons', locale)}
+      </Button>
     </div>
   );
 };
 
-// injectComponent(SettingsComponents, { key: 'face', component: Settings });
+const mapStateToProps = state => ({
+  locale: state.common.locale,
+  isActive: state.common.isWebcamActive,
+  profiles: state.face.profiles,
+});
+
+const ConnectedSettings = connect(mapStateToProps)(Settings);
+
+injectComponent(SettingsComponents, { key: 'face', component: ConnectedSettings });
 
 export {
   Settings as default,
   Settings,
 };
 
-const styles = {
-  settingsLocales: {
+const getStyles = ({ active = true }) => ({
+  settingsFaceApi: {
+    opacity: active ? 1 : '0.5',
     width: '100%',
     color: 'white',
     fontSize: '24',
   },
-};
+});

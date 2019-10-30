@@ -1,6 +1,7 @@
 import { createReducer } from '../../../../store/helpers/createReducer';
 
 const initialState = {
+  active: true,
   allCompliments: {
     morning: {
       time_start: 6,
@@ -121,7 +122,10 @@ const initialState = {
 const { reducer, actions } = createReducer(
   initialState,
   {
-
+    toggleActive: state => ({
+      ...state,
+      active: !state.active,
+    }),
   },
   'compliments',
 );

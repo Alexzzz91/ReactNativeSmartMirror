@@ -1,4 +1,5 @@
 const initialState = {
+  active: true,
   dateParams: {
     status: true,
     format: 'dddd, MMMM Do YYYY',
@@ -15,6 +16,11 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'CHANGE_ACTIVE':
+      return {
+        ...state,
+        active: !state.active,
+      };
     case 'CHANGE_DATE_CONFIG':
       return {
         ...state,
@@ -56,6 +62,9 @@ const actions = {
   setSecondsParams: payload => ({
     type: 'CHANGE_SECONDS_CONFIG',
     payload,
+  }),
+  toggleActive: () => ({
+    type: 'CHANGE_ACTIVE',
   }),
 };
 

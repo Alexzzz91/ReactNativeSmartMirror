@@ -52,6 +52,11 @@ class CommonSettings extends React.PureComponent {
     setFont(e.value);
   }
 
+  handleOnChangeWebcamMode = () => {
+    const { toogleWebcamMode } = this.props;
+    toogleWebcamMode();
+  }
+
   render() {
     const {
       locale,
@@ -59,13 +64,11 @@ class CommonSettings extends React.PureComponent {
       webcamMode,
     } = this.props;
 
-    console.log('locale', locale);
-
     return (
       <div style={{ ...styles.commonLocales }}>
-        <h2>
+        <h3>
           { translate('Language', locale) }
-        </h2>
+        </h3>
         <SelectBox
           label={translate('Language', locale)}
           placeholder={translate('Language', locale)}
@@ -73,9 +76,9 @@ class CommonSettings extends React.PureComponent {
           value={{ value: locale, label: Locales[locale] }}
           options={Object.keys(Locales).map(l => ({ value: l, label: Locales[l] }))}
         />
-        <h2>
+        <h3>
           { translate('Fonts', locale) }
-        </h2>
+        </h3>
         <SelectBox
           label={translate('Fonts', locale)}
           placeholder={translate('Fonts', locale)}
@@ -84,12 +87,13 @@ class CommonSettings extends React.PureComponent {
           value={{ value: fonts.current, label: fonts.current }}
           options={fonts.list.map(label => ({ value: label, label }))}
         />
-        <h2>
-          {translate('UseCamera', locale)}
-        </h2>
+        <h3>
+          {translate('Use Camera', locale)}
+        </h3>
         <Toggle
           label={translate('Active', locale)}
           value={webcamMode}
+          onChange={this.handleOnChangeWebcamMode}
         />
       </div>
     );
@@ -99,7 +103,7 @@ class CommonSettings extends React.PureComponent {
 const mapStateToProps = state => ({
   locale: state.common.locale,
   fonts: state.common.fonts,
-  webcamMode: state.common.webcamMode,
+  webcamMode: state.common.isWebcamActive,
 });
 
 const mapDispatchToProps = dispatch => ({
